@@ -1,0 +1,99 @@
+@import 'variables.scss';
+
+$inputPlaceholderColor: gray;//$gray1;
+$inputPlaceholderFocusColor: lightgray;//$gray3;
+
+// Internet explorer 11 has issues with hover css for .mat-drawer-inner-container (as of Angular Material 7)
+// Using the 'improve css performance' hack
+// source: https://benfrain.com/improving-css-performance-fixed-position-elements/
+.mat-drawer-inner-container {
+    transform: translate3d(0, 0, 0);
+}
+
+// Removes clear icon on IE inputs
+input::-ms-clear {
+    display: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+
+// source: https://stackoverflow.com/questions/22199047/placeholder-css-not-being-applied-in-ie-11
+// IE may require !important for placeholder styles to take affect, also should be put to the end after the other browser styles
+// Note that you cannot stack these rules using comma, they must be seperate
+::-webkit-input-placeholder {
+    color: $inputPlaceholderColor;
+    text-align: center;
+
+    transition: color 200ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+::-moz-placeholder {
+    opacity: 1;// Firefox
+
+    color: $inputPlaceholderColor;
+    text-align: center;
+
+    transition: color 200ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+::placeholder {
+    opacity: 1;// Firefox
+
+    color: $inputPlaceholderColor;
+    text-align: center;
+
+    transition: color 200ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+:-ms-input-placeholder {
+    color: $inputPlaceholderColor !important;
+    text-align: center;
+
+    transition: color 200ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+::-ms-input-placeholder {
+    color: $inputPlaceholderColor;
+    text-align: center;
+
+    transition: color 200ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+:-moz-placeholder {
+    opacity: 1;// Firefox
+
+    color: $inputPlaceholderColor;
+    text-align: center;
+
+    transition: color 200ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+input:focus::-webkit-input-placeholder {
+    color: $inputPlaceholderFocusColor;
+}
+input:focus::-moz-placeholder {
+    color: $inputPlaceholderFocusColor;
+}
+input:focus::placeholder {
+    color: $inputPlaceholderFocusColor;
+}
+input:focus:-ms-input-placeholder {
+    color: $inputPlaceholderFocusColor;
+}
+input:focus::-ms-input-placeholder {
+    color: $inputPlaceholderFocusColor;
+}
+input:focus:-moz-placeholder {
+    color: $inputPlaceholderFocusColor;
+}
+
+// We have to do IE placeholder styles last since the other styles make IE revert back to default color
+input:-ms-input-placeholder {
+    color: $inputPlaceholderColor !important;
+}

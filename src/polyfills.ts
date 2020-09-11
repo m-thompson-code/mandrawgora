@@ -21,6 +21,17 @@
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
 // import 'classlist.js';  // Run `npm install --save classlist.js`.
 
+
+
+/** Required imports for @firebase/analytics ie 11 support (and it looks like this might be required for @firebase/firestore too) */ 
+/** source: https://firebase.google.com/support/guides/environments_js-sdk#add-polyfills-manuall */
+import 'core-js/stable';
+import 'cross-fetch/polyfill';
+/** May also be required, but doesn't look that way */
+// import 'core-js/es/object';
+
+
+
 /**
  * Web Animations `@angular/platform-browser/animations`
  * Only required if AnimationBuilder is used within the application and using IE/Edge or Safari.

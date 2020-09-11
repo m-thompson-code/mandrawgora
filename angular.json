@@ -33,7 +33,30 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src"
+              ]
+            },
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "@firebase/app",
+              "firebase/app",
+              "@firebase/database",
+              "firebase/database",
+              "@firebase/firestore",
+              "firebase/firestore",
+              "@firebase/auth",
+              "firebase/auth",
+              "@firebase/analytics",
+              "firebase/analytics",
+              "@firebase/functions",
+              "@firebase/util",
+              "@firebase/component",
+              "@firebase/performance",
+              "@firebase/remote-config",
+              "moment-timezone"
+            ]
           },
           "configurations": {
             "production": {
@@ -97,6 +120,11 @@
             "styles": [
               "src/styles.scss"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src"
+              ]
+            },
             "scripts": []
           }
         },
@@ -126,6 +154,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "mandrawgora"
+    }
+  },
+  "defaultProject": "mandrawgora",
+  "cli": {
+    "analytics": "1e6e0f63-a627-4aa4-9b67-6b7209285f01"
+  }
 }
