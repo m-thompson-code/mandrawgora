@@ -5,6 +5,13 @@ import { Subscription } from 'rxjs';
 import { environment } from '@environment';
 
 import { AnalyticsService } from '@app/services/analytics.service';
+import { StorageService } from './services/storage.service';
+
+export interface UploadFile {
+    file: File;
+    filename: string;
+    src: string | ArrayBuffer | null;
+}
 
 @Component({
     selector: 'app-root',
@@ -14,7 +21,11 @@ import { AnalyticsService } from '@app/services/analytics.service';
 export class AppComponent implements AfterViewInit, OnDestroy {
     private _routerEventsSub?: Subscription;
 
-    constructor(private router: Router, private activatedRoute: ActivatedRoute, private analyticsService: AnalyticsService) {
+    public dragover?: boolean;
+
+    public uploadFiles: UploadFile[] = [];
+
+    constructor(private router: Router, private analyticsService: AnalyticsService, private storageService: StorageService) {
         
     }
 
@@ -57,25 +68,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
 
 	private checkRouterEvent(routerEvent: RouterEvent): void {
-		// if (routerEvent instanceof NavigationStart) {
-		// 	// clearTimeout(this.setRouteLoadingTimeout);
-		// 	// this.setRouteLoadingTimeout = window.setTimeout(() => {
-		// 	// 	this.routeLoading = true;
-		// 	// }, 1000);
-		// }
-
-		// if (routerEvent instanceof NavigationEnd ||
-		// 	routerEvent instanceof NavigationCancel ||
-		// 	routerEvent instanceof NavigationError) {
-		// 	// clearTimeout(this.setRouteLoadingTimeout);
-		// 	// this.setRouteLoadingTimeout = window.setTimeout(() => {
-		// 	// 	this.routeLoading = false;
-		// 	// }, 0);
-
-		// 	// // Clear any router preloads that may be going while navigating back to the same page before PreloadResolver resolves
-		// 	// this.preloadService.preloadRouterAssets();
-		// }
-
 		// Tracking page views
 		if (routerEvent instanceof NavigationEnd) {
 			try {
@@ -92,20 +84,97 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 			}
         }
     }
-    
-    // private getExtraRouteData(activatedRoute: ActivatedRoute): any | undefined {// ExtraRouteData | undefined {
-    //     const data = activatedRoute.snapshot.data as any;
 
-    //     if (data.extraRouteData) {
-    //         return data.extraRouteData;
-    //     }
+    public handleFileInputChange(event: any): void {
+        console.log(event);
+
+        const _t = event?.target as HTMLInputElement;
+
+        if (!_t || !_t.files || !_t.files.length) {
+            console.error("Unexpected missing files from event");
+            return;
+        }
+
+        const files = _t.files;
+
+        this._handleFileList(files);
+    }
+
+    public handleFileInputDrop(event: any): void {
+        console.log(event);
+
+        event?.stopPropagation();
+        event?.preventDefault();
+
+        const _d = event?.dataTransfer as DataTransfer;
+
+        if (!_d || !_d.files || !_d.files.length) {
+            console.error("Unexpected missing files from event");
+            return;
+        }
         
-    //     if (activatedRoute.firstChild) {
-    //         return this.getExtraRouteData(activatedRoute.firstChild);
-    //     }
+        const files = _d.files;
 
-    //     return undefined;
-    // }
+        this._handleFileList(files);
+
+        this.dragover = false;
+    }
+
+    public handleDragover(event: any): void {
+        console.log(event);
+
+        event?.stopPropagation();
+        event?.preventDefault();
+
+        if (!event || !event.dataTransfer) {
+            return;
+        }
+        
+        // Style the drag-and-drop as a "copy file" operation.
+        event.dataTransfer.dropEffect = 'copy';
+
+        this.dragover = true;
+    }
+    
+    public handleDragend(event: any): void {
+        console.log(event);
+
+        event?.stopPropagation();
+        event?.preventDefault();
+
+        this.dragover = false;
+    }
+
+    private _handleFileList(fileList: FileList): void {
+        if (!fileList) {
+            console.error("Unexpected missing files from Filelist");
+            return;
+        }
+
+        for (let i = 0; i < fileList.length; i++) {
+            const file = fileList[i];
+
+            const reader = new FileReader();
+
+            console.log(file);
+
+            const _file: UploadFile = {
+                file: file,
+                filename: file.name,
+                src: null,
+            };
+
+            this.uploadFiles.push(_file);
+
+            reader.onload = function (e) {
+                // get loaded data and render thumbnail.
+                _file.src = e?.target?.result || null;
+            };
+        
+            // read the image file as a data URL.
+            reader.readAsDataURL(file);
+        }
+    }
 
     public ngOnDestroy(): void {
         this._routerEventsSub?.unsubscribe();
