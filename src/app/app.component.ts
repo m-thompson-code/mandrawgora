@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router, RouterEvent } from '@angular/router';
+import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { environment } from '@environment';
@@ -7,6 +7,7 @@ import { environment } from '@environment';
 import { AnalyticsService } from '@app/services/analytics.service';
 import { StorageService } from './services/storage.service';
 import { FileMetadata, FirestoreService } from './services/firestore.service';
+import { FirebaseService } from './services/firebase.service';
 
 export interface UploadFile {
     file: File;
@@ -28,9 +29,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     public files?: FileMetadata[];
 
-    constructor(private router: Router, private analyticsService: AnalyticsService, 
+    constructor(private router: Router, private analyticsService: AnalyticsService, public firebaseService: FirebaseService, 
         private storageService: StorageService, private firestoreService: FirestoreService) {
-        
     }
 
     public ngAfterViewInit(): void {
