@@ -6,6 +6,7 @@ import { environment } from '@environment';
 
 import { AnalyticsService } from '@app/services/analytics.service';
 import { StorageService } from './services/storage.service';
+import { FileMetadata, FirestoreService } from './services/firestore.service';
 
 export interface UploadFile {
     file: File;
@@ -25,11 +26,19 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     public uploadFiles: UploadFile[] = [];
 
-    constructor(private router: Router, private analyticsService: AnalyticsService, private storageService: StorageService) {
+    public files?: FileMetadata[];
+
+    constructor(private router: Router, private analyticsService: AnalyticsService, 
+        private storageService: StorageService, private firestoreService: FirestoreService) {
         
     }
 
     public ngAfterViewInit(): void {
+        this.firestoreService.getFiles('timestamp').then(files => {
+            this.files = files.slice(0, 3);
+            console.log(files);
+        });
+        
         // const updateResponsiveService = () => {
         //     this.responsiveService.responsiveMetadata = this.responsiveService.getResponsiveType();
         // }
@@ -158,9 +167,11 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
             console.log(file);
 
+            const filename = (file.name || '').toLowerCase();
+
             const _file: UploadFile = {
                 file: file,
-                filename: file.name,
+                filename: filename,
                 src: null,
             };
 
@@ -173,6 +184,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         
             // read the image file as a data URL.
             reader.readAsDataURL(file);
+
+            this.storageService.uploadFile(file, filename).then(uploadMetadata => {
+                this.firestoreService.saveFile(uploadMetadata.url, filename, undefined);
+            });
         }
     }
 

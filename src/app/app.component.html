@@ -1,4 +1,4 @@
-<label for="file-input" [class]="'file-input-label' + (dragover ? ' on-drag' : '')" (dragover)="handleDragover($event)" (dragleave)="handleDragend($event)" (drop)="handleFileInputDrop($event)">Choose a file</label>
+<!-- <label for="file-input" [class]="'file-input-label' + (dragover ? ' on-drag' : '')" (dragover)="handleDragover($event)" (dragleave)="handleDragend($event)" (drop)="handleFileInputDrop($event)">Choose a file</label>
 <input class="file-input" type="file" id="file-input" name="file-input" accept=".jpg, .jpeg, .png" multiple 
     (change)="handleFileInputChange($event)" (dragover)="handleDragover($event)" (dragleave)="handleDragend($event)" (drop)="handleFileInputDrop($event)">
 
@@ -9,4 +9,32 @@
 <div *ngFor="let uploadFile of uploadFiles">
     <div>File name: {{ uploadFile.filename }}</div>
     <img [src]="uploadFile.src">
+</div> -->
+
+<div class="header">
+    ManDrawGora
+</div>
+
+<div class="sections">
+    <div class="sections">
+        Illustration
+    </div>
+    <div class="sections">
+        Comics
+    </div>
+    <div class="sections">
+        About
+    </div>
+</div>
+
+<div class="images-wrapper">
+    <div class="container">
+        <div *ngFor="let fileMetadata of files" class="image responsive-width" mooKeepRatio [ratioHeight]="64" [ratioWidth]="64" [basedOnWidth]="true">
+            <img class="cover-fit" [src]="fileMetadata.url">
+        </div>
+    </div>    
+</div>
+
+<div class="footer">
+    ©&nbsp;2020&nbsp;Mario Diaz
 </div>

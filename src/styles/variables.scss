@@ -1,0 +1,70 @@
+
+$shortTransitionDuration: 200ms;
+$shortTransitionTimingFunction: cubic-bezier(0.35, 0, 0.25, 1);
+
+$smediumTransitionDuration: 400ms;
+$smediumTransitionTimingFunction: cubic-bezier(0.25, 0.8, 0.25, 1);
+
+@mixin short-transition {
+    transition-duration: $shortTransitionDuration;
+    transition-timing-function: $shortTransitionTimingFunction;
+}
+
+@mixin medium-transition {
+    transition-duration: $smediumTransitionDuration;
+    transition-timing-function: $smediumTransitionTimingFunction;
+}
+
+// Responsive variables
+// These values need to be updated in ResponsiveService
+// Container / Media breaking points / widths
+$desktop_4k_scale: 1.3;
+$desktop_4k_width: 2540px;
+$desktop_4k_width_ratio: 0.825;
+
+$desktop_scale: 1;
+$desktop_width: 1920px;// 1280px;
+$desktop_width_ratio: .85;// .70
+
+// Roughly a little bigger than iPad Pro height (1366px)
+$landscape_width: 1400px;
+
+$tablet_scale: .7;
+$tablet_width: 1100px;// 992px updated to 1100 to meet iPad pro
+$tablet_width_ratio: .90;// .85
+
+$mobile_scale: .5;
+$mobile_width: 600px;
+$mobile_width_ratio: .95;// .9
+// End Container / Media breaking points / widths
+// END Responsive variables
+
+
+
+// Common padding and margins
+$mobileScreenWidth: 414;// Mock up width for mobile
+$desktopScreenWidth: 1444;// Mock up width for desktop
+
+$mobileHorizontalMargin: 33;// Mock up horizontal margin for mobile
+$desktopHorizontalMargin: 294;// Mock up horizontal margin for desktop
+
+$mobileHorizontalMarginWidth: $mobileHorizontalMargin / $mobileScreenWidth * 100vw;//$mobileHorizontalMargin / $mobileScreenWidth * 100vw;
+$tabletHorizontalMarginWidth: .14 * 100vw;
+$desktopHorizontalMarginWidth: $desktopHorizontalMargin / $desktopScreenWidth * 100vw;//desktopHorizontalMargin / desktopScreenWidth * 100vw;
+$desktop4kHorizontalMarginWidth: .26 * 100vw;
+
+$longPadding: 120px;
+$panelTextBodyBreak: 33px;
+
+// Component variables
+$topNavHeight: 64px;
+
+$basicOverlayZIndex: 1;
+$topNavOverlayZIndex: 100;
+
+// Font related variables
+$longFormBodyLineHeight: 1.4;
+
+// Panel related variables 
+$desktop4kHeaderWidth: 272px * 39/36;
+$desktopHeaderWidth: 272px;

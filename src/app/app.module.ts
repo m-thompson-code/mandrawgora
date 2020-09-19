@@ -30,6 +30,10 @@ firebase.initializeApp({
 firebase.analytics();
 
 import { AnalyticsService } from '@app/services/analytics.service';
+import { StorageService } from './services/storage.service';
+import { FirestoreService } from './services/firestore.service';
+
+import { DirectivesModule } from '@app/directives';
 
 @NgModule({
     declarations: [
@@ -40,9 +44,13 @@ import { AnalyticsService } from '@app/services/analytics.service';
         AppRoutingModule,
         BrowserAnimationsModule,
 
+        DirectivesModule,
+
     ],
     providers: [
         AnalyticsService,
+        StorageService,
+        FirestoreService,
     ],
     bootstrap: [AppComponent]
 })
