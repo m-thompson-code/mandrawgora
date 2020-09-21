@@ -32,7 +32,9 @@ body {
   // So the top nav and footer look better on iPhone X notches
   background: $white;
 
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  // font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  font: 400 14px/20px Roboto, "Helvetica Neue", sans-serif;
 }
 
 // //scroll bar// TODO: Handle scrollbar

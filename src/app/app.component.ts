@@ -35,7 +35,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     public ngAfterViewInit(): void {
         this.firestoreService.getFiles('timestamp').then(files => {
-            this.files = files.slice(0, 3);
+            this.files = files;
+            // this.files = files.slice(0, 3);
             console.log(files);
         });
         
@@ -72,16 +73,14 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         appHeight();
 
         this._routerEventsSub = this.router.events.subscribe(routerEvent=> {
-			this.checkRouterEvent(routerEvent as RouterEvent);
+			this._checkRouterEvent(routerEvent as RouterEvent);
         });
     }
 
-	private checkRouterEvent(routerEvent: RouterEvent): void {
+	private _checkRouterEvent(routerEvent: RouterEvent): void {
 		// Tracking page views
 		if (routerEvent instanceof NavigationEnd) {
 			try {
-                // const extraRouteData = this.getExtraRouteData(this.activatedRoute);
-
                 this.analyticsService.addPageView({
                     url: routerEvent.urlAfterRedirects,
                 });
