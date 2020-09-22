@@ -8,6 +8,7 @@ import { AnalyticsService } from '@app/services/analytics.service';
 import { StorageService } from './services/storage.service';
 import { FileMetadata, FirestoreService } from './services/firestore.service';
 import { FirebaseService } from './services/firebase.service';
+import { LoaderService } from './services/loader.service';
 
 export interface UploadFile {
     file: File;
@@ -22,7 +23,8 @@ export interface UploadFile {
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
     private _routerEventsSub?: Subscription;
-    constructor(private router: Router, public firebaseService: FirebaseService, private analyticsService: AnalyticsService) {
+    constructor(private router: Router, public firebaseService: FirebaseService, private analyticsService: AnalyticsService, 
+        public loaderService: LoaderService) {
     }
 
     public ngAfterViewInit(): void {

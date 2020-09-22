@@ -1,27 +1,10 @@
 @import 'styles/variables.scss';
 
-// @mixin host-styles($padding) {
-//     :host {
-//         padding-left: $padding;
-//         padding-right: $padding;
-//     }
-// }
-
-// :host {
-//     display: flex;
-//     flex-direction: column;
-
-//     padding-left: 120px;
-//     padding-right: 120px;
-//     box-sizing: border-box;
-
-//     width: 100%;
-//     height: auto;
-//     min-height: 100vh;
-//     min-height: var(--app-height-100);
-
-//     overflow-x: hidden;
-// }
+:host {
+    display: flex;
+    flex-grow: 2;
+    flex-direction: column;
+}
 
 input {
     width: 0.1px;

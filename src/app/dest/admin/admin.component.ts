@@ -4,9 +4,9 @@ import { Subscription } from 'rxjs';
 
 import { environment } from '@environment';
 
-import { StorageService } from '../../services/storage.service';
-import { FileMetadata, FirestoreService } from '../../services/firestore.service';
-import { FirebaseService } from '../../services/firebase.service';
+import { StorageService } from '@app/services/storage.service';
+import { FileMetadata, FirestoreService } from '@app/services/firestore.service';
+import { FirebaseService } from '@app/services/firebase.service';
 
 export interface UploadFile {
     file: File;

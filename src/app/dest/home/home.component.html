@@ -1,20 +1,40 @@
-<div class="header">
-    ManDrawGora
+<div class="top-nav">
+    <div class="top-nav-main">
+        <div class="icon-container">
+            <div matRipple [matRippleUnbounded]="false" class="icon" (click)="setSections(!showTopNavSections)">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+            </div>
+        </div>
+    
+        <div class="header">
+            ManDrawGora
+        </div>
+    </div>
+    
+    <div [class]="'sections' + (showTopNavSections ? ' show' : ' hide')" [style.max-height]="(sections.length * 49) + 'px'">
+        <div *ngFor="let section of sections" matRipple [matRippleUnbounded]="false" class="section" (click)="setSelectedSection(section);setSections(false)">
+            {{ section }}
+        </div>
+    </div>
 </div>
 
-<div class="sections">
-    <div class="sections">
-        Illustration
+<div class="desktop-top">
+    <div class="header">
+        ManDrawGora
     </div>
+    
     <div class="sections">
-        Comics
-    </div>
-    <div class="sections">
-        About
+        <div *ngFor="let section of sections" [class]="'section' + (selectedSection === section ? ' selected' : '')" (click)="setSelectedSection(section);setSections(false)">
+            {{ section }}
+        </div>
     </div>
 </div>
 
 <div class="main">
+    <div class="mobile-selected-section">
+        {{ selectedSection }}
+    </div>
+
     <div class="images-wrapper">
         <div class="container">
             <div *ngFor="let fileMetadata of files" class="image responsive-width" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">

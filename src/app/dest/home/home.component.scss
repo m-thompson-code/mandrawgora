@@ -1,5 +1,74 @@
 @import 'styles/variables.scss';
 
+:host {
+    display: flex;
+    flex-grow: 2;
+    flex-direction: column;
+}
+
+.icon {
+    height: 32px;
+    width: 32px;
+
+    svg {
+        fill: currentColor;
+        height: 32px;
+        width: 32px;
+    }
+}
+
+.top-nav {
+    min-height: 64px;
+    width: 100%;
+
+    margin-bottom: 32px;
+
+    box-shadow: 0 3px 5px -1px rgba(0,0,0,.2), 0 6px 10px 0 rgba(0,0,0,.14), 0 1px 18px 0 rgba(0,0,0,.12);
+
+    .top-nav-main {
+        display: flex;
+        align-items: center;
+
+        .header {
+            margin: 0;
+        }
+    
+        .icon-container {
+            padding: (64px - 32px) / 4;
+
+            .icon {
+                padding: (64px - 32px) / 4;
+                border-radius: 50%;
+            }
+        }
+    }
+
+    .sections {
+        padding: 0;
+        margin: 0;
+
+        overflow: hidden;
+
+        .section {
+            width: 100%;
+            text-align: center;
+            box-sizing: border-box;
+
+            margin: 0;
+            padding: 12px;
+
+            border-top: 1px solid #212121;
+        }
+
+        transition: max-height 200ms cubic-bezier(0.35, 0, 0.25, 1);
+    }
+    .sections.hide {
+        max-height: 0 !important;
+    }
+
+    display: none;
+}
+
 .header {
     height: auto;
     width: 100%;
@@ -27,6 +96,20 @@
     div:first-child {
         margin-left: 0;
     }
+
+    .section {
+        cursor: pointer;
+    }
+    .section.selected {
+        text-decoration: underline;
+    }
+}
+
+.mobile-selected-section {
+    font-size: 20px;
+    padding-bottom: 16px;
+
+    display: none;
 }
 
 $imagePadding: 12px;
@@ -63,8 +146,16 @@ $imagePadding: 12px;
     }
 }
 
+.main {
+    display: flex;
+    flex-direction: column;
+
+    flex-grow: 2;
+}
+
 .footer {
     color: #616161;
+    padding-bottom: 4px;
 }
 
 $imagePadding: 10px;
@@ -81,6 +172,20 @@ $imagePadding: 10px;
     .main {
         padding-left: $padding;
         padding-right: $padding;
+    }
+}
+
+@mixin show-top-nav() {
+    .desktop-top {
+        display :none;
+    }
+
+    .top-nav {
+        display: block;
+    }
+
+    .mobile-selected-section {
+        display: block;
     }
 }
 
@@ -104,6 +209,8 @@ $imagePadding: 10px;
     }
 
     @include mobile-padding(2.5vw);
+
+    @include show-top-nav();
 }
 
 @media only screen and (max-width: $landscape_width) and (max-height: $tablet_width) and (orientation: landscape) {
@@ -122,4 +229,6 @@ $imagePadding: 10px;
     }
 
     @include mobile-padding(2.5vw);
+
+    @include show-top-nav();
 }
