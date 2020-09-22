@@ -1,0 +1,7 @@
+<div [class]="'slides-container' + (animate ? ' animate': '') + (slideDir ? (' slide-to-' + (slideDir || '')): '')">
+    <div class="slides">
+        <div class="slide" *ngFor="let slide of activeSlides">
+            <moo-image *ngIf="slide.src || slide.url" [src]="slide.src || slide.url"></moo-image>
+        </div>
+    </div>
+</div>

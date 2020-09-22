@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -8,11 +8,12 @@ import { StorageService } from '@app/services/storage.service';
 import { FileMetadata, FirestoreService } from '@app/services/firestore.service';
 import { FirebaseService } from '@app/services/firebase.service';
 import { LoaderService } from '@app/services/loader.service';
+import { GalleryComponent } from '@app/components/gallery/gallery.component';
 
 export interface UploadFile {
     file: File;
     filename: string;
-    src: string | ArrayBuffer | null;
+    src: string | ArrayBuffer | null | undefined;
 }
 
 @Component({
@@ -21,6 +22,8 @@ export interface UploadFile {
     styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements AfterViewInit, OnDestroy {
+    @ViewChild('gallery', {static: false}) public galleryRef!: GalleryComponent;
+
     public files?: FileMetadata[];
 
     public sections: string[] = [];

@@ -12,6 +12,8 @@ import { FirebaseService } from '@app/services/firebase.service';
 
 import { DirectivesModule } from '@app/directives';
 
+import { GalleryModule } from '@app/components/gallery';
+
 @NgModule({
     declarations: [
         HomeComponent
@@ -24,6 +26,8 @@ import { DirectivesModule } from '@app/directives';
         MatRippleModule,
 
         DirectivesModule,
+
+        GalleryModule,
     ],
     providers: [
         StorageService,

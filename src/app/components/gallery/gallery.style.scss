@@ -1,0 +1,51 @@
+:host {
+    display: block;
+    
+    height: 100%;
+    width: 100%;
+
+    overflow: hidden;
+}
+
+.slide-to-left {
+    transform: translateX(100%);
+}
+
+.slide-to-right {
+    transform: translateX(-100%);
+}
+
+.slides-container {
+    height: 100%;
+    width: 100%;
+}
+
+.slides-container.animate {
+    transition: transform 200ms cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+.slides {
+    height: 100%;
+    width: 300%;
+    margin-left: -100%;
+
+    display: flex;
+    flex-direction: row;
+}
+
+.slide {
+    height: 100%;
+    width: 100%;
+}
+
+// .slide-left {
+//     background: yellow;
+// }
+
+// .slide-current {
+//     background: green;
+// }
+
+// .slide-right {
+//     background: blue;
+// }

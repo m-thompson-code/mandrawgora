@@ -83,21 +83,21 @@ export class KeepRatioDirective implements OnInit, AfterViewInit {
     }
 
     public ngOnInit(): void {
-        if (!this.ratioHeight) {
-            const message = "Unexpected missing ratioHeight";
-            console.error(message);
-            throw {
-                message: message,
-            };
-        }
+        // if (!this.ratioHeight) {
+        //     const message = "Unexpected missing ratioHeight";
+        //     console.error(message);
+        //     throw {
+        //         message: message,
+        //     };
+        // }
 
-        if (!this.ratioWidth) {
-            const message = "Unexpected missing ratioWidth";
-            console.error(message);
-            throw {
-                message: message,
-            };
-        }
+        // if (!this.ratioWidth) {
+        //     const message = "Unexpected missing ratioWidth";
+        //     console.error(message);
+        //     throw {
+        //         message: message,
+        //     };
+        // }
     }
 
     @HostListener('window:resize') public onResize(): void {

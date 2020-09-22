@@ -30,6 +30,17 @@
     </div>
 </div>
 
+<div>
+    <a (click)="galleryRef.increaseIndex()">Increase</a>
+</div>
+<div>
+    <a (click)="galleryRef.decreaseIndex()">Decrease</a>
+</div>
+
+<div *ngIf="files" class="test">
+    <moo-gallery #gallery [images]="files"></moo-gallery>
+</div>
+
 <div class="main">
     <div class="mobile-selected-section">
         {{ selectedSection }}
