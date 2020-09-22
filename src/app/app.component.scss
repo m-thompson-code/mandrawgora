@@ -23,152 +23,24 @@
     overflow-x: hidden;
 }
 
-input {
-    width: 0.1px;
-    height: 0.1px;
-    opacity: 0;
-    overflow: hidden;
-    position: absolute;
-    z-index: -1;
-}
-label {
-    cursor: pointer;
-
-    padding: 24px;
-    border: 1px solid blue;
-    display: block;
-}
-
-input:focus + label,
-input + label:hover {
-    background-color: red;
-}
-
-label.on-drag {
-    background: green;
-}
-
-input:focus + label {
-	outline: 1px dotted #000;
-	outline: -webkit-focus-ring-color auto 5px;
-}
-
-.header {
-    height: auto;
-    width: 100%;
-
-    font-size: 88px;
-    line-height: 1;
-
-    margin-top: 13vh;
-    margin-bottom: 32px;
-}
-
-.sections {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: flex-end;
-
-    font-size: 24px;
-    line-height: 1;
-
-    margin-bottom: 32px;
-
-    div {
-        margin-left: 32px;
-    }
-    div:first-child {
-        margin-left: 0;
-    }
-}
-
-$imagePadding: 12px;
-
-.images-wrapper {
-    width: 100%;
-    overflow: hidden;
-    background: red;
-
-    flex-grow: 2;
-}
-
-.container {
-    display: flex;
-    flex-wrap: wrap;
-
-    height: auto;
-    width: auto;
-
-    margin: -1 * $imagePadding / 2;
-}
-
-.image {
-    position: relative;
-    overflow: hidden;
-
-    padding: $imagePadding/2;
-    box-sizing: border-box;
-
-    img {
-        height: 100%;
-        width: 100%;
-    }
-}
-
-$imagePadding: 10px;
-
-@mixin images-styles($rowCount) {
-    .image {
-        width: 100% / $rowCount;
-    }
-}
-
 @include host-styles(240px);
 
-@include images-styles(4);
-
 @media only screen and (max-width: $desktop_width) {
-    @include images-styles(4);
-
     @include host-styles(120px);
 }
 
 @media only screen and (max-width: $tablet_width) and (orientation: portrait) {
-    @include images-styles(3);
-
     @include host-styles(60px);
-
-    .header {
-        font-size: 69px;
-    }
 }
 
 @media only screen and (max-width: $mobile_width) and (orientation: portrait) {
-    @include images-styles(1);
-
-    @include host-styles(2.5%);
-    
-    .header {
-        font-size: 32px;
-    }
+    @include host-styles(0);// padding is handled on the routing component instead of on app
 }
 
 @media only screen and (max-width: $landscape_width) and (max-height: $tablet_width) and (orientation: landscape) {
-    @include images-styles(3);
-
     @include host-styles(60px);
-
-    .header {
-        font-size: 69px;
-    }
 }
 
 @media only screen and (max-width: $landscape_width) and (max-height: $mobile_width) and (orientation: landscape) {
-    @include images-styles(2);
-
-    @include host-styles(2.5%);
-
-    .header {
-        font-size: 32px;
-    }
+    @include host-styles(0);// padding is handled on the routing component instead of on app
 }
