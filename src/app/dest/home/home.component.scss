@@ -63,6 +63,10 @@ $imagePadding: 12px;
     }
 }
 
+.footer {
+    color: #616161;
+}
+
 $imagePadding: 10px;
 
 @mixin images-styles($rowCount) {
