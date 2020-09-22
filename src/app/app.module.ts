@@ -12,10 +12,13 @@ import { StorageService } from './services/storage.service';
 import { FirestoreService } from './services/firestore.service';
 import { FirebaseService } from './services/firebase.service';
 import { LoaderService } from './services/loader.service';
+import { OverlayGalleryService } from './services/overlay-gallery.service';
 
 import { DirectivesModule } from '@app/directives';
 
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+
+import { OverlayGalleryModule } from '@app/components/overlay-gallery';
 
 @NgModule({
     declarations: [
@@ -32,6 +35,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 
         DirectivesModule,
 
+        OverlayGalleryModule,
     ],
     providers: [
         AnalyticsService,
@@ -39,6 +43,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
         FirestoreService,
         FirebaseService,
         LoaderService,
+
+        OverlayGalleryService,
     ],
     bootstrap: [AppComponent]
 })

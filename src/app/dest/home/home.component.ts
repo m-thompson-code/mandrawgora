@@ -9,6 +9,7 @@ import { FileMetadata, FirestoreService } from '@app/services/firestore.service'
 import { FirebaseService } from '@app/services/firebase.service';
 import { LoaderService } from '@app/services/loader.service';
 import { GalleryComponent } from '@app/components/gallery/gallery.component';
+import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 
 export interface UploadFile {
     file: File;
@@ -31,7 +32,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     public showTopNavSections?: boolean;
 
-    constructor(private router: Router, private firestoreService: FirestoreService, private loaderService: LoaderService) {
+    constructor(private router: Router, private firestoreService: FirestoreService, private loaderService: LoaderService, 
+        private overlayGalleryService: OverlayGalleryService) {
     }
 
     public ngAfterViewInit(): void {
@@ -62,6 +64,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     public setSections(show: boolean): void {
         this.showTopNavSections = show;
+    }
+
+    public activateOverlay(): void {
+        setTimeout(() => {
+            this.overlayGalleryService.active = true;
+        }, 0);
     }
 
     public ngOnDestroy(): void {

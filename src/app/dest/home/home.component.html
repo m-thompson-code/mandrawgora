@@ -48,7 +48,7 @@
 
     <div class="images-wrapper">
         <div class="container">
-            <div *ngFor="let fileMetadata of files" class="image responsive-width" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">
+            <div (click)="activateOverlay()" *ngFor="let fileMetadata of files" class="image responsive-width" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">
                 <img class="cover-fit" [src]="fileMetadata.url">
             </div>
         </div>    

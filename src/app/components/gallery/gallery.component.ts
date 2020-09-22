@@ -33,6 +33,10 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public increaseIndex(): void {
+        if (this.animate) {
+            return;
+        }
+
         this.animate = true;
         this.slideDir = 'right';
 
@@ -48,6 +52,10 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     
     public decreaseIndex(): void {
+        if (this.animate) {
+            return;
+        }
+        
         this.animate = true;
         this.slideDir = 'left';
 
