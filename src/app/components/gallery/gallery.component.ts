@@ -99,7 +99,6 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
             this.panTransformStyle = `translateX(${deltaX || 0}px)`;
         } else {
             this.panTransformStyle = '';
-            debugger;
         }
     }
 
@@ -113,7 +112,7 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
         const deltaX = hammerEvent?.deltaX || 0;
         const velocityX = hammerEvent?.velocityX || 0;
         // console.log(deltaX,velocityX);
-        
+
         if (deltaX > 100 || velocityX > 3) {
             this.decreaseIndex();
         } else if (deltaX < -100 || velocityX < -3) {
