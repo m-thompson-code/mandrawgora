@@ -1,7 +1,7 @@
 <div [class]="'overlay mat-app-background' + (show ? ' show' : ' hide')">
     <div class="container">
         <div *ngIf="galleryRef" class="top">
-            <span>{{ galleryRef.currentIndex }} / {{ overlayGalleryService?.images?.length || '?' }}</span>
+            <span>{{ galleryRef.currentIndex + 1 }} / {{ overlayGalleryService?.images?.length || '?' }}</span>
             <a (click)="deactivate()">CLOSE</a>
         </div>
     

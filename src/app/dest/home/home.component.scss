@@ -141,6 +141,11 @@ $imagePadding: 12px;
     margin: -1 * $imagePadding / 2;
 }
 
+@keyframes home-image {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
 .image {
     position: relative;
     overflow: hidden;
@@ -151,6 +156,17 @@ $imagePadding: 12px;
     img {
         height: 100%;
         width: 100%;
+
+        animation-name: home-image;
+        animation-duration: 400ms;
+
+        border-radius: 4px;
+
+        cursor: pointer;
+        transition: filter 200ms linear;
+    }
+    img:hover {
+        filter: brightness(1.06) contrast(1.04);
     }
 }
 
@@ -207,6 +223,12 @@ $imagePadding: 10px;
     .header {
         font-size: 69px;
     }
+
+    .image {
+        img:hover {
+            filter: none;
+        }
+    }
 }
 
 @media only screen and (max-width: $mobile_width) and (orientation: portrait) {
@@ -219,6 +241,12 @@ $imagePadding: 10px;
     @include mobile-padding(2.5vw);
 
     @include show-top-nav();
+    
+    .image {
+        img:hover {
+            filter: none;
+        }
+    }
 }
 
 @media only screen and (max-width: $landscape_width) and (max-height: $tablet_width) and (orientation: landscape) {
@@ -226,6 +254,12 @@ $imagePadding: 10px;
 
     .header {
         font-size: 69px;
+    }
+    
+    .image {
+        img:hover {
+            filter: none;
+        }
     }
 }
 
@@ -239,4 +273,10 @@ $imagePadding: 10px;
     @include mobile-padding(2.5vw);
 
     @include show-top-nav();
+    
+    .image {
+        img:hover {
+            filter: none;
+        }
+    }
 }

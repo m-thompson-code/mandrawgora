@@ -113,9 +113,9 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
         const velocityX = hammerEvent?.velocityX || 0;
         // console.log(deltaX,velocityX);
 
-        if (deltaX > 100 || velocityX > 3) {
+        if (deltaX > 30 || velocityX > 1.5) {
             this.decreaseIndex();
-        } else if (deltaX < -100 || velocityX < -3) {
+        } else if (deltaX < -30 || velocityX < -1.5) {
             this.increaseIndex();
         }
 

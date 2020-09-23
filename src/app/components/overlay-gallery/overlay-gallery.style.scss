@@ -40,7 +40,7 @@
     height: 100%;
     width: 100%;
 
-    padding: 16px 10vw;
+    padding: 16px 0;
     box-sizing: border-box;
 
     display: flex;
@@ -54,7 +54,7 @@
 
     justify-content: space-between;
 
-    padding-bottom: 16px;
+    padding: 0 10vw 16px;
     box-sizing: border-box;
 
     font-size: 20px;
@@ -92,8 +92,12 @@
         display: none;
     }
 
+    .top {
+        padding: 0 16px 16px;
+    }
+
     .container {
-        padding: 16px;
+        padding: 16px 0;
     }
 }
 
@@ -103,11 +107,11 @@
     }
 
     .top {
-        padding-bottom: 4px;
+        padding: 0 4px 4px;
     }
 
     .container {
-        padding: 4px;
+        padding: 4px 0;
     }
 }
 
@@ -116,8 +120,12 @@
         display: none;
     }
 
+    .top {
+        padding: 0 16px 16px;
+    }
+
     .container {
-        padding: 16px;
+        padding: 16px 0;
     }
 }
 
@@ -127,10 +135,10 @@
     }
 
     .top {
-        padding-bottom: 4px;
+        padding: 0 4px 4px;
     }
 
     .container {
-        padding: 4px;
+        padding: 4px 0;
     }
 }

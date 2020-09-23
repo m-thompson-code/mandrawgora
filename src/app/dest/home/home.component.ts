@@ -32,6 +32,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     public showTopNavSections?: boolean;
 
+    public revealImageCount = 0;
+
+    public _revealImageInterval?: number;
+
     constructor(private router: Router, private firestoreService: FirestoreService, private loaderService: LoaderService, 
         private overlayGalleryService: OverlayGalleryService) {
     }
@@ -55,6 +59,19 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
             console.log(files);
 
             this.loaderService.setShowLoader(false);
+
+            this.revealImageCount == 1;
+
+            this._revealImageInterval = window.setInterval(() => {
+                if (!this.files) {
+                    return;
+                }
+    
+                this.revealImageCount += 1;
+                if (this.revealImageCount >= this.files.length) {
+                    clearInterval(this._revealImageInterval);
+                }
+            }, 100);
         });
     }
 
@@ -76,5 +93,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     public ngOnDestroy(): void {
         this.loaderService.setShowLoader(false);
+        clearInterval(this._revealImageInterval);
     }
 }

@@ -1,6 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'styles/theme.scss';
 @import 'styles/colors.scss';
+@import 'styles/variables.scss';
 
 :root {
     --app-height-100: 100vh;
@@ -156,4 +157,62 @@ a {
 div, a {
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     -webkit-tap-highlight-color: transparent;
+}
+
+.moo-slides-container {
+    .slides {
+        .slide {
+            padding: 0 10vw;
+            box-sizing: border-box;
+        }
+    }
+}
+
+
+@media only screen and (max-width: $desktop_width) {
+    // pass
+}
+
+@media only screen and (max-width: $tablet_width) and (orientation: portrait) {
+    .moo-slides-container {
+        .slides {
+            .slide {
+                padding: 0 16px;
+                box-sizing: border-box;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $mobile_width) and (orientation: portrait) {
+    .moo-slides-container {
+        .slides {
+            .slide {
+                padding: 0 4px;
+                box-sizing: border-box;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $landscape_width) and (max-height: $tablet_width) and (orientation: landscape) {
+    .moo-slides-container {
+        .slides {
+            .slide {
+                padding: 0 16px;
+                box-sizing: border-box;
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: $landscape_width) and (max-height: $mobile_width) and (orientation: landscape) {
+    .moo-slides-container {
+        .slides {
+            .slide {
+                padding: 0 4px;
+                box-sizing: border-box;
+            }
+        }
+    }
 }
