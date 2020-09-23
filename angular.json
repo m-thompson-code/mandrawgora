@@ -55,7 +55,9 @@
               "@firebase/component",
               "@firebase/performance",
               "@firebase/remote-config",
-              "moment-timezone"
+              "moment",
+              "moment-timezone",
+              "hammerjs"
             ]
           },
           "configurations": {

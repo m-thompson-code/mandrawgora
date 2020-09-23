@@ -8,11 +8,11 @@
 }
 
 .slide-to-left {
-    transform: translateX(100%);
+    transform: translateX(100%) !important;
 }
 
 .slide-to-right {
-    transform: translateX(-100%);
+    transform: translateX(-100%) !important;
 }
 
 .slides-container {
@@ -22,6 +22,8 @@
 
     height: 100%;
     width: 100%;
+
+    cursor: pointer;
 }
 
 .slides-container.animate {
@@ -46,4 +48,6 @@
     width: 100%;
 
     overflow: hidden;
+
+    pointer-events: none;// Needed to handle pan events correctly (or else you'll just be dragging the image)
 }

@@ -22,6 +22,8 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public slideDir?: 'left' | 'right';
 
+    public panTransformStyle: string = '';
+
     constructor(private ngZone: NgZone) {
 
     }
@@ -81,6 +83,46 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public ngAfterViewInit(): void {
         
+    }
+
+    public panHandler(event: any): void {
+        const hammerEvent: HammerInput = event as HammerInput;
+
+        if (this.animate) {
+            return;
+        }
+        // console.log(panEvent);
+
+        const deltaX = hammerEvent?.deltaX || 0;
+
+        if (deltaX) {
+            this.panTransformStyle = `translateX(${deltaX || 0}px)`;
+        } else {
+            this.panTransformStyle = '';
+            debugger;
+        }
+    }
+
+    public panEndHandler(event: any): void {
+        const hammerEvent: HammerInput = event as HammerInput;
+
+        if (this.animate) {
+            return;
+        }
+        
+        const deltaX = hammerEvent?.deltaX || 0;
+        const velocityX = hammerEvent?.velocityX || 0;
+        // console.log(deltaX,velocityX);
+        
+        if (deltaX > 100 || velocityX > 3) {
+            this.decreaseIndex();
+        } else if (deltaX < -100 || velocityX < -3) {
+            this.increaseIndex();
+        }
+
+        setTimeout(() => {
+            this.panTransformStyle = '';
+        }, 100);
     }
 
     public ngOnDestroy(): void {

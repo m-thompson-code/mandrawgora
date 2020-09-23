@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG, HammerModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -20,6 +20,19 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { OverlayGalleryModule } from '@app/components/overlay-gallery';
 
+import * as hammer from 'hammerjs';
+
+export class MyHammerConfig extends HammerGestureConfig {
+    overrides = <any> {
+        pinch: { enable: false },
+        rotate: { enable: false },
+        pan: {
+            direction: hammer.DIRECTION_HORIZONTAL,
+            enable: true,
+        },
+    }
+}
+
 @NgModule({
     declarations: [
         AppComponent
@@ -28,7 +41,8 @@ import { OverlayGalleryModule } from '@app/components/overlay-gallery';
         BrowserModule,
         AppRoutingModule,
         BrowserAnimationsModule,
-
+        HammerModule,
+        
         MatRippleModule,
 
         MatProgressBarModule,
@@ -45,6 +59,11 @@ import { OverlayGalleryModule } from '@app/components/overlay-gallery';
         LoaderService,
 
         OverlayGalleryService,
+
+        {
+            provide: HAMMER_GESTURE_CONFIG,
+            useClass: MyHammerConfig
+        },
     ],
     bootstrap: [AppComponent]
 })

@@ -1,4 +1,5 @@
-<div [class]="'slides-container' + (animate ? ' animate': '') + (slideDir ? (' slide-to-' + (slideDir || '')): '')">
+<div [class]="'slides-container' + (animate ? ' animate': '') + (slideDir ? (' slide-to-' + (slideDir || '')): '')"
+    (pan)="panHandler($event)" (panEnd)="panEndHandler($event)" [style.transform]="panTransformStyle">
     <div class="slides">
         <div #slideContainer class="slide" *ngFor="let slide of activeSlides">
             <moo-image *ngIf="slide.src || slide.url" [src]="slide.src || slide.url" [containerElement]="slideContainer"></moo-image>

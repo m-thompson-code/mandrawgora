@@ -37,15 +37,17 @@ export class OverlayGalleryComponent implements OnInit, AfterViewInit, OnDestroy
     
     public deactivate(): void {
         this.show = false;
-        
-        const offsetY = Math.abs(parseInt(document.body.style.top || "0", 10));
-        document.body.classList.remove('js-lock-position');
-        document.body.style.removeProperty('top');
-        window.scrollTo(0, offsetY || 0);
 
         setTimeout(() => {
-            this.overlayGalleryService.active = false;
-        }, 0);
+            const offsetY = Math.abs(parseInt(document.body.style.top || "0", 10));
+            document.body.classList.remove('js-lock-position');
+            document.body.style.removeProperty('top');
+            window.scrollTo(0, offsetY || 0);
+    
+            setTimeout(() => {
+                this.overlayGalleryService.active = false;
+            }, 0);
+        }, 200);
     }
 
     public ngOnDestroy(): void {

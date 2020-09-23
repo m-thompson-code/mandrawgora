@@ -1,3 +1,15 @@
+@import 'styles/variables.scss';
+
+@keyframes overlay-gallery-animation-show {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes overlay-gallery-animation-hide {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}
+
 :host {
     position: fixed;
     top: 0;
@@ -14,13 +26,21 @@
 .overlay {
     height: 100%;
     width: 100%;
+
+    animation-name: overlay-gallery-animation-show;
+    animation-duration: 200ms;
+}
+.overlay.hide {
+    animation-name: overlay-gallery-animation-hide;
+    animation-duration: 200ms;
+    opacity: 0;
 }
 
 .container {
     height: 100%;
     width: 100%;
 
-    padding: 16px;
+    padding: 16px 10vw;
     box-sizing: border-box;
 
     display: flex;
@@ -41,13 +61,10 @@
     line-height: 1;
 }
 
-.gallery-container-outer {
+.gallery-container {
+    height: 100%;
+    width: 100%;
     flex-grow: 2;
-
-    .gallery-container-inner {
-        height: 100%;
-        width: 100%;
-    }
 }
 
 .left-nav {
@@ -64,4 +81,56 @@
     top: 50%;
     transform: translateY(-50%);
     z-index: 1;
+}
+
+@media only screen and (max-width: $desktop_width) {
+    // pass
+}
+
+@media only screen and (max-width: $tablet_width) and (orientation: portrait) {
+    .nav {
+        display: none;
+    }
+
+    .container {
+        padding: 16px;
+    }
+}
+
+@media only screen and (max-width: $mobile_width) and (orientation: portrait) {
+    .nav {
+        display: none;
+    }
+
+    .top {
+        padding-bottom: 4px;
+    }
+
+    .container {
+        padding: 4px;
+    }
+}
+
+@media only screen and (max-width: $landscape_width) and (max-height: $tablet_width) and (orientation: landscape) {
+    .nav {
+        display: none;
+    }
+
+    .container {
+        padding: 16px;
+    }
+}
+
+@media only screen and (max-width: $landscape_width) and (max-height: $mobile_width) and (orientation: landscape) {
+    .nav {
+        display: none;
+    }
+
+    .top {
+        padding-bottom: 4px;
+    }
+
+    .container {
+        padding: 4px;
+    }
 }
