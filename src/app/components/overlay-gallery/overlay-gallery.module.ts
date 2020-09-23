@@ -7,6 +7,8 @@ import { DirectivesModule } from '@app/directives';
 
 import { GalleryModule } from '@app/components/gallery';
 
+import { MatRippleModule } from '@angular/material/core';
+
 @NgModule({
     declarations: [OverlayGalleryComponent],
     imports: [
@@ -15,6 +17,8 @@ import { GalleryModule } from '@app/components/gallery';
         DirectivesModule,
 
         GalleryModule,
+
+        MatRippleModule,
     ],
     exports: [OverlayGalleryComponent]
 })

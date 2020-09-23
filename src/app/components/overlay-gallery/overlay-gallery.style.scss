@@ -29,6 +29,8 @@
 
     animation-name: overlay-gallery-animation-show;
     animation-duration: 200ms;
+
+    background-color: rgba(#303030, .975);
 }
 .overlay.hide {
     animation-name: overlay-gallery-animation-hide;
@@ -61,10 +63,68 @@
     line-height: 1;
 }
 
+.close-icon {
+    position: relative;
+    top: 0;
+    left: 0;
+
+    height: 27px;
+    width: 27px;
+
+    border-radius: 50%;
+
+    svg {
+        height: 27px;
+        width: 27px;
+        fill: currentColor;
+    }
+    .icon-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        width: 200%;
+        height: 200%;
+
+        transform: translate(-50%, -50%);
+
+        border-radius: 50%;
+
+        cursor: pointer;
+    }
+}
+
 .gallery-container {
     height: 100%;
     width: 100%;
     flex-grow: 2;
+}
+
+.nav {
+    height: 40px;
+    width: 40px;
+
+    svg {
+        height: 40px;
+        width: 40px;
+        fill: currentColor;
+        transform: translateX(5px);
+    }
+
+    .icon-overlay {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        width: 200%;
+        height: 200%;
+
+        transform: translate(-50%, -50%);
+
+        border-radius: 50%;
+
+        cursor: pointer;
+    }
 }
 
 .left-nav {
@@ -73,6 +133,7 @@
     top: 50%;
     transform: translateY(-50%);
     z-index: 1;
+    margin-left: 20px;
 }
 
 .right-nav {
@@ -81,6 +142,7 @@
     top: 50%;
     transform: translateY(-50%);
     z-index: 1;
+    margin-right: 20px;
 }
 
 @media only screen and (max-width: $desktop_width) {
