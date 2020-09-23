@@ -30,16 +30,16 @@
     </div>
 </div>
 
-<div>
+<!-- <div>
     <a (click)="galleryRef.increaseIndex()">Increase</a>
 </div>
 <div>
     <a (click)="galleryRef.decreaseIndex()">Decrease</a>
-</div>
+</div> -->
 
-<div *ngIf="files" class="test">
+<!-- <div *ngIf="files" class="test">
     <moo-gallery #gallery [images]="files"></moo-gallery>
-</div>
+</div> -->
 
 <div class="main">
     <div class="mobile-selected-section">
@@ -48,10 +48,10 @@
 
     <div class="images-wrapper">
         <div class="container">
-            <div (click)="activateOverlay()" *ngFor="let fileMetadata of files" class="image responsive-width" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">
+            <div (click)="activateOverlay(i)" *ngFor="let fileMetadata of files; let i = index" class="image responsive-width" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">
                 <img class="cover-fit" [src]="fileMetadata.url">
             </div>
-        </div>    
+        </div>
     </div>
     
     <div class="footer">

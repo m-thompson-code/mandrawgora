@@ -36,6 +36,8 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
     public imageWidth: number = 0;
     public imageHeight: number = 0;
 
+    @Input() containerElement?: HTMLElement;
+
     constructor(private ngZone: NgZone) {
     }
 

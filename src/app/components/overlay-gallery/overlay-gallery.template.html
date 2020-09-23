@@ -1,5 +1,23 @@
-<div class="overlay mat-app-background" (click)="deactivate()">
-    <div>
+<div class="overlay mat-app-background">
+    <div class="container">
+        <div *ngIf="galleryRef" class="top">
+            <span>{{ galleryRef.currentIndex }} / {{ overlayGalleryService?.images?.length || '?' }}</span>
+            <a (click)="deactivate()">CLOSE</a>
+        </div>
+    
+        <div class="gallery-container-outer">
+            <div class="gallery-container-inner">
+                <moo-gallery *ngIf="overlayGalleryService.images" #gallery [images]="overlayGalleryService.images" [currentIndex]="overlayGalleryService.initalIndex"></moo-gallery>
+            </div>
+        </div>
+        
+    </div>
 
+    <div class="left-nav">
+        <a (click)="galleryRef.decreaseIndex()">Back</a>
+    </div>
+
+    <div class="right-nav">
+        <a (click)="galleryRef.increaseIndex()">Forward</a>
     </div>
 </div>

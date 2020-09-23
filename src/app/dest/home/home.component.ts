@@ -66,10 +66,12 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         this.showTopNavSections = show;
     }
 
-    public activateOverlay(): void {
-        setTimeout(() => {
-            this.overlayGalleryService.active = true;
-        }, 0);
+    public activateOverlay(index: number): void {
+        if (!this.files) {
+            return;
+        }
+
+        this.overlayGalleryService.activate(index, this.files);
     }
 
     public ngOnDestroy(): void {

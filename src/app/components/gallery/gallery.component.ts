@@ -16,7 +16,7 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() public images: SlideImage[] = [];
     public activeSlides: SlideImage[] = [];
 
-    public currentIndex: number = 0;
+    @Input() public currentIndex: number = 0;
 
     public animate?: boolean;
 
@@ -27,8 +27,6 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public ngOnInit(): void {
-        this.currentIndex = 0;
-
         this.updateCurrentImage();
     }
 

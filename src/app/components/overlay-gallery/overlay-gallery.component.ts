@@ -1,12 +1,10 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy, Output, EventEmitter, NgZone, AfterViewInit } from '@angular/core';
+
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 
-// import { environment } from '@environment';
+import { GalleryComponent } from '@app/components/gallery/gallery.component';
 
-export interface SlideImage {
-    src?: string | ArrayBuffer | null | undefined;
-    url?: string | ArrayBuffer | null | undefined;
-}
+// import { environment } from '@environment';
 
 @Component({
     selector: 'moo-overlay-gallery',
@@ -14,18 +12,19 @@ export interface SlideImage {
     styleUrls: ['./overlay-gallery.style.scss']
 })
 export class OverlayGalleryComponent implements OnInit, AfterViewInit, OnDestroy {
+    @ViewChild('gallery', {static: false}) public galleryRef!: GalleryComponent;
+
     public show?: boolean;
 
-    constructor(private ngZone: NgZone, private overlayGalleryService: OverlayGalleryService) {
+    constructor(private ngZone: NgZone, public overlayGalleryService: OverlayGalleryService) {
 
     }
 
     public ngOnInit(): void {
-       
+       this.activate();
     }
 
     public ngAfterViewInit(): void {
-        this.activate();
     }
 
     public activate(): void {

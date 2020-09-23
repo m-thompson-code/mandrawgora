@@ -37,6 +37,7 @@ body {
     font: 400 14px/20px Roboto, "Helvetica Neue", sans-serif;
 }
 
+// source: https://bugs.webkit.org/show_bug.cgi?id=153852 (Kareem Darkazanli 2020-04-01 19:37:31 PDT)
 .js-lock-position {
     position: fixed;
     overflow: hidden;

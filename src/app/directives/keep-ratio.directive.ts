@@ -63,7 +63,26 @@ export class KeepRatioDirective implements OnInit, AfterViewInit {
         return this._basedOnWidth;
     };
 
-    @Output() public keepRatioResized: EventEmitter<void> = new EventEmitter();
+    private _containerElement: HTMLElement | undefined;
+    @Input()
+    public set containerElement(containerElement: HTMLElement | undefined) {
+        this._containerElement = containerElement;
+
+        if (this.element.nativeElement) {
+            this._recalcKeepRatio();
+        }
+    };
+
+    public get containerElement(): HTMLElement | undefined {
+        return this._containerElement;
+    };
+
+    @Output() public keepRatioResized: EventEmitter<{
+        oldWidth: number;
+        oldHeight: number;
+        newWidth: number;
+        newHeight: number;
+    }> = new EventEmitter();
 
     private _debounceTimeout?: number;
 
@@ -159,11 +178,21 @@ export class KeepRatioDirective implements OnInit, AfterViewInit {
             _w = width;
             _h = height;
 
-            element.style.height = `${height}px`;
+            if (this.containerElement) {
+                const _c = this.handleContainer(_h, _w);
+                _w = _c.newWidth;
+                _h = _c.newHeight;
+
+                if (width !== _w) {
+                    element.style.width = `${_w}px`;
+                }
+            }
+
+            element.style.height = `${_h}px`;
         } else {
             element.style.height = ``;
 
-            const rect_height = element.offsetHeight || element.getBoundingClientRect()?.height;
+            const rect_height = element.offsetHeight || element.getBoundingClientRect()?.height || 0;
             // const rect_width = element.offsetWidth || rect.width;
 
             const height: number = rect_height || 0;
@@ -177,15 +206,59 @@ export class KeepRatioDirective implements OnInit, AfterViewInit {
             _w = width;
             _h = height;
 
-            element.style.width = `${width}px`;
-        }
+            if (this.containerElement) {
+                const _c = this.handleContainer(_h, _w);
+                _w = _c.newWidth;
+                _h = _c.newHeight;
 
-        if (this._w === _w || this._h !== _h) {
-            this.keepRatioResized.emit();
+                if (height !== _h) {
+                    element.style.height = `${_h}px`;
+                }
+            }
+
+            element.style.width = `${_w}px`;
         }
 
         this._w = _w;
         this._h = _h;
+
+        if (this._w === _w || this._h !== _h) {
+            this.keepRatioResized.emit({
+                oldWidth: _w,
+                oldHeight: _h,
+                newWidth: _w,
+                newHeight: _h,
+            });
+        }
+    }
+
+    private handleContainer(height: number, width: number): {newWidth: number; newHeight: number} {
+        let newHeight = height;
+        let newWidth = width;
+
+        if (this.containerElement) {
+            const container_height = this.containerElement.offsetHeight || this.containerElement.getBoundingClientRect()?.height || 0;
+            const container_width = this.containerElement.offsetWidth || this.containerElement.getBoundingClientRect()?.width || 0;
+
+            if (container_height && container_height < newHeight) {
+                newWidth = newWidth * container_height / newHeight;
+                newHeight = container_height || 0;
+            }
+
+            if (container_width && container_width < newWidth) {
+                newHeight = newHeight * container_width / newWidth;
+                newWidth = container_width || 0;
+            }
+
+            console.log(this.containerElement);
+            console.log(newHeight, newWidth);
+            // debugger;
+        }
+
+        return {
+            newHeight: newHeight,
+            newWidth: newWidth,
+        };
     }
 
     // @debounce(100)
