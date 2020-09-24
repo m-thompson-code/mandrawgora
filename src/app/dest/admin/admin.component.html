@@ -10,3 +10,17 @@
     <div>File name: {{ uploadFile.filename }}</div>
     <img [src]="uploadFile.src">
 </div>
+
+<div>
+    Sections
+</div>
+
+<mat-label>New Section</mat-label>
+<input matInput type="text" [value]="newSectionText" (input)="updateNewSectionText($event)">
+
+<div class="new-section-form">
+    <mat-form-field class="example-form-field">
+        <mat-label>New Section</mat-label>
+        <input matInput type="text" [value]="newSectionText" (input)="updateNewSectionText($event)">
+      </mat-form-field>
+</div>

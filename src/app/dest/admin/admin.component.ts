@@ -24,6 +24,8 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
 
     public uploadFiles: UploadFile[] = [];
 
+    public newSectionText: string = '';
+
     constructor(private router: Router, private firestoreService: FirestoreService, 
         private storageService: StorageService) {
     }
@@ -128,6 +130,10 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
                 this.firestoreService.saveFile(uploadMetadata.url, filename, undefined);
             });
         }
+    }
+
+    public updateNewSectionText(event: any): void {
+        this.newSectionText = event?.target?.value || '';
     }
 
     public ngOnDestroy(): void {
