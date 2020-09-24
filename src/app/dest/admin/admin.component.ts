@@ -8,10 +8,10 @@ import { StorageService } from '@app/services/storage.service';
 import { FileMetadata, FirestoreService } from '@app/services/firestore.service';
 import { FirebaseService } from '@app/services/firebase.service';
 
-export interface UploadFile {
-    file: File;
-    filename: string;
-    src: string | ArrayBuffer | null;
+import { UploadFile } from '@app/components/uploader/uploader.component';
+
+export interface PendingUploadFile extends UploadFile {
+    src: string | ArrayBuffer | null | undefined;
 }
 
 @Component({
@@ -20,11 +20,10 @@ export interface UploadFile {
     styleUrls: ['./admin.component.scss']
 })
 export class AdminComponent implements AfterViewInit, OnDestroy {
-    public dragover?: boolean;
-
-    public uploadFiles: UploadFile[] = [];
+    public pendingUploadFiles: PendingUploadFile[] = [];
 
     public newSectionText: string = '';
+    public newSectionError?: string = '';
 
     constructor(private router: Router, private firestoreService: FirestoreService, 
         private storageService: StorageService) {
@@ -34,89 +33,83 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
         // pass
     }
 
-    
-    public handleFileInputChange(event: any): void {
-        console.log(event);
+    // public handleFileInputChange(event: any): void {
+    //     console.log(event);
 
-        const _t = event?.target as HTMLInputElement;
+    //     const _t = event?.target as HTMLInputElement;
 
-        if (!_t || !_t.files || !_t.files.length) {
-            console.error("Unexpected missing files from event");
-            return;
-        }
+    //     if (!_t || !_t.files || !_t.files.length) {
+    //         console.error("Unexpected missing files from event");
+    //         return;
+    //     }
 
-        const files = _t.files;
+    //     const files = _t.files;
 
-        this._handleFileList(files);
-    }
+    //     this._handleFileList(files);
+    // }
 
-    public handleFileInputDrop(event: any): void {
-        console.log(event);
+    // public handleFileInputDrop(event: any): void {
+    //     console.log(event);
 
-        event?.stopPropagation();
-        event?.preventDefault();
+    //     event?.stopPropagation();
+    //     event?.preventDefault();
 
-        const _d = event?.dataTransfer as DataTransfer;
+    //     const _d = event?.dataTransfer as DataTransfer;
 
-        if (!_d || !_d.files || !_d.files.length) {
-            console.error("Unexpected missing files from event");
-            return;
-        }
+    //     if (!_d || !_d.files || !_d.files.length) {
+    //         console.error("Unexpected missing files from event");
+    //         return;
+    //     }
         
-        const files = _d.files;
+    //     const files = _d.files;
 
-        this._handleFileList(files);
+    //     this._handleFileList(files);
 
-        this.dragover = false;
-    }
+    //     this.dragover = false;
+    // }
 
-    public handleDragover(event: any): void {
-        console.log(event);
+    // public handleDragover(event: any): void {
+    //     console.log(event);
 
-        event?.stopPropagation();
-        event?.preventDefault();
+    //     event?.stopPropagation();
+    //     event?.preventDefault();
 
-        if (!event || !event.dataTransfer) {
-            return;
-        }
+    //     if (!event || !event.dataTransfer) {
+    //         return;
+    //     }
         
-        // Style the drag-and-drop as a "copy file" operation.
-        event.dataTransfer.dropEffect = 'copy';
+    //     // Style the drag-and-drop as a "copy file" operation.
+    //     event.dataTransfer.dropEffect = 'copy';
 
-        this.dragover = true;
-    }
+    //     this.dragover = true;
+    // }
     
-    public handleDragend(event: any): void {
-        console.log(event);
+    // public handleDragend(event: any): void {
+    //     console.log(event);
 
-        event?.stopPropagation();
-        event?.preventDefault();
+    //     event?.stopPropagation();
+    //     event?.preventDefault();
 
-        this.dragover = false;
-    }
+    //     this.dragover = false;
+    // }
 
-    private _handleFileList(fileList: FileList): void {
-        if (!fileList) {
-            console.error("Unexpected missing files from Filelist");
-            return;
-        }
+    public handleFilesUploaded(uploadFiles: UploadFile[]): void {
+        for (let i = 0; i < uploadFiles.length; i++) {
+            const uploadFile = uploadFiles[i];
 
-        for (let i = 0; i < fileList.length; i++) {
-            const file = fileList[i];
+            const file = uploadFile.file;
+            const filename = uploadFile.filename;
 
-            const reader = new FileReader();
 
-            console.log(file);
-
-            const filename = (file.name || '').toLowerCase();
-
-            const _file: UploadFile = {
+            const _file: PendingUploadFile = {
                 file: file,
                 filename: filename,
                 src: null,
             };
 
-            this.uploadFiles.push(_file);
+            this.pendingUploadFiles.push(_file);
+
+            const reader = new FileReader();
 
             reader.onload = function (e) {
                 // get loaded data and render thumbnail.
@@ -126,9 +119,11 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
             // read the image file as a data URL.
             reader.readAsDataURL(file);
 
-            this.storageService.uploadFile(file, filename).then(uploadMetadata => {
-                this.firestoreService.saveFile(uploadMetadata.url, filename, undefined);
-            });
+            
+
+            // this.storageService.uploadFile(file, filename).then(uploadMetadata => {
+            //     this.firestoreService.saveFile(uploadMetadata.url, filename, undefined);
+            // });
         }
     }
 

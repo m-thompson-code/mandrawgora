@@ -19,7 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatRippleModule } from '@angular/material/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
-
+import { UploaderModule } from '@app/components/uploader';
 
 @NgModule({
     declarations: [
@@ -40,6 +40,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 
         MatRippleModule,
         DragDropModule,
+
+        UploaderModule,
     ],
     providers: [
         StorageService,

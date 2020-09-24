@@ -11,11 +11,11 @@ import { LoaderService } from '@app/services/loader.service';
 import { GalleryComponent } from '@app/components/gallery/gallery.component';
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 
-export interface UploadFile {
-    file: File;
-    filename: string;
-    src: string | ArrayBuffer | null | undefined;
-}
+// export interface UploadFile {
+//     file: File;
+//     filename: string;
+//     src: string | ArrayBuffer | null | undefined;
+// }
 
 @Component({
     selector: 'home',

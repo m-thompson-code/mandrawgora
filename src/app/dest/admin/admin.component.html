@@ -1,26 +1,42 @@
-<label for="file-input" [class]="'file-input-label' + (dragover ? ' on-drag' : '')" (dragover)="handleDragover($event)" (dragleave)="handleDragend($event)" (drop)="handleFileInputDrop($event)">Choose a file</label>
-<input class="file-input" type="file" id="file-input" name="file-input" accept=".jpg, .jpeg, .png" multiple 
-    (change)="handleFileInputChange($event)" (dragover)="handleDragover($event)" (dragleave)="handleDragend($event)" (drop)="handleFileInputDrop($event)">
+<div class="upload-panel margin-bottom">
+    <moo-uploader (filesUploaded)="handleFilesUploaded($event)"></moo-uploader>
 
-<div>
-    DRAGOVER: {{ dragover }}
+    <div *ngFor="let pendingUploadFile of pendingUploadFiles">
+        <div>File name: {{ pendingUploadFile.filename }}</div>
+        <img [src]="pendingUploadFile.src">
+    </div>
 </div>
 
-<div *ngFor="let uploadFile of uploadFiles">
-    <div>File name: {{ uploadFile.filename }}</div>
-    <img [src]="uploadFile.src">
-</div>
+<div class="sections-panel margin-bottom">
+    <div>
+        Sections
+    </div>
+    <!-- 
+    <mat-label>New Section</mat-label>
+    <input matInput type="text" [value]="newSectionText" (input)="updateNewSectionText($event)">
+    
+    <div class="new-section-form">
+        <mat-form-field class="example-form-field">
+            <mat-label>New Section</mat-label>
+            <input matInput type="text" [value]="newSectionText" (input)="updateNewSectionText($event)">
+        </mat-form-field>
+    </div> -->
+    
+    <form class="example-form">
+        <mat-form-field class="example-full-width">
+            <mat-label>New Section</mat-label>
+            <!-- <input matInput placeholder="Ex. "> -->
+            <input matInput type="text" [value]="newSectionText" (input)="updateNewSectionText($event)">
+            
+            <mat-error *ngIf="newSectionError">
+                {{ newSectionError }}
+            </mat-error>
+        </mat-form-field>
 
-<div>
-    Sections
-</div>
-
-<mat-label>New Section</mat-label>
-<input matInput type="text" [value]="newSectionText" (input)="updateNewSectionText($event)">
-
-<div class="new-section-form">
-    <mat-form-field class="example-form-field">
-        <mat-label>New Section</mat-label>
-        <input matInput type="text" [value]="newSectionText" (input)="updateNewSectionText($event)">
-      </mat-form-field>
+        <div class="delete-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+            </svg>
+        </div>
+    </form>
 </div>
