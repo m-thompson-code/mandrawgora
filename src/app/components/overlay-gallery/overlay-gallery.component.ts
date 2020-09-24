@@ -16,6 +16,10 @@ export class OverlayGalleryComponent implements OnInit, AfterViewInit, OnDestroy
 
     public show?: boolean;
 
+    private _keyDownFunc?: (event: KeyboardEvent) => void;
+
+    private _timeout?: number;
+
     constructor(private ngZone: NgZone, public overlayGalleryService: OverlayGalleryService) {
 
     }
@@ -33,24 +37,45 @@ export class OverlayGalleryComponent implements OnInit, AfterViewInit, OnDestroy
         const offsetY = window.pageYOffset;
         document.body.style.top = `${-offsetY}px`;
         document.body.classList.add('js-lock-position');
+
+        this.bindKeyDownListeners();
+    }
+
+    private bindKeyDownListeners(): void {
+        this._keyDownFunc = (event: KeyboardEvent) => {
+            console.log(event);
+            if (event.key === 'ArrowLeft') {
+                this.galleryRef.decreaseIndex();
+            } else if (event.key === 'ArrowRight') {
+                this.galleryRef.increaseIndex();
+            } else if (event.key === 'Escape') {
+                this.deactivate();
+            }
+        }
+		
+		document.addEventListener('keydown', this._keyDownFunc);
     }
     
     public deactivate(): void {
         this.show = false;
 
-        setTimeout(() => {
+        this._timeout = window.setTimeout(() => {
             const offsetY = Math.abs(parseInt(document.body.style.top || "0", 10));
             document.body.classList.remove('js-lock-position');
             document.body.style.removeProperty('top');
             window.scrollTo(0, offsetY || 0);
     
-            setTimeout(() => {
+            this._timeout = window.setTimeout(() => {
                 this.overlayGalleryService.active = false;
             }, 0);
         }, 200);
     }
 
     public ngOnDestroy(): void {
-        
+        if (this._keyDownFunc) {
+            document.removeEventListener('keydown', this._keyDownFunc);
+        }
+
+        clearTimeout(this._timeout);
     }
 }

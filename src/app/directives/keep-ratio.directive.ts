@@ -249,10 +249,6 @@ export class KeepRatioDirective implements OnInit, AfterViewInit {
                 newHeight = newHeight * container_width / newWidth;
                 newWidth = container_width || 0;
             }
-
-            console.log(this.containerElement);
-            console.log(newHeight, newWidth);
-            // debugger;
         }
 
         return {
