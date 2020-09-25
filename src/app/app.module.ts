@@ -1,5 +1,5 @@
 import { BrowserModule, HammerGestureConfig, HAMMER_GESTURE_CONFIG, HammerModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { Injectable, NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -8,11 +8,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatRippleModule } from '@angular/material/core';
 
 import { AnalyticsService } from '@app/services/analytics.service';
-import { StorageService } from './services/storage.service';
-import { FirestoreService } from './services/firestore.service';
-import { FirebaseService } from './services/firebase.service';
-import { LoaderService } from './services/loader.service';
-import { OverlayGalleryService } from './services/overlay-gallery.service';
+import { StorageService } from '@app/services/storage.service';
+import { AuthService } from '@app/services/auth.service';
+import { FirestoreService } from '@app/services/firestore.service';
+import { FirebaseService } from '@app/services/firebase.service';
+import { LoaderService } from '@app/services/loader.service';
+import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 
 import { DirectivesModule } from '@app/directives';
 
@@ -22,6 +23,7 @@ import { OverlayGalleryModule } from '@app/components/overlay-gallery';
 
 import * as hammer from 'hammerjs';
 
+@Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
     overrides = <any> {
         pinch: { enable: false },
@@ -54,6 +56,7 @@ export class MyHammerConfig extends HammerGestureConfig {
     providers: [
         AnalyticsService,
         StorageService,
+        AuthService,
         FirestoreService,
         FirebaseService,
         LoaderService,

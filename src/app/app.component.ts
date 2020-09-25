@@ -1,21 +1,23 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
+
 import { Subscription } from 'rxjs';
 
 import { environment } from '@environment';
 
 import { AnalyticsService } from '@app/services/analytics.service';
-import { StorageService } from './services/storage.service';
-import { FileMetadata, FirestoreService } from './services/firestore.service';
-import { FirebaseService } from './services/firebase.service';
-import { LoaderService } from './services/loader.service';
-import { OverlayGalleryService } from './services/overlay-gallery.service';
+// import { StorageService } from '@app/services/storage.service';
+// import { FileMetadata, FirestoreService } from '@app/services/firestore.service';
+import { FirebaseService } from '@app/services/firebase.service';
+import { LoaderService } from '@app/services/loader.service';
+import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
+import { AuthService } from '@app/services/auth.service';
 
-export interface UploadFile {
-    file: File;
-    filename: string;
-    src: string | ArrayBuffer | null;
-}
+// export interface UploadFile {
+//     file: File;
+//     filename: string;
+//     src: string | ArrayBuffer | null;
+// }
 
 @Component({
     selector: 'app-root',
@@ -23,15 +25,23 @@ export interface UploadFile {
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
+    public initalized: boolean = false;
+
     private _routerEventsSub?: Subscription;
     constructor(private router: Router, public firebaseService: FirebaseService, private analyticsService: AnalyticsService, 
-        public loaderService: LoaderService, public overlayGalleryService: OverlayGalleryService) {
+        public loaderService: LoaderService, public overlayGalleryService: OverlayGalleryService, private authService: AuthService) {
     }
 
     public ngAfterViewInit(): void {
         // const updateResponsiveService = () => {
         //     this.responsiveService.responsiveMetadata = this.responsiveService.getResponsiveType();
         // }
+
+        
+        this.initalized = false;
+        void this._initalize().then(() => {
+            this.initalized = true;
+        });
 
         // Handle getting screen height css variables
         const appHeight = () => {
@@ -66,6 +76,17 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         });
     }
 
+    private _initalize(): Promise<void> {
+        const promises: Promise<any>[] = [];
+
+        // Check if any current user is signed in
+        promises.push(this.authService.handleAuth());
+
+        return Promise.all(promises).then(() => {
+            // pass
+        });
+    }
+
 	private _checkRouterEvent(routerEvent: RouterEvent): void {
 		// Tracking page views
 		if (routerEvent instanceof NavigationEnd) {
@@ -83,6 +104,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
+        this.authService?.firebaseAuthUnSub && this.authService.firebaseAuthUnSub();
+
         this._routerEventsSub?.unsubscribe();
     }
 }

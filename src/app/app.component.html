@@ -1,7 +1,7 @@
 <moo-overlay-gallery *ngIf="overlayGalleryService.active"></moo-overlay-gallery>
 
-<mat-progress-bar *ngIf="loaderService._showLoader"
+<mat-progress-bar *ngIf="loaderService._showLoader || !initalized" 
     mode="indeterminate">
 </mat-progress-bar>
 
-<router-outlet></router-outlet>
+<router-outlet *ngIf="initalized"></router-outlet>
