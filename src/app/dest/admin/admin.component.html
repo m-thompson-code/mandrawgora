@@ -22,8 +22,8 @@
         </mat-form-field>
     </div> -->
     
-    <form class="example-form">
-        <mat-form-field class="example-full-width">
+    <div class="new-section-container">
+        <mat-form-field>
             <mat-label>New Section</mat-label>
             <!-- <input matInput placeholder="Ex. "> -->
             <input matInput type="text" [value]="newSectionText" (input)="updateNewSectionText($event)">
@@ -33,10 +33,24 @@
             </mat-error>
         </mat-form-field>
 
-        <div class="delete-icon">
+        <div class="delete-icon" matRipple [matRippleUnbounded]="false">
             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                 <path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
             </svg>
         </div>
-    </form>
+    </div>
+
+    <div cdkDropList class="sections" (cdkDropListDropped)="dropSection($event)">
+        <div *ngFor="let section of sections" class="section mat-app-background" cdkDrag>
+            <div class="section-drop-placeholder" *cdkDragPlaceholder></div>
+
+            <div class="section-text">{{ section.text }}</div>
+
+            <div class="delete-icon" matRipple [matRippleUnbounded]="false">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+            </div>
+        </div>
+    </div>
 </div>

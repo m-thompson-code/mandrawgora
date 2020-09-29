@@ -24,6 +24,8 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public panTransformStyle: string = '';
 
+    public dragging: boolean = false;
+
     constructor(private ngZone: NgZone) {
 
     }
@@ -100,6 +102,8 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
         } else {
             this.panTransformStyle = '';
         }
+
+        this.dragging = true;
     }
 
     public panEndHandler(event: any): void {
@@ -122,6 +126,8 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
         setTimeout(() => {
             this.panTransformStyle = '';
         }, 100);
+
+        this.dragging = false;
     }
 
     public ngOnDestroy(): void {

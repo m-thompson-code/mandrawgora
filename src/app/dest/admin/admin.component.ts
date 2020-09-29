@@ -2,6 +2,8 @@ import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+
 import { environment } from '@environment';
 
 import { StorageService } from '@app/services/storage.service';
@@ -9,6 +11,12 @@ import { FileMetadata, FirestoreService } from '@app/services/firestore.service'
 import { FirebaseService } from '@app/services/firebase.service';
 
 import { UploadFile } from '@app/components/uploader/uploader.component';
+
+export interface Section {
+    text: string;
+    slug: string;
+    order: number;
+}
 
 export interface PendingUploadFile extends UploadFile {
     src: string | ArrayBuffer | null | undefined;
@@ -25,73 +33,32 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
     public newSectionText: string = '';
     public newSectionError?: string = '';
 
+    public sections: Section[] = [];
+
     constructor(private router: Router, private firestoreService: FirestoreService, 
         private storageService: StorageService) {
     }
 
     public ngAfterViewInit(): void {
         // pass
+        this.sections = [
+            {
+                text: 'First Section',
+                slug: 'first_section',
+                order: 3,
+            },
+            {
+                text: 'Second Section',
+                slug: 'second_section',
+                order: 2,
+            },
+            {
+                text: 'Third Section',
+                slug: 'third_section',
+                order: 1,
+            },
+        ];
     }
-
-    // public handleFileInputChange(event: any): void {
-    //     console.log(event);
-
-    //     const _t = event?.target as HTMLInputElement;
-
-    //     if (!_t || !_t.files || !_t.files.length) {
-    //         console.error("Unexpected missing files from event");
-    //         return;
-    //     }
-
-    //     const files = _t.files;
-
-    //     this._handleFileList(files);
-    // }
-
-    // public handleFileInputDrop(event: any): void {
-    //     console.log(event);
-
-    //     event?.stopPropagation();
-    //     event?.preventDefault();
-
-    //     const _d = event?.dataTransfer as DataTransfer;
-
-    //     if (!_d || !_d.files || !_d.files.length) {
-    //         console.error("Unexpected missing files from event");
-    //         return;
-    //     }
-        
-    //     const files = _d.files;
-
-    //     this._handleFileList(files);
-
-    //     this.dragover = false;
-    // }
-
-    // public handleDragover(event: any): void {
-    //     console.log(event);
-
-    //     event?.stopPropagation();
-    //     event?.preventDefault();
-
-    //     if (!event || !event.dataTransfer) {
-    //         return;
-    //     }
-        
-    //     // Style the drag-and-drop as a "copy file" operation.
-    //     event.dataTransfer.dropEffect = 'copy';
-
-    //     this.dragover = true;
-    // }
-    
-    // public handleDragend(event: any): void {
-    //     console.log(event);
-
-    //     event?.stopPropagation();
-    //     event?.preventDefault();
-
-    //     this.dragover = false;
-    // }
 
     public handleFilesUploaded(uploadFiles: UploadFile[]): void {
         for (let i = 0; i < uploadFiles.length; i++) {
@@ -119,8 +86,6 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
             // read the image file as a data URL.
             reader.readAsDataURL(file);
 
-            
-
             // this.storageService.uploadFile(file, filename).then(uploadMetadata => {
             //     this.firestoreService.saveFile(uploadMetadata.url, filename, undefined);
             // });
@@ -129,6 +94,10 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
 
     public updateNewSectionText(event: any): void {
         this.newSectionText = event?.target?.value || '';
+    }
+
+    public dropSection(event: CdkDragDrop<Section[]>) {
+        moveItemInArray(this.sections, event.previousIndex, event.currentIndex);
     }
 
     public ngOnDestroy(): void {

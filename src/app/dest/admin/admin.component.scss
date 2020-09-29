@@ -1,5 +1,7 @@
 @import 'styles/variables.scss';
 
+$spacing: 32px;
+
 :host {
     display: flex;
     flex-grow: 2;
@@ -7,7 +9,102 @@
 }
 
 .margin-bottom {
-    margin-bottom: 32px;
+    margin-bottom: $spacing;
+}
+
+.new-section-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    mat-form-field {
+        flex-grow: 2;
+    }
+}
+
+.delete-icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 56px;
+    min-width: 56px;
+    height: 56px;
+    min-height: 56px;
+    
+    border-radius: 50%;
+
+    margin-left: $spacing/4;
+
+    cursor: pointer;
+
+    svg {
+        fill: currentColor;
+    }
+}
+
+.sections {
+    display: flex;
+    flex-direction: column;
+
+    // border-top: solid 1px #121212;
+}
+
+.section {
+    min-height: 56px;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    border-bottom: solid 1px #121212;
+    box-sizing: border-box;
+
+    cursor: grab;
+
+    .section-text {
+        flex-grow: 2;
+        padding: 0 $spacing/4;
+        box-sizing: border-box;
+    }
+}
+
+.section-drop-placeholder {
+    height: 56px;
+    width: 100%;
+
+    border: dashed 1px black;
+    background: #121212;
+    background: linear-gradient(45deg, #121212, transparent);
+}
+
+.cdk-drag-preview {
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+
+    box-sizing: border-box;
+    // border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+    
+    cursor: grabbing;
+}
+
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drop-list-dragging {
+    cursor: grabbing;
+}
+
+.cdk-drop-list-dragging *:not(.cdk-drag-placeholder) {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+
+    cursor: grabbing;
 }
 
 @mixin mobile-padding($padding) {
