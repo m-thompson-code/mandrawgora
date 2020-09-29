@@ -30,7 +30,8 @@
     animation-name: overlay-gallery-animation-show;
     animation-duration: 200ms;
 
-    background-color: rgba(#303030, .975);
+    background: rgba(#303030, .975);
+    background: linear-gradient(#303030, rgba(#303030, .975));
 }
 .overlay.hide {
     animation-name: overlay-gallery-animation-hide;
