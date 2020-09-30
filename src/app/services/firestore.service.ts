@@ -106,6 +106,55 @@ export class FirestoreService {
     }
 
     public getSections(): Promise<Section[]> {
+        const docRef = firebase.firestore().collection('sections').doc('sections-data');
 
+        const sections: Section[] = [];
+
+        return docRef.get().then(_d => {
+            if (!_d || !_d.exists) {
+                return [];
+            }
+
+            const _datas = _d.data();
+
+            if (!_datas || !Array.isArray(_datas)) {
+                return [];
+            }
+
+            for (const _data of _datas) {
+                const text = ('' + _data.text) || '';
+                const slug = ('' + _data.slug) || '';
+                const order = +_data.order || 0;
+
+                sections.push({
+                    text: text,
+                    slug: slug,
+                    order: order,
+                });
+            }
+
+            return sections;
+        });
+    }
+
+    public setSections(sections: Section[]): Promise<void> {
+        const _sections: Section[] = [];
+        for (let i = 0; i < sections.length; i++) {
+            const section = sections[i];
+
+            const text = ('' + section.text) || '';
+            const slug = ('' + section.slug) || '';
+            const order = sections.length - i;
+
+            _sections.push({
+                text: text,
+                slug: slug,
+                order: order,
+            });
+        }
+
+        const docRef = firebase.firestore().collection('sections').doc('sections-data');
+
+        return docRef.set(_sections);
     }
 }

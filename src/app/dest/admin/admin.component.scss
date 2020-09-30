@@ -8,8 +8,43 @@ $spacing: 32px;
     flex-direction: column;
 }
 
+.header {
+    font-size: 24px;
+    line-height: 1.4;
+}
+
 .margin-bottom {
     margin-bottom: $spacing;
+}
+
+@keyframes error-show {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.error-container {
+    position: absolute;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+
+    color: #f44336;// TODO: figure out how to get this hex value through Angular Material
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.125;
+
+    margin-top: 13px;
+
+    .error {
+        animation: error-show 400ms linear;
+        animation: error-show 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
 }
 
 .new-section-container {
@@ -19,6 +54,7 @@ $spacing: 32px;
 
     mat-form-field {
         flex-grow: 2;
+        // margin: 0 $spacing/4;
     }
 }
 
@@ -40,6 +76,44 @@ $spacing: 32px;
 
     svg {
         fill: currentColor;
+    }
+}
+
+.header-container {
+    display: flex;
+
+    .expand-icon {
+        position: relative;
+        top: 0;
+        left: 0;
+
+        height: 33px;
+        width: 33px;
+        margin-right: $spacing/4;
+
+        svg {
+            height: 100%;
+            width: 100%;
+
+            transition: all 400ms linear;
+            // transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 400ms cubic-bezier(0.61, 0.01, 0.28, 1.26);
+        }
+        svg.active {
+            transform: rotate(90deg);
+        }
+
+        .svg-overlap {
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            transition: all 400ms linear;
+            transition: all 400ms cubic-bezier(0.61, 0.01, 0.28, 1.26);
+        }
+        .svg-overlap.active {
+            transform: rotate(180deg);
+        }
     }
 }
 
@@ -65,7 +139,7 @@ $spacing: 32px;
 
     .section-text {
         flex-grow: 2;
-        padding: 0 $spacing/4;
+        // padding: 0 $spacing/4;
         box-sizing: border-box;
     }
 }
@@ -108,7 +182,7 @@ $spacing: 32px;
 }
 
 @mixin mobile-padding($padding) {
-    .main {
+    :host {
         padding-left: $padding;
         padding-right: $padding;
     }

@@ -1,0 +1,5 @@
+<div [class]="'expander' + (expanded ? ' expanded' : '')" [style.maxHeight]="maxHeight || 'none'">
+    <div #content class="content">
+        <ng-content></ng-content>
+    </div>
+</div>

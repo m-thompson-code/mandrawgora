@@ -168,6 +168,9 @@ div, a {
     }
 }
 
+svg {
+    fill: currentColor;
+}
 
 @media only screen and (max-width: $desktop_width) {
     // pass

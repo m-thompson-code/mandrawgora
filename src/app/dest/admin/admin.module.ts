@@ -15,11 +15,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatChipsModule } from '@angular/material/chips';
+
 
 import { MatRippleModule } from '@angular/material/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { UploaderModule } from '@app/components/uploader';
+import { ExpandableModule } from '@app/components/expandable';
 
 @NgModule({
     declarations: [
@@ -37,11 +40,13 @@ import { UploaderModule } from '@app/components/uploader';
         MatInputModule,
         MatProgressBarModule,
         MatSelectModule,
+        MatChipsModule,
 
         MatRippleModule,
         DragDropModule,
 
         UploaderModule,
+        ExpandableModule,
     ],
     providers: [
         StorageService,
