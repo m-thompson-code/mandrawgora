@@ -7,16 +7,10 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { environment } from '@environment';
 
 import { StorageService } from '@app/services/storage.service';
-import { FileMetadata, FirestoreService } from '@app/services/firestore.service';
+import { FileMetadata, Section, FirestoreService } from '@app/services/firestore.service';
 import { FirebaseService } from '@app/services/firebase.service';
 
 import { UploadFile } from '@app/components/uploader/uploader.component';
-
-export interface Section {
-    text: string;
-    slug: string;
-    order: number;
-}
 
 export interface PendingUploadFile extends UploadFile {
     src: string | ArrayBuffer | null | undefined;

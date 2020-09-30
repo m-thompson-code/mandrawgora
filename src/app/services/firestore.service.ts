@@ -5,6 +5,12 @@ import { environment } from '@environment';
 
 import * as firebase from 'firebase/app';
 
+export interface Section {
+    text: string;
+    slug: string;
+    order: number;
+}
+
 export interface FileMetadata {
     url: string;
     filename: string;
@@ -97,5 +103,9 @@ export class FirestoreService {
 
             return error;
         });
+    }
+
+    public getSections(): Promise<Section[]> {
+
     }
 }
