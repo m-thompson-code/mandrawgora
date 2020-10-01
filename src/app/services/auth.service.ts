@@ -21,9 +21,9 @@ export class AuthService {
             this.firebaseAuthUnSub = firebase.auth().onAuthStateChanged(user => {
                 this.ngZone.run(() => {
         
-                    if (environment.env !== 'prod') {
+                    // if (environment.env !== 'prod') {
                         console.log(' ~ AuthService: user', user);
-                    }
+                    // }
 
                     this.user = user;
 
