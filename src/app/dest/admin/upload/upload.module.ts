@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { AdminRoutingModule } from './admin-routing.module';
-import { AdminComponent } from './admin.component';
+import { UploadRoutingModule } from './upload-routing.module';
+import { UploadComponent } from './upload.component';
 
 import { StorageService } from '@app/services/storage.service';
 import { FirestoreService } from '@app/services/firestore.service';
@@ -17,7 +17,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSelectModule } from '@angular/material/select';
 import { MatChipsModule } from '@angular/material/chips';
 
-
 import { MatRippleModule } from '@angular/material/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -26,12 +25,12 @@ import { ExpandableModule } from '@app/components/expandable';
 
 @NgModule({
     declarations: [
-        AdminComponent
+        UploadComponent
     ],
     imports: [
         CommonModule,
         
-        AdminRoutingModule,
+        UploadRoutingModule,
 
         DirectivesModule,
 
@@ -49,7 +48,10 @@ import { ExpandableModule } from '@app/components/expandable';
         ExpandableModule,
     ],
     providers: [
+        StorageService,
+        FirestoreService,
+        FirebaseService,
     ],
-    bootstrap: [AdminComponent]
+    bootstrap: [UploadComponent]
 })
-export class AdminModule { }
+export class UploadModule { }

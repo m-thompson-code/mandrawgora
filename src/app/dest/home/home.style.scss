@@ -107,6 +107,16 @@
 
     .section {
         cursor: pointer;
+
+        .section-text.hide {
+            visibility: hidden;
+        }
+        .section-text.show {
+            visibility: visible;
+
+            animation: fade-in-from-top 400ms linear;
+            animation: fade-in-from-top 400ms cubic-bezier(0.61, 0.01, 0.28, 1.26);
+        }
     }
     .section.selected {
         text-decoration: underline;
@@ -116,6 +126,9 @@
 .mobile-selected-section {
     font-size: 20px;
     padding-bottom: 16px;
+
+    animation: fade-in-from-top 400ms linear;
+    animation: fade-in-from-top 400ms cubic-bezier(0.61, 0.01, 0.28, 1.26);
 
     display: none;
 }
@@ -147,11 +160,16 @@ $imagePadding: 12px;
 }
 
 .image {
-    position: relative;
+    position: relative;// Required for IE support (polyfill for cover-fit makes .cover-fit position absolute
     overflow: hidden;
 
     padding: $imagePadding/2;
     box-sizing: border-box;
+
+    .image-wrapper {
+        height: 100%;
+        width: 100%;
+    }
 
     img {
         height: 100%;

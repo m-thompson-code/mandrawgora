@@ -8,10 +8,10 @@ const routes: Routes = [
         runGuardsAndResolvers: 'always',
     },
     {
-      path: 'admin',
-      loadChildren: () => import('./dest/admin/admin.module').then(m => m.AdminModule),
-      runGuardsAndResolvers: 'always',
-  },
+        path: 'admin',
+        loadChildren: () => import('./dest/admin/admin.module').then(m => m.AdminModule),
+        runGuardsAndResolvers: 'always',
+    },
     {
         path: ':section',
         loadChildren: () => import('./dest/home/home.module').then(m => m.HomeModule),

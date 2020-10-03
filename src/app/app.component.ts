@@ -21,13 +21,14 @@ import { AuthService } from '@app/services/auth.service';
 
 @Component({
     selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.scss']
+    templateUrl: './app.template.html',
+    styleUrls: ['./app.style.scss']
 })
 export class AppComponent implements AfterViewInit, OnDestroy {
     public initalized: boolean = false;
 
     private _routerEventsSub?: Subscription;
+    private _onResize?: () => void;
     constructor(private router: Router, public firebaseService: FirebaseService, private analyticsService: AnalyticsService, 
         public loaderService: LoaderService, public overlayGalleryService: OverlayGalleryService, private authService: AuthService) {
     }
@@ -61,13 +62,13 @@ export class AppComponent implements AfterViewInit, OnDestroy {
             }
         }
 
-        const onResize = () => {
+        this._onResize = () => {
             appHeight();
             // updateResponsiveService();
         }
 
-        window.addEventListener('resize', onResize);
-        window.addEventListener('orientationchange', onResize);
+        window.addEventListener('resize', this._onResize);
+        window.addEventListener('orientationchange', this._onResize);
         
         appHeight();
 
@@ -107,5 +108,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         this.authService?.firebaseAuthUnSub && this.authService.firebaseAuthUnSub();
 
         this._routerEventsSub?.unsubscribe();
+
+        if (this._onResize) {
+			window.removeEventListener('resize', this._onResize);
+			window.removeEventListener('orientationchange', this._onResize);
+		}
     }
 }

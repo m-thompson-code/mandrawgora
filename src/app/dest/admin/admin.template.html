@@ -1,11 +1,4 @@
-<div class="upload-panel margin-bottom">
-    <moo-uploader (filesUploaded)="handleFilesUploaded($event)"></moo-uploader>
-
-    <div *ngFor="let pendingUploadFile of pendingUploadFiles">
-        <div>File name: {{ pendingUploadFile.filename }}</div>
-        <img [src]="pendingUploadFile.src">
-    </div>
-</div>
+<router-outlet></router-outlet>
 
 <div class="panel margin-bottom">
     <div class="header-container" (click)="expandSections = !expandSections" matRipple [matRippleUnbounded]="false">

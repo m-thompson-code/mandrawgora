@@ -117,11 +117,11 @@ export class FirestoreService {
 
             const _datas = _d.data();
 
-            if (!_datas || !Array.isArray(_datas)) {
+            if (!_datas || !_datas.sections || !Array.isArray(_datas.sections)) {
                 return [];
             }
 
-            for (const _data of _datas) {
+            for (const _data of _datas.sections) {
                 const text = ('' + _data.text) || '';
                 const slug = ('' + _data.slug) || '';
                 const order = +_data.order || 0;
@@ -154,7 +154,10 @@ export class FirestoreService {
         }
 
         const docRef = firebase.firestore().collection('sections').doc('sections-data');
-
-        return docRef.set(_sections);
+        console.log(_sections);
+        return docRef.set({
+            updatedAt: Date.now(),
+            sections: _sections,
+        });
     }
 }

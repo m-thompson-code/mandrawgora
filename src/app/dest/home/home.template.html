@@ -12,8 +12,10 @@
     </div>
     
     <div [class]="'sections' + (showTopNavSections ? ' show' : ' hide')" [style.max-height]="(sections.length * 49) + 'px'">
-        <div *ngFor="let section of sections" matRipple [matRippleUnbounded]="false" class="section" (click)="setSelectedSection(section);setSections(false)">
-            {{ section }}
+        <div *ngFor="let section of sections;let i = index" matRipple [matRippleUnbounded]="false" class="section" (click)="setSelectedSection(section);setSections(false)">
+            <div [class]="'section-text' + (i < revealSectionCount ? ' show' : ' hide')">
+                {{ section.text }}
+            </div>
         </div>
     </div>
 </div>
@@ -24,8 +26,10 @@
     </div>
     
     <div class="sections">
-        <div *ngFor="let section of sections" [class]="'section' + (selectedSection === section ? ' selected' : '')" (click)="setSelectedSection(section);setSections(false)">
-            {{ section }}
+        <div *ngFor="let section of sections; let i = index" [class]="'section' + (selectedSection === section ? ' selected' : '')" (click)="setSelectedSection(section);setSections(false)">
+            <div [class]="'section-text' + (i < revealSectionCount ? ' show' : ' hide')">
+                {{ section.text }}
+            </div>
         </div>
     </div>
 </div>
@@ -42,14 +46,14 @@
 </div> -->
 
 <div class="main">
-    <div class="mobile-selected-section">
-        {{ selectedSection }}
+    <div *ngIf="selectedSection" class="mobile-selected-section">
+        {{ selectedSection.text }}
     </div>
 
     <div class="images-wrapper">
         <div class="container">
-            <div (click)="activateOverlay(i)" *ngFor="let fileMetadata of files; let i = index" class="image responsive-width" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">
-                <img *ngIf="i < revealImageCount" class="cover-fit" [src]="fileMetadata.url">
+            <div matRipple [matRippleUnbounded]="false" (click)="activateOverlay(i)" *ngFor="let fileMetadata of files; let i = index" class="image responsive-width" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">
+                <img *ngIf="i < revealImageCount" class="responsive-width cover-fit" [src]="fileMetadata.url">
             </div>
         </div>
     </div>

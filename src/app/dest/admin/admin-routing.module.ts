@@ -7,7 +7,24 @@ const routes: Routes = [
         path: '',
         component: AdminComponent,
         runGuardsAndResolvers: 'always',
-    }
+        children: [
+            {
+                path: '',
+                loadChildren: () => import('./menu/menu.module').then(m => m.MenuModule),
+                runGuardsAndResolvers: 'always',
+            },
+            {
+                path: 'upload',
+                loadChildren: () => import('./upload/upload.module').then(m => m.UploadModule),
+                runGuardsAndResolvers: 'always',
+            },
+            {
+                path: 'management',
+                loadChildren: () => import('./upload/upload.module').then(m => m.UploadModule),
+                runGuardsAndResolvers: 'always',
+            },
+        ],
+    },
 ];
 
 @NgModule({

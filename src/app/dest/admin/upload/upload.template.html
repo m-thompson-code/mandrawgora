@@ -1,0 +1,8 @@
+<div class="upload-panel margin-bottom">
+    <moo-uploader (filesUploaded)="handleFilesUploaded($event)"></moo-uploader>
+
+    <div *ngFor="let pendingUploadFile of pendingUploadFiles">
+        <div>File name: {{ pendingUploadFile.filename }}</div>
+        <img [src]="pendingUploadFile.src">
+    </div>
+</div>

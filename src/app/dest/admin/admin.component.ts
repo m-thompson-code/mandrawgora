@@ -24,12 +24,10 @@ export interface SectionFilter extends Section {
 
 @Component({
     selector: 'admin',
-    templateUrl: './admin.component.html',
-    styleUrls: ['./admin.component.scss']
+    templateUrl: './admin.template.html',
+    styleUrls: ['./admin.style.scss']
 })
 export class AdminComponent implements AfterViewInit, OnDestroy {
-    public pendingUploadFiles: PendingUploadFile[] = [];
-
     public newSectionText: string = '';
     public newSectionError: string = '';
 
@@ -68,37 +66,37 @@ export class AdminComponent implements AfterViewInit, OnDestroy {
         this.getSectionFilters();
     }
 
-    public handleFilesUploaded(uploadFiles: UploadFile[]): void {
-        for (let i = 0; i < uploadFiles.length; i++) {
-            const uploadFile = uploadFiles[i];
+    // public handleFilesUploaded(uploadFiles: UploadFile[]): void {
+    //     for (let i = 0; i < uploadFiles.length; i++) {
+    //         const uploadFile = uploadFiles[i];
 
-            const file = uploadFile.file;
-            const filename = uploadFile.filename;
+    //         const file = uploadFile.file;
+    //         const filename = uploadFile.filename;
 
 
-            const _file: PendingUploadFile = {
-                file: file,
-                filename: filename,
-                src: null,
-            };
+    //         const _file: PendingUploadFile = {
+    //             file: file,
+    //             filename: filename,
+    //             src: null,
+    //         };
 
-            this.pendingUploadFiles.push(_file);
+    //         this.pendingUploadFiles.push(_file);
 
-            const reader = new FileReader();
+    //         const reader = new FileReader();
 
-            reader.onload = function (e) {
-                // get loaded data and render thumbnail.
-                _file.src = e?.target?.result || reader.result || null;
-            };
+    //         reader.onload = function (e) {
+    //             // get loaded data and render thumbnail.
+    //             _file.src = e?.target?.result || reader.result || null;
+    //         };
         
-            // read the image file as a data URL.
-            reader.readAsDataURL(file);
+    //         // read the image file as a data URL.
+    //         reader.readAsDataURL(file);
 
-            // this.storageService.uploadFile(file, filename).then(uploadMetadata => {
-            //     this.firestoreService.saveFile(uploadMetadata.url, filename, undefined);
-            // });
-        }
-    }
+    //         // this.storageService.uploadFile(file, filename).then(uploadMetadata => {
+    //         //     this.firestoreService.saveFile(uploadMetadata.url, filename, undefined);
+    //         // });
+    //     }
+    // }
 
     public updateNewSectionText(event: any): void {
         this.newSectionText = event?.target?.value || '';
