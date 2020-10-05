@@ -1,0 +1,66 @@
+
+<div class="panel margin-bottom">
+    <div class="header-container" (click)="expandSections = !expandSections" matRipple [matRippleUnbounded]="false">
+        <div class="expand-icon">
+            <svg [class]="!expandSections ? 'active' : ''" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/>
+            </svg>
+            <svg [class]="'svg-overlap' + (!expandSections ? ' active' : '')" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/>
+            </svg>
+        </div>
+        
+        <div class="header">
+            Sections
+        </div>
+    </div>
+
+    <moo-expandable [expanded]="expandSections">
+        <div class="new-section-container">
+            <moo-input label="New Section" [value]="newSectionText" [error]="newSectionError" 
+                (valueChanged)="updateNewSectionText($event)"
+                (enterPressed)="addSection()"></moo-input>
+
+            <button mat-raised-button color="primary" (click)="addSection()" [disabled]="loading">ADD</button>
+
+            <!-- <div class="delete-icon" matRipple [matRippleUnbounded]="false">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                </svg>
+            </div> -->
+        </div>
+        <div>Drag n drop to change order</div>
+        <div cdkDropList class="sections" (cdkDropListDropped)="dropSection($event)">
+            <div *ngFor="let section of sections" class="section mat-app-background" cdkDrag>
+                <div class="section-drop-placeholder" *cdkDragPlaceholder></div>
+
+                <div class="section-text">{{ section.text }}</div>
+
+                <div class="icon-container" matRipple [matRippleUnbounded]="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                        <path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <a (click)="save()">SAVE</a>
+        </div>
+    </moo-expandable>
+</div>
+
+<mat-chip-list aria-label="Fish selection" [multiple]="true">
+    <mat-chip *ngFor="let sectionFilter of sectionFilters" 
+        [color]="sectionFilter.noSection ? 'accent' : 'primary'" 
+        (click)="toggleSectionFilter(sectionFilter)" 
+        [selected]="sectionFilter.selected">{{ sectionFilter.text }}</mat-chip>
+    <!-- <mat-chip color="accent" selected>All images</mat-chip>
+    <mat-chip>One fish</mat-chip>
+    <mat-chip>Two fish</mat-chip>
+    <mat-chip selected>Three fish</mat-chip>
+    <mat-chip color="primary">Primary fish</mat-chip>
+    <mat-chip color="accent">Accent fish</mat-chip>
+    <mat-chip color="primary" selected>Primary fish</mat-chip>
+    <mat-chip color="accent" selected>No section</mat-chip> -->
+</mat-chip-list>

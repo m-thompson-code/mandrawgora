@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { UploadRoutingModule } from './upload-routing.module';
-import { UploadComponent } from './upload.component';
+import { ManagementRoutingModule } from './management-routing.module';
+import { ManagementComponent } from './management.component';
 
 import { StorageService } from '@app/services/storage.service';
 import { FirestoreService } from '@app/services/firestore.service';
@@ -15,19 +15,20 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatChipsModule } from '@angular/material/chips';
 
 import { MatRippleModule } from '@angular/material/core';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
+import { ExpandableModule } from '@app/components/expandable';
 import { InputModule } from '@app/components/input';
 import { SelectModule } from '@app/components/select';
-import { UploaderModule } from '@app/components/uploader';
 
 @NgModule({
     declarations: [
-        UploadComponent
+        ManagementComponent
     ],
     imports: [
         CommonModule,
         
-        UploadRoutingModule,
+        ManagementRoutingModule,
 
         DirectivesModule,
 
@@ -36,16 +37,16 @@ import { UploaderModule } from '@app/components/uploader';
         MatChipsModule,
 
         MatRippleModule,
+        DragDropModule,
 
+        ExpandableModule,
         InputModule,
-        SelectModule,
-        UploaderModule,
     ],
     providers: [
         StorageService,
         FirestoreService,
         FirebaseService,
     ],
-    bootstrap: [UploadComponent]
+    bootstrap: [ManagementComponent]
 })
-export class UploadModule { }
+export class ManagementModule { }

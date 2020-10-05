@@ -14,6 +14,7 @@ import { FirestoreService } from '@app/services/firestore.service';
 import { FirebaseService } from '@app/services/firebase.service';
 import { LoaderService } from '@app/services/loader.service';
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
+import { ResponsiveService } from '@app/services/responsive.service';
 import { HelperService } from '@app/services/helper.service';
 
 import { DirectivesModule } from '@app/directives';
@@ -63,6 +64,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         LoaderService,
 
         OverlayGalleryService,
+        ResponsiveService,
         HelperService,
 
         {

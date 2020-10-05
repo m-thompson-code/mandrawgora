@@ -20,7 +20,7 @@ const routes: Routes = [
             },
             {
                 path: 'management',
-                loadChildren: () => import('./upload/upload.module').then(m => m.UploadModule),
+                loadChildren: () => import('./management/management.module').then(m => m.ManagementModule),
                 runGuardsAndResolvers: 'always',
             },
         ],

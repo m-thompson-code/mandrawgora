@@ -1,0 +1,11 @@
+<mat-form-field>
+    <mat-label *ngIf="label">{{ label }}</mat-label>
+    <!-- <input matInput placeholder="Ex. "> -->
+    <input #input matInput [type]="inputType || 'text'" [value]="value || ''" (input)="handleInput($event)" (focus)="handleFocus()" (blur)="handleBlur()" >
+    
+    <div *ngIf="error" class="error-container">
+        <div class="error">
+            {{ error }}
+        </div>
+    </div>
+</mat-form-field>

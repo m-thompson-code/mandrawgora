@@ -12,6 +12,7 @@ import { FirebaseService } from '@app/services/firebase.service';
 import { LoaderService } from '@app/services/loader.service';
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 import { AuthService } from '@app/services/auth.service';
+import { ResponsiveService } from './services/responsive.service';
 
 // export interface UploadFile {
 //     file: File;
@@ -30,13 +31,14 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     private _routerEventsSub?: Subscription;
     private _onResize?: () => void;
     constructor(private router: Router, public firebaseService: FirebaseService, private analyticsService: AnalyticsService, 
-        public loaderService: LoaderService, public overlayGalleryService: OverlayGalleryService, private authService: AuthService) {
+        public loaderService: LoaderService, public overlayGalleryService: OverlayGalleryService, 
+        private authService: AuthService, private responsiveService: ResponsiveService) {
     }
 
     public ngAfterViewInit(): void {
-        // const updateResponsiveService = () => {
-        //     this.responsiveService.responsiveMetadata = this.responsiveService.getResponsiveType();
-        // }
+        const updateResponsiveService = () => {
+            this.responsiveService.responsiveMetadata = this.responsiveService.getResponsiveType();
+        }
 
         
         this.initalized = false;
@@ -64,7 +66,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
         this._onResize = () => {
             appHeight();
-            // updateResponsiveService();
+            updateResponsiveService();
         }
 
         window.addEventListener('resize', this._onResize);

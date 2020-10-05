@@ -8,16 +8,17 @@ import { StorageService } from '@app/services/storage.service';
 import { FileMetadata, FirestoreService, Section } from '@app/services/firestore.service';
 import { FirebaseService } from '@app/services/firebase.service';
 import { LoaderService } from '@app/services/loader.service';
-import { GalleryComponent } from '@app/components/gallery/gallery.component';
-import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
-import { PendingUploadFile } from '../admin.component';
-import { UploadFile } from '@app/components/uploader/uploader.component';
 
-// export interface UploadFile {
-//     file: File;
-//     filename: string;
-//     src: string | ArrayBuffer | null | undefined;
-// }
+import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
+
+import { UploadFile } from '@app/components/uploader/uploader.component';
+import { MatSelectChange } from '@angular/material/select';
+
+export interface PendingUploadFile extends UploadFile {
+    src: string | ArrayBuffer | null | undefined;
+    section?: Section;
+    error?: string;
+}
 
 @Component({
     selector: 'upload',
@@ -34,7 +35,23 @@ export class UploadComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngAfterViewInit(): void {
-        // this.loaderService.setShowLoader(true);
+        this.loaderService.setShowLoader(true);
+
+        this._initalize().then(() => {
+            this.loaderService.setShowLoader(false);
+        });
+    }
+
+    private _initalize(): Promise<void> {
+        const promises = [];
+
+        promises.push(this.firestoreService.getSections().then(sections => {
+            this.sections = sections;
+        }));
+
+        return Promise.all(promises).then(() => {
+            // pass
+        });
     }
 
     public handleFilesUploaded(uploadFiles: UploadFile[]): void {
@@ -63,10 +80,26 @@ export class UploadComponent implements AfterViewInit, OnDestroy {
             // read the image file as a data URL.
             reader.readAsDataURL(file);
 
-            this.storageService.uploadFile(file, filename).then(uploadMetadata => {
-                this.firestoreService.saveFile(uploadMetadata.url, filename, undefined);
-            });
+            // this.storageService.uploadFile(file, filename).then(uploadMetadata => {
+            //     this.firestoreService.saveFile(uploadMetadata.url, filename, undefined);
+            // });
         }
+    }
+
+    public handleSelectionChange(pendingUploadFile: PendingUploadFile, newSection: Section): void {
+        console.log(newSection);
+        pendingUploadFile.section = newSection;
+        // TODO: handle section change
+    }
+
+    public handleFilenameChange(pendingUploadFile: PendingUploadFile, text: string): void {
+        console.log(event);
+        pendingUploadFile.filename = text;
+        // TODO: handle section change
+    }
+
+    public activateOverlay(index: number): void {
+        this.overlayGalleryService.activate(index, this.pendingUploadFiles);
     }
 
     public ngOnDestroy(): void {
