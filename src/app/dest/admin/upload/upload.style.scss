@@ -107,8 +107,16 @@ $spacing: 32px;
     display: flex;
     flex-grow: 2;
 
-    moo-input, moo-select {
+    .filename, moo-input, moo-select {
         flex-grow: 2;
+    }
+
+    .filename {
+        display: flex;
+        align-items: flex-end;
+        
+        box-sizing: border-box;
+        padding-bottom: 21px;
     }
 
     moo-select {

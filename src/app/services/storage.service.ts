@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '@environment';
 
 import * as firebase from 'firebase/app';
+import { Observable, Subject } from 'rxjs';
 
 export interface FileUploadResult {
     snapshot: firebase.storage.UploadTaskSnapshot;
@@ -17,19 +18,41 @@ export class StorageService {
     constructor() {
     }
     
-    public uploadFile(file: Blob, filename: string): Promise<FileUploadResult> {
+    public uploadFile(file: Blob, filename: string): {progressObservable: Observable<number>, fileUploadResult: Promise<FileUploadResult>} {
         // Create a root reference
         let storageRef = firebase.storage().ref();
 
         // Create a reference to 'mountains.jpg'
         var childRef = storageRef.child(filename);
 
+        const uploadTask = childRef.put(file);
+
         // // While the file names are the same, the references point to different files
         // childRef.name === mountainImagesRef.name            // true
         // childRef.fullPath === mountainImagesRef.fullPath    // false
 
-        // var file = ... // use the Blob or File API
-        return childRef.put(file).then(snapshot => {
+        const _s: Subject<number> = new Subject<number>();
+        const _o: Observable<number> = _s.asObservable();
+
+        uploadTask.on('state_changed', snapshot => {
+            // Observe state change events such as progress, pause, and resume
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            const progress = snapshot.bytesTransferred / snapshot.totalBytes;
+            _s.next(progress);
+            console.log('Upload is ' + progress + '% done');
+        }, error => {
+            // TODO: Handle unsuccessful uploads
+            console.error(error);
+
+            if (environment.env !== 'prod') {
+                debugger;
+            }
+
+        }, () => {
+            _s.next(1);
+        });
+
+        const _p = uploadTask.then(snapshot => {
             console.log('Uploaded a blob or file!');
             console.log(snapshot);
 
@@ -45,5 +68,10 @@ export class StorageService {
 
             return error;
         });
+
+        return {
+            fileUploadResult: _p,
+            progressObservable: _o,
+        };
     }
 }

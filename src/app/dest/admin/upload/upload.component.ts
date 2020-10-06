@@ -18,6 +18,8 @@ export interface PendingUploadFile extends UploadFile {
     src: string | ArrayBuffer | null | undefined;
     section?: Section;
     error?: string;
+    editable?: boolean;
+    uploading?: boolean;
 }
 
 @Component({
@@ -66,6 +68,7 @@ export class UploadComponent implements AfterViewInit, OnDestroy {
                 file: file,
                 filename: filename,
                 src: null,
+                editable: i % 2 === 0,
             };
 
             this.pendingUploadFiles.push(_file);
@@ -96,6 +99,10 @@ export class UploadComponent implements AfterViewInit, OnDestroy {
         console.log(event);
         pendingUploadFile.filename = text;
         // TODO: handle section change
+    }
+
+    public uploadFile(pendingUploadFile: PendingUploadFile): void {
+        // TODO: handle this
     }
 
     public activateOverlay(index: number): void {
