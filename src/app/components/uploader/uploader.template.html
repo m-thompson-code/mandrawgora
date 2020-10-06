@@ -1,7 +1,7 @@
 <label for="file-input" [class]="'file-input-label' + (dragover ? ' on-drag' : '')" (dragover)="handleDragover($event)" (dragleave)="handleDragend($event)" (drop)="handleFileInputDrop($event)">Choose a file</label>
-<input class="file-input" type="file" id="file-input" name="file-input" accept=".jpg, .jpeg, .png" multiple 
+<input #input class="file-input" type="file" id="file-input" name="file-input" accept=".jpg, .jpeg, .png" multiple 
     (change)="handleFileInputChange($event)" (dragover)="handleDragover($event)" (dragleave)="handleDragend($event)" (drop)="handleFileInputDrop($event)">
-
+<!-- 
 <div>
     DRAGOVER: {{ dragover }}
-</div>
+</div> -->

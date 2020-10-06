@@ -1,3 +1,5 @@
+$primary: #c9997f;
+$accent: #71c4c8;
 
 $shortTransitionDuration: 200ms;
 $shortTransitionTimingFunction: cubic-bezier(0.35, 0, 0.25, 1);
@@ -31,10 +33,12 @@ $landscape_width: 1400px;
 
 $tablet_scale: .7;
 $tablet_width: 1100px;// 992px updated to 1100 to meet iPad pro
+$tablet_height: 1100px;
 $tablet_width_ratio: .90;// .85
 
 $mobile_scale: .5;
 $mobile_width: 600px;
+$mobile_height: 500px;
 $mobile_width_ratio: .95;// .9
 // End Container / Media breaking points / widths
 // END Responsive variables

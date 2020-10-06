@@ -27,6 +27,20 @@ export class HelperService {
             .replace(/-+$/, '') // Trim - from end of text
     }
 
+    public filenameIsValid(filename: string): boolean {
+        // Validate filename without extension
+        if (!/^[a-z0-9_-]+\.[^.]+$/i.test(filename)) {
+            return false;
+        }
+
+        // Validate extension
+        if (!/.*\.(png|jpg|jpeg|gif)$/i.test(filename)) {
+            return false
+        }
+
+        return true;
+    }
+
     public getSafeFileName(string: string): string {
         const a = 'àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż';
         const b = 'aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz';

@@ -178,7 +178,7 @@
     }
 }
 
-@media only screen and (max-width: $landscape_width) and (max-height: $tablet_width) and (orientation: landscape) {
+@media only screen and (max-width: $landscape_width) and (max-height: $tablet_height) and (orientation: landscape) {
     .nav {
         display: none;
     }
@@ -192,7 +192,7 @@
     }
 }
 
-@media only screen and (max-width: $landscape_width) and (max-height: $mobile_width) and (orientation: landscape) {
+@media only screen and (max-width: $landscape_width) and (max-height: $mobile_height) and (orientation: landscape) {
     .nav {
         display: none;
     }

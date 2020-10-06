@@ -14,8 +14,10 @@ export interface Section {
 export interface FileMetadata {
     url: string;
     filename: string;
-    section?: string;
+    sectionSlug?: string;
     timestamp: number;
+    firestoreID: string;
+    order: number;
 }
 
 @Injectable({
@@ -26,20 +28,70 @@ export class FirestoreService {
     constructor() {
     }
     
-    public saveFile(url: string, filename: string, section?: string): Promise<void> {
+    public addFile(url: string, filename: string, order: number, section?: Section): Promise<FileMetadata> {
         const timestamp = Date.now();
+
+        const docRef = firebase.firestore().collection('files').doc();
+
+        const firestoreID = docRef.id;
 
         const fileMetadata: FileMetadata = {
             url: url,
             filename: filename,
             timestamp: timestamp,
+            firestoreID: firestoreID,
+            order: order || 0,
         };
 
         if (section) {
-            fileMetadata.section = section;
+            fileMetadata.sectionSlug = section.slug;
         }
 
-        return firebase.firestore().collection('files').add(fileMetadata).then(() => {
+        return docRef.set(fileMetadata).then(() => {
+            return fileMetadata;
+        }).catch(error => {
+            console.error(error);
+            if (environment.env !== 'prod') {
+                debugger;
+            }
+
+            return error;
+        });
+    }
+
+    public updateFile(fileMetadata: FileMetadata, section?: Section): Promise<FileMetadata> {
+        const timestamp = Date.now();
+
+        const docRef = firebase.firestore().collection('files').doc(fileMetadata.firestoreID);
+
+        const firestoreID = docRef.id;
+
+        const _fileMetadata: FileMetadata = {
+            url: fileMetadata.url,
+            filename: fileMetadata.filename,
+            timestamp: fileMetadata.timestamp || Date.now(),
+            firestoreID: firestoreID,
+            order: fileMetadata.order || 0,
+        };
+
+        if (section) {
+            _fileMetadata.sectionSlug = section.slug;
+        }
+
+        return docRef.set(_fileMetadata).then(() => {
+            return _fileMetadata;
+        }).catch(error => {
+            console.error(error);
+            if (environment.env !== 'prod') {
+                debugger;
+            }
+
+            return error;
+        });
+    }
+
+    public deleteFile(firestoreID: string): Promise<void> {
+        return firebase.firestore().collection('files').doc(firestoreID).delete().then(() => {
             // pass
         }).catch(error => {
             console.error(error);
@@ -51,7 +103,7 @@ export class FirestoreService {
         });
     }
 
-    public getFiles(orderBy: 'timestamp' | 'filename', section?: string): Promise<FileMetadata[]> {
+    public getFiles(orderBy: 'order' | 'timestamp' | 'filename', section?: string): Promise<FileMetadata[]> {
         const files: FileMetadata[] = [];
 
         const colRef = firebase.firestore().collection('files');
@@ -62,6 +114,8 @@ export class FirestoreService {
             query.orderBy('timestamp', 'desc');
         } else if (orderBy === 'filename') {
             query.orderBy('timestamp', 'asc');
+        } else if (orderBy === 'order') {
+            query.orderBy('order', 'desc');
         } else {
             console.warn("Unexpected orderBy", orderBy);
             if (environment.env !== 'prod') {
@@ -85,10 +139,12 @@ export class FirestoreService {
                     url: data.url,
                     filename: data.filename,
                     timestamp: data.timestamp,
+                    order: data.order,
+                    firestoreID: _d.id,
                 };
 
-                if (data.section) {
-                    _fileMetadata.section = data.section;
+                if (data.sectionSlug) {
+                    _fileMetadata.sectionSlug = data.sectionSlug;
                 }
 
                 files.push(_fileMetadata);
@@ -130,6 +186,10 @@ export class FirestoreService {
                     text: text,
                     slug: slug,
                     order: order,
+                });
+
+                sections.sort((a, b) => {
+                    return (b.order || 0) - (a.order || 0);
                 });
             }
 

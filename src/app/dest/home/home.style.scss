@@ -267,7 +267,7 @@ $imagePadding: 10px;
     }
 }
 
-@media only screen and (max-width: $landscape_width) and (max-height: $tablet_width) and (orientation: landscape) {
+@media only screen and (max-width: $landscape_width) and (max-height: $tablet_height) and (orientation: landscape) {
     @include images-styles(3);
 
     .header {
@@ -281,7 +281,7 @@ $imagePadding: 10px;
     }
 }
 
-@media only screen and (max-width: $landscape_width) and (max-height: $mobile_width) and (orientation: landscape) {
+@media only screen and (max-width: $landscape_width) and (max-height: $mobile_height) and (orientation: landscape) {
     @include images-styles(2);
 
     .header {

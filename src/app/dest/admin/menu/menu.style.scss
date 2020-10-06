@@ -115,10 +115,10 @@ $spacing: 32px;
     @include mobile-padding(2.5vw);
 }
 
-@media only screen and (max-width: $landscape_width) and (max-height: $tablet_width) and (orientation: landscape) {
+@media only screen and (max-width: $landscape_width) and (max-height: $tablet_height) and (orientation: landscape) {
     // pass
 }
 
-@media only screen and (max-width: $landscape_width) and (max-height: $mobile_width) and (orientation: landscape) {
+@media only screen and (max-width: $landscape_width) and (max-height: $mobile_height) and (orientation: landscape) {
     @include mobile-padding(2.5vw);
 }

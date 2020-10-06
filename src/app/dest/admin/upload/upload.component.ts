@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild, Input } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild, Input, ElementRef } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -13,13 +13,15 @@ import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 
 import { UploadFile } from '@app/components/uploader/uploader.component';
 import { MatSelectChange } from '@angular/material/select';
+import { HelperService } from '@app/services/helper.service';
 
 export interface PendingUploadFile extends UploadFile {
     src: string | ArrayBuffer | null | undefined;
     section?: Section;
     error?: string;
-    editable?: boolean;
-    uploading?: boolean;
+    uploading: boolean;
+    progress: number;
+    metadata?: FileMetadata,
 }
 
 @Component({
@@ -28,12 +30,14 @@ export interface PendingUploadFile extends UploadFile {
     styleUrls: ['./upload.style.scss']
 })
 export class UploadComponent implements AfterViewInit, OnDestroy {
-    @Input() public sections: Section[] = [];
+    public sections: Section[] = [];
+    public files: FileMetadata[] = [];
 
     public pendingUploadFiles: PendingUploadFile[] = [];
 
     constructor(private router: Router, private firestoreService: FirestoreService, private loaderService: LoaderService, 
-        private overlayGalleryService: OverlayGalleryService, private storageService: StorageService) {
+        private overlayGalleryService: OverlayGalleryService, private storageService: StorageService, 
+        private helperService: HelperService) {
     }
 
     public ngAfterViewInit(): void {
@@ -46,6 +50,10 @@ export class UploadComponent implements AfterViewInit, OnDestroy {
 
     private _initalize(): Promise<void> {
         const promises = [];
+
+        promises.push(this.firestoreService.getFiles('order').then(files => {
+            this.files = files;
+        }));
 
         promises.push(this.firestoreService.getSections().then(sections => {
             this.sections = sections;
@@ -63,12 +71,12 @@ export class UploadComponent implements AfterViewInit, OnDestroy {
             const file = uploadFile.file;
             const filename = uploadFile.filename;
 
-
             const _file: PendingUploadFile = {
                 file: file,
                 filename: filename,
                 src: null,
-                editable: i % 2 === 0,
+                uploading: false,
+                progress: 0,
             };
 
             this.pendingUploadFiles.push(_file);
@@ -89,20 +97,99 @@ export class UploadComponent implements AfterViewInit, OnDestroy {
         }
     }
 
-    public handleSelectionChange(pendingUploadFile: PendingUploadFile, newSection: Section): void {
+    public handleSelectionChange(pendingUploadFile: PendingUploadFile, newSection?: Section): void {
         console.log(newSection);
         pendingUploadFile.section = newSection;
-        // TODO: handle section change
+
+        if (pendingUploadFile.metadata) {
+            this.firestoreService.updateFile(pendingUploadFile.metadata, newSection);
+        }
     }
 
     public handleFilenameChange(pendingUploadFile: PendingUploadFile, text: string): void {
-        console.log(event);
+        console.log(text);
         pendingUploadFile.filename = text;
         // TODO: handle section change
     }
 
-    public uploadFile(pendingUploadFile: PendingUploadFile): void {
-        // TODO: handle this
+    public uploadFile(pendingUploadFile: PendingUploadFile): Promise<void> {
+        if (pendingUploadFile.uploading) {
+            return Promise.resolve();
+        }
+
+        pendingUploadFile.error = undefined;
+
+        pendingUploadFile.filename = pendingUploadFile.filename.toLowerCase();
+        pendingUploadFile.filename = pendingUploadFile.filename.replace(/ /g,"_");
+
+        for (const file of this.files) {
+            if (pendingUploadFile.filename === file.filename) {
+                pendingUploadFile.error = "Unexpected duplicate filename";
+                return Promise.resolve();
+            }
+        }
+
+        if (!this.helperService.filenameIsValid(pendingUploadFile.filename)) {
+            pendingUploadFile.error = "Filename is invalid. Allowed: a-z, 0-9, - _ (no spaces) (extensions: .png, .jpg, .jpeg, .gif)"
+            return Promise.resolve();
+        }
+
+        const _d = this.storageService.uploadFile(pendingUploadFile.file, pendingUploadFile.filename);
+
+        pendingUploadFile.uploading = true;
+
+        _d.progressObservable.subscribe(progress => {
+            pendingUploadFile.progress = progress;
+        });
+
+        return _d.fileUploadResult.then(_result => {
+            console.log(_result);
+            return _result;
+        }).then(_result => {
+            return this.firestoreService.addFile(_result.url, _result.filename, this.files.length + 1, pendingUploadFile.section).then(metadata => {
+                pendingUploadFile.metadata = metadata;
+                pendingUploadFile.uploading = false;
+                this.files.push(metadata);
+            });
+        }).catch(error => {
+            console.error(error);
+            pendingUploadFile.error = error.message || "Unexpected error";
+            debugger;
+            pendingUploadFile.uploading = false;
+        });
+    }
+
+    public deleteFile(pendingUploadFile: PendingUploadFile, index: number): Promise<void> {
+        const promises: Promise<any>[] = [];
+
+        const filename = pendingUploadFile.filename;
+        const metadata = pendingUploadFile.metadata;
+
+        if (metadata) {
+            promises.push(this.storageService.deleteFile(filename).then(() => {
+                return this.firestoreService.deleteFile(metadata.firestoreID);
+            }));
+        }
+
+        pendingUploadFile.uploading = true;
+
+        return Promise.all(promises).then(() => {
+            this.pendingUploadFiles.splice(index, 1);
+
+            for (let i = 0; i < this.files.length; i++) {
+                const file = this.files[i];
+                
+                if (file === metadata) {
+                    this.files.splice(i, 1);
+                    break;
+                }
+            }
+        }).catch(error => {
+            console.error(error);
+            pendingUploadFile.error = error.message || "Unexpected error";
+            debugger;
+            pendingUploadFile.uploading = false;
+        });
     }
 
     public activateOverlay(index: number): void {

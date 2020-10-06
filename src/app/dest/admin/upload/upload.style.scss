@@ -18,6 +18,10 @@ $spacing: 32px;
 }
 
 .thumbnail {
+    position: relative;
+    top: 0;
+    left: 0;
+
     min-height: 56px;
     min-width: 56px;
 
@@ -90,6 +94,10 @@ $spacing: 32px;
 }
 
 .row {
+    position: relative;
+    top: 0;
+    left: 0;
+
     display: flex;
 
     .top {
@@ -101,6 +109,19 @@ $spacing: 32px;
     }
 
     margin-bottom: $spacing/4;
+
+    mat-progress-bar {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+
+        width: 100%;
+
+        animation-name: loader-animation;
+        animation-duration: 400ms;
+
+        pointer-events: none;
+    }
 }
 
 .top, .bottom {
@@ -122,6 +143,15 @@ $spacing: 32px;
     moo-select {
         max-width: 350px;
     }
+}
+
+.spin {
+    animation-name: spin;
+    animation-timing-function: linear;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+
+    pointer-events: none;
 }
 
 @mixin mobile-padding($padding) {
@@ -158,11 +188,11 @@ $spacing: 32px;
     }
 }
 
-@media only screen and (max-width: $landscape_width) and (max-height: $tablet_width) and (orientation: landscape) {
+@media only screen and (max-width: $landscape_width) and (max-height: $tablet_height) and (orientation: landscape) {
     // pass
 }
 
-@media only screen and (max-width: $landscape_width) and (max-height: $mobile_width) and (orientation: landscape) {
+@media only screen and (max-width: $landscape_width) and (max-height: $mobile_height) and (orientation: landscape) {
     @include mobile-padding(2.5vw);
 
     .row {

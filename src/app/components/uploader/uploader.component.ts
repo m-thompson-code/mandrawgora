@@ -12,7 +12,9 @@ export interface UploadFile {
     templateUrl: './uploader.template.html',
     styleUrls: ['./uploader.style.scss']
 })
-export class UploaderComponent implements OnInit, AfterViewInit, OnDestroy {
+export class UploaderComponent {
+    @ViewChild('input', {static: true}) private _input!: ElementRef<HTMLInputElement>;
+
     public dragover?: boolean;
 
     @Output() public filesUploaded: EventEmitter<UploadFile[]> = new EventEmitter();
@@ -20,17 +22,9 @@ export class UploaderComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(private ngZone: NgZone) {
 
     }
-
-    public ngOnInit(): void {
-    }
-
-    public ngAfterViewInit(): void {
-        
-    }
-
     
     public handleFileInputChange(event: any): void {
-        console.log(event);
+        // console.log(event);
 
         const _t = event?.target as HTMLInputElement;
 
@@ -45,7 +39,7 @@ export class UploaderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public handleFileInputDrop(event: any): void {
-        console.log(event);
+        // console.log(event);
 
         event?.stopPropagation();
         event?.preventDefault();
@@ -65,7 +59,7 @@ export class UploaderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public handleDragover(event: any): void {
-        console.log(event);
+        // console.log(event);
 
         event?.stopPropagation();
         event?.preventDefault();
@@ -81,7 +75,7 @@ export class UploaderComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     
     public handleDragend(event: any): void {
-        console.log(event);
+        // console.log(event);
 
         event?.stopPropagation();
         event?.preventDefault();
@@ -100,9 +94,7 @@ export class UploaderComponent implements OnInit, AfterViewInit, OnDestroy {
         for (let i = 0; i < fileList.length; i++) {
             const file = fileList[i];
 
-            
-
-            console.log(file);
+            // console.log(file);
 
             const filename = (file.name || '').toLowerCase();
 
@@ -116,9 +108,8 @@ export class UploaderComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.filesUploaded.emit(uploadFiles);
-    }
 
-    public ngOnDestroy(): void {
-        
+        // Clear input value to allow for same file upload
+        this._input.nativeElement.value = '';
     }
 }

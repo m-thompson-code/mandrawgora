@@ -37,11 +37,11 @@
     @include host-styles(0);// padding is handled on the routing component instead of on app
 }
 
-@media only screen and (max-width: $landscape_width) and (max-height: $tablet_width) and (orientation: landscape) {
+@media only screen and (max-width: $landscape_width) and (max-height: $tablet_height) and (orientation: landscape) {
     @include host-styles(60px);
 }
 
-@media only screen and (max-width: $landscape_width) and (max-height: $mobile_width) and (orientation: landscape) {
+@media only screen and (max-width: $landscape_width) and (max-height: $mobile_height) and (orientation: landscape) {
     @include host-styles(0);// padding is handled on the routing component instead of on app
 }
 
@@ -50,7 +50,12 @@
     to {opacity: 1;}
 }
 
-mat-progress-bar {
+@keyframes spin {
+    from {transform: rotate(0);}
+    to {transform: rotate(-360deg);}
+}
+
+mat-progress-bar.global {
     position: absolute;
     left: 0;
     top: 0;

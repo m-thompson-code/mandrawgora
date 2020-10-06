@@ -8,6 +8,7 @@ import { Observable, Subject } from 'rxjs';
 export interface FileUploadResult {
     snapshot: firebase.storage.UploadTaskSnapshot;
     url: string;
+    filename: string;
 }
 
 @Injectable({
@@ -27,10 +28,6 @@ export class StorageService {
 
         const uploadTask = childRef.put(file);
 
-        // // While the file names are the same, the references point to different files
-        // childRef.name === mountainImagesRef.name            // true
-        // childRef.fullPath === mountainImagesRef.fullPath    // false
-
         const _s: Subject<number> = new Subject<number>();
         const _o: Observable<number> = _s.asObservable();
 
@@ -39,6 +36,7 @@ export class StorageService {
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             const progress = snapshot.bytesTransferred / snapshot.totalBytes;
             _s.next(progress);
+
             console.log('Upload is ' + progress + '% done');
         }, error => {
             // TODO: Handle unsuccessful uploads
@@ -59,6 +57,7 @@ export class StorageService {
             return {
                 snapshot: snapshot,
                 url: `https://storage.googleapis.com/mandrawgora-170d4.appspot.com/${filename}`,
+                filename: filename,
             };
         }).catch(error => {
             console.error(error);
@@ -73,5 +72,18 @@ export class StorageService {
             fileUploadResult: _p,
             progressObservable: _o,
         };
+    }
+
+    public deleteFile(filename: string): Promise<void> {
+        // Create a root reference
+        let storageRef = firebase.storage().ref();
+
+        // Create a reference to 'mountains.jpg'
+        var childRef = storageRef.child(filename);
+
+        return childRef.delete().then(_d => {
+            console.log(_d);
+            // pass
+        });
     }
 }
