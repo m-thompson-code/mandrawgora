@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 
 import { environment } from '@environment';
 
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 import { StorageService } from '@app/services/storage.service';
 import { FileMetadata, Section, FirestoreService } from '@app/services/firestore.service';
@@ -12,6 +12,7 @@ import { FirebaseService } from '@app/services/firebase.service';
 
 import { UploadFile } from '@app/components/uploader/uploader.component';
 import { HelperService } from '@app/services/helper.service';
+import { LoaderService } from '@app/services/loader.service';
 
 export interface SectionFilter extends Section {
     selected: boolean;
@@ -35,14 +36,61 @@ export class ManagementComponent implements AfterViewInit {
 
     public sectionFilters: SectionFilter[] = [];
 
+    public expandFiles: boolean = false;
+
+    public files: FileMetadata[] = [];
+    public filesMap: {
+        [slug: string]: FileMetadata[];
+    } = {};
+
+    public testList: Section[] = [];
+
     constructor(private router: Router, private firestoreService: FirestoreService, 
-        private storageService: StorageService, private helperService: HelperService) {
+        private storageService: StorageService, private helperService: HelperService, 
+        private loaderService: LoaderService) {
     }
 
     public ngAfterViewInit(): void {
         this.firestoreService.getSections().then(sections => {
             this.sections = sections;
+            this.testList = [];
+            for (const section of this.sections) {
+                this.testList.push(section);
+            }
             this.getSectionFilters();
+        });
+
+        this.loaderService.setShowLoader(true);
+
+        this._initalize().then(() => {
+            this.loaderService.setShowLoader(false);
+        });
+    }
+
+    private _initalize(): Promise<void> {
+        const promises = [];
+
+        promises.push(this.firestoreService.getFiles('order').then(files => {
+            this.files = files;
+        }));
+
+        promises.push(this.firestoreService.getSections().then(sections => {
+            this.sections = sections;
+            this.getSectionFilters();
+        }));
+
+        return Promise.all(promises).then(() => {
+            this.filesMap = {};
+
+            for (const section of this.sectionFilters) {
+                this.filesMap[section.slug] = [];
+            }
+
+            this.filesMap["delete__SPECIAL"] = [];
+
+            for (const file of this.files) {
+                this.filesMap[file.sectionSlug || "no-section__SPECIAL"].push(file);
+            }
         });
     }
 
@@ -78,8 +126,52 @@ export class ManagementComponent implements AfterViewInit {
         this.newSectionError = "";
     }
 
+    public deleteSection(section: Section, index: number): void {
+        this.sections.splice(index, 1);
+    }
+
     public dropSection(event: CdkDragDrop<Section[]>) {
-        moveItemInArray(this.sections, event.previousIndex, event.currentIndex);
+        console.log(event);
+        // if (event.previousContainer === event.container) {
+        //     // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        //     moveItemInArray(this.sections, event.previousIndex, event.currentIndex);
+        //   } else {
+        //     transferArrayItem(event.previousContainer.data,
+        //                       event.container.data,
+        //                       event.previousIndex,
+        //                       event.currentIndex);
+        //   }
+
+        if (event.previousContainer === event.container) {
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        } else {
+        transferArrayItem(event.previousContainer.data,
+                            event.container.data,
+                            event.previousIndex,
+                            event.currentIndex);
+        }
+    }
+
+    public dropFile(event: CdkDragDrop<FileMetadata[]>) {
+        console.log(event);
+        // if (event.previousContainer === event.container) {
+        //     // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        //     moveItemInArray(this.sections, event.previousIndex, event.currentIndex);
+        //   } else {
+        //     transferArrayItem(event.previousContainer.data,
+        //                       event.container.data,
+        //                       event.previousIndex,
+        //                       event.currentIndex);
+        //   }
+
+        if (event.previousContainer === event.container) {
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+        } else {
+        transferArrayItem(event.previousContainer.data,
+                            event.container.data,
+                            event.previousIndex,
+                            event.currentIndex);
+        }
     }
 
     public save(): Promise<void> {
@@ -135,5 +227,9 @@ export class ManagementComponent implements AfterViewInit {
     public toggleSectionFilter(sectionFilter: SectionFilter): void {
         console.log(sectionFilter, this.sectionFilters);
         sectionFilter.selected = !sectionFilter.selected;
+    }
+
+    public ngOnDestroy(): void {
+        this.loaderService.setShowLoader(false);
     }
 }

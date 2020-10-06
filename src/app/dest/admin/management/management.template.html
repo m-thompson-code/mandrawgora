@@ -1,4 +1,3 @@
-
 <div class="panel margin-bottom">
     <div class="header-container" (click)="expandSections = !expandSections" matRipple [matRippleUnbounded]="false">
         <div class="expand-icon">
@@ -24,38 +23,70 @@
 
             <button mat-raised-button color="primary" (click)="addSection()" [disabled]="loading">ADD</button>
         </div>
+
         <div>Drag n drop to change order</div>
-        <div cdkDropList class="sections" (cdkDropListDropped)="dropSection($event)">
-            <div *ngFor="let section of sections" class="section mat-app-background" cdkDrag>
+
+        <div cdkDropList class="sections" [cdkDropListData]="sections"
+            (cdkDropListDropped)="dropSection($event)">
+            <div *ngFor="let section of sections; let i = index" class="section mat-app-background" cdkDrag>
                 <div class="section-drop-placeholder" *cdkDragPlaceholder></div>
 
                 <div class="section-text">{{ section.text }}</div>
 
-                <div class="icon-container" matRipple [matRippleUnbounded]="false">
+                <div class="icon-container" matRipple [matRippleUnbounded]="false" (click)="deleteSection(section, i)">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                         <path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
                     </svg>
                 </div>
             </div>
         </div>
-
-        <div>
-            <a (click)="save()">SAVE</a>
-        </div>
     </moo-expandable>
 </div>
 
-<mat-chip-list aria-label="Fish selection" [multiple]="true">
-    <mat-chip *ngFor="let sectionFilter of sectionFilters" 
-        [color]="sectionFilter.noSection ? 'accent' : 'primary'" 
-        (click)="toggleSectionFilter(sectionFilter)" 
-        [selected]="sectionFilter.selected">{{ sectionFilter.text }}</mat-chip>
-    <!-- <mat-chip color="accent" selected>All images</mat-chip>
-    <mat-chip>One fish</mat-chip>
-    <mat-chip>Two fish</mat-chip>
-    <mat-chip selected>Three fish</mat-chip>
-    <mat-chip color="primary">Primary fish</mat-chip>
-    <mat-chip color="accent">Accent fish</mat-chip>
-    <mat-chip color="primary" selected>Primary fish</mat-chip>
-    <mat-chip color="accent" selected>No section</mat-chip> -->
-</mat-chip-list>
+<div class="panel margin-bottom" cdkDropListGroup>
+    <div class="header-container" (click)="expandFiles = !expandFiles" matRipple [matRippleUnbounded]="false">
+        <div class="expand-icon">
+            <svg [class]="!expandFiles ? 'active' : ''" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/>
+            </svg>
+            <svg [class]="'svg-overlap' + (!expandFiles ? ' active' : '')" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/>
+            </svg>
+        </div>
+        
+        <div class="header">
+            Images
+        </div>
+    </div>
+
+    <moo-expandable [expanded]="expandFiles">
+        <mat-chip-list aria-label="Select filter" [multiple]="true">
+            <mat-chip *ngFor="let sectionFilter of sectionFilters" 
+                [color]="sectionFilter.noSection ? 'accent' : 'primary'" 
+                (click)="toggleSectionFilter(sectionFilter)" 
+                [selected]="sectionFilter.selected">
+                {{ sectionFilter.text }}
+            </mat-chip>
+        </mat-chip-list>
+
+        <div>Drag n drop to change order</div>
+
+        <ng-container *ngIf="filesMap">
+            <ng-container *ngFor="let section of sections">
+                <moo-management-files [label]="'Section: ' + section.text" [files]="filesMap[section.slug]"></moo-management-files>
+                
+                <mat-divider></mat-divider>
+            </ng-container>
+
+            <moo-management-files label="No Section list" [files]="filesMap['no-section__SPECIAL']"></moo-management-files>
+
+            <mat-divider></mat-divider>
+
+            <moo-management-files label="Delete list" [files]="filesMap['delete__SPECIAL']"></moo-management-files>
+        </ng-container>
+    </moo-expandable>
+</div>
+
+<div>
+    <a (click)="save()">SAVE</a>
+</div>

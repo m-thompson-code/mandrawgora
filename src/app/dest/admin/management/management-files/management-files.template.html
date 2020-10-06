@@ -1,0 +1,12 @@
+<div *ngIf="label">
+    {{ label }}
+</div>
+
+<div cdkDropList class="sections" [cdkDropListData]="files" 
+    (cdkDropListDropped)="dropFile($event)">
+    <div *ngFor="let file of files; let i = index" class="section mat-app-background" cdkDrag>
+        <div class="section-drop-placeholder" *cdkDragPlaceholder></div>
+
+        <div class="section-text">{{ file.filename }}</div>
+    </div>
+</div>
