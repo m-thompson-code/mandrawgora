@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild, Input, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild, Input, ElementRef, Output, EventEmitter } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -25,43 +25,21 @@ export interface PendingUploadFile extends UploadFile {
 }
 
 @Component({
-    selector: 'upload',
+    selector: 'moo-upload',
     templateUrl: './upload.template.html',
     styleUrls: ['./upload.style.scss']
 })
-export class UploadComponent implements AfterViewInit, OnDestroy {
-    public sections: Section[] = [];
-    public files: FileMetadata[] = [];
+export class UploadComponent {
+    @Input() public sections: Section[] = [];
+    @Input() public files: FileMetadata[] = [];
+
+    @Output() public fileUploaded: EventEmitter<PendingUploadFile> = new EventEmitter();
 
     public pendingUploadFiles: PendingUploadFile[] = [];
 
     constructor(private router: Router, private firestoreService: FirestoreService, private loaderService: LoaderService, 
         private overlayGalleryService: OverlayGalleryService, private storageService: StorageService, 
         private helperService: HelperService) {
-    }
-
-    public ngAfterViewInit(): void {
-        this.loaderService.setShowLoader(true);
-
-        this._initalize().then(() => {
-            this.loaderService.setShowLoader(false);
-        });
-    }
-
-    private _initalize(): Promise<void> {
-        const promises = [];
-
-        promises.push(this.firestoreService.getFiles('order').then(files => {
-            this.files = files;
-        }));
-
-        promises.push(this.firestoreService.getSections().then(sections => {
-            this.sections = sections;
-        }));
-
-        return Promise.all(promises).then(() => {
-            // pass
-        });
     }
 
     public handleFilesUploaded(uploadFiles: UploadFile[]): void {
@@ -90,10 +68,6 @@ export class UploadComponent implements AfterViewInit, OnDestroy {
         
             // read the image file as a data URL.
             reader.readAsDataURL(file);
-
-            // this.storageService.uploadFile(file, filename).then(uploadMetadata => {
-            //     this.firestoreService.saveFile(uploadMetadata.url, filename, undefined);
-            // });
         }
     }
 
@@ -149,7 +123,8 @@ export class UploadComponent implements AfterViewInit, OnDestroy {
             return this.firestoreService.addFile(_result.url, _result.filename, this.files.length + 1, pendingUploadFile.section).then(metadata => {
                 pendingUploadFile.metadata = metadata;
                 pendingUploadFile.uploading = false;
-                this.files.push(metadata);
+                // this.files.push(metadata);
+                this.fileUploaded.emit(pendingUploadFile);
             });
         }).catch(error => {
             console.error(error);
@@ -192,11 +167,11 @@ export class UploadComponent implements AfterViewInit, OnDestroy {
         });
     }
 
-    public activateOverlay(index: number): void {
-        this.overlayGalleryService.activate(index, this.pendingUploadFiles);
+    public hideFile(index: number): void {
+        this.pendingUploadFiles.splice(index, 1);
     }
 
-    public ngOnDestroy(): void {
-        this.loaderService.setShowLoader(false);
+    public activateOverlay(index: number): void {
+        this.overlayGalleryService.activate(index, this.pendingUploadFiles);
     }
 }

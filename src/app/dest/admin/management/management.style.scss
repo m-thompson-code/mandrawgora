@@ -1,7 +1,5 @@
 @import 'styles/variables.scss';
 
-$spacing: 32px;
-
 :host {
     display: flex;
     flex-grow: 2;
@@ -49,9 +47,25 @@ $spacing: 32px;
     }
 }
 
+.icon-container.drag {
+    margin-left: 0;
+    margin-right: $spacing/4;
+
+    cursor: grab;
+
+    svg {
+        fill: currentColor;
+    }
+}
+
+.chips-container {
+    margin-bottom: $spacing/4;
+}
+
 .header-container {
     display: flex;
     cursor: pointer;
+    margin-bottom: $spacing/4;
 
     .expand-icon {
         position: relative;
@@ -92,9 +106,7 @@ $spacing: 32px;
     display: flex;
     flex-direction: column;
 
-    min-height: 55px;
-
-    // border-top: solid 1px #121212;
+    min-height: 56px;
 }
 
 .section {
@@ -108,50 +120,16 @@ $spacing: 32px;
     border-bottom: solid 1px #121212;
     box-sizing: border-box;
 
-    cursor: grab;
-
     .section-text {
         flex-grow: 2;
-        // padding: 0 $spacing/4;
         box-sizing: border-box;
     }
 }
 
-.section-drop-placeholder {
-    height: 56px;
-    width: 100%;
-
-    border: dashed 1px black;
-    background: #121212;
-    background: linear-gradient(45deg, #121212, transparent);
-}
-
-.cdk-drag-preview {
-    // display: flex;
-    // justify-content: center;
-    // align-items: center;
-
-    box-sizing: border-box;
-    // border-radius: 4px;
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
-                0 8px 10px 1px rgba(0, 0, 0, 0.14),
-                0 3px 14px 2px rgba(0, 0, 0, 0.12);
-    
-    cursor: grabbing;
-}
-
-.cdk-drag-animating {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-}
-
-.cdk-drop-list-dragging {
-    cursor: grabbing;
-}
-
-.cdk-drop-list-dragging *:not(.cdk-drag-placeholder) {
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-
-    cursor: grabbing;
+.floating-fav-button {
+    position: fixed;
+    bottom: 56px;
+    right: 56px;
 }
 
 @mixin mobile-padding($padding) {
@@ -171,6 +149,12 @@ $spacing: 32px;
 
 @media only screen and (max-width: $mobile_width) and (orientation: portrait) {
     @include mobile-padding(2.5vw);
+
+    .floating-fav-button {
+        position: fixed;
+        bottom: $spacing/2;
+        right: $spacing/2;
+    }
 }
 
 @media only screen and (max-width: $landscape_width) and (max-height: $tablet_height) and (orientation: landscape) {
@@ -179,4 +163,10 @@ $spacing: 32px;
 
 @media only screen and (max-width: $landscape_width) and (max-height: $mobile_height) and (orientation: landscape) {
     @include mobile-padding(2.5vw);
+
+    .floating-fav-button {
+        position: fixed;
+        bottom: $spacing/2;
+        right: $spacing/2;
+    }
 }

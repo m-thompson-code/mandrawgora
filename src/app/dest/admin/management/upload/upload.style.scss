@@ -1,7 +1,5 @@
 @import 'styles/variables.scss';
 
-$spacing: 32px;
-
 :host {
     display: flex;
     flex-grow: 2;
@@ -54,6 +52,54 @@ $spacing: 32px;
     }
 }
 
+@keyframes fade-in-from-top {
+    from {
+        opacity: 0;
+        transform: translateY(-100%);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in-out {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: .5;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.success {
+    color: $primary;
+
+    animation-name: fade-in-from-top;
+    animation-timing-function: cubic-bezier(0.35, 0, 0.25, 1);
+    animation-duration: 400ms;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    height: 100%;
+    width: 100%;
+
+    animation-name: fade-in-out;
+    animation-timing-function: linear;
+    animation-duration: 400ms;
+    background: linear-gradient(-45deg, $primary, transparent);
+    opacity: 0;
+
+    pointer-events: none;
+}
+
 .header-container {
     display: flex;
     cursor: pointer;
@@ -102,6 +148,7 @@ $spacing: 32px;
 
     .top {
         margin-right: $spacing/8;
+        overflow-wrap: anywhere;
     }
     .bottom {
         margin-left: $spacing/8;
@@ -128,11 +175,11 @@ $spacing: 32px;
     display: flex;
     flex-grow: 2;
 
-    .filename, moo-input, moo-select {
+    .filename, .section, moo-input, moo-select {
         flex-grow: 2;
     }
 
-    .filename {
+    .filename, .section {
         display: flex;
         align-items: flex-end;
         
@@ -140,7 +187,7 @@ $spacing: 32px;
         padding-bottom: 22px;
     }
 
-    moo-select {
+    moo-select, .section {
         max-width: 350px;
     }
 }
@@ -181,7 +228,7 @@ $spacing: 32px;
         .bottom {
             margin-left: 56px + $spacing/4;
             
-            moo-select {
+            moo-select, .section {
                 max-width: none;
             }
         }
@@ -204,7 +251,7 @@ $spacing: 32px;
         .bottom {
             margin-left: 56px + $spacing/4;
 
-            moo-select {
+            moo-select, .section {
                 max-width: none;
             }
         }

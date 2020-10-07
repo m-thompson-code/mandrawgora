@@ -1,4 +1,25 @@
 <div class="panel margin-bottom">
+    <div class="header-container" (click)="expandUpload = !expandUpload" matRipple [matRippleUnbounded]="false">
+        <div class="expand-icon">
+            <svg [class]="!expandUpload ? 'active' : ''" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/>
+            </svg>
+            <svg [class]="'svg-overlap' + (!expandUpload ? ' active' : '')" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path d="M0 0h24v24H0z" fill="none"/><path d="M19 13H5v-2h14v2z"/>
+            </svg>
+        </div>
+        
+        <div class="header">
+            Upload
+        </div>
+    </div>
+
+    <moo-expandable [expanded]="expandUpload">
+        <moo-upload [files]="files" [sections]="sections" (fileUploaded)="handleFileUploaded($event)"></moo-upload>
+    </moo-expandable>
+</div>
+
+<div class="panel margin-bottom">
     <div class="header-container" (click)="expandSections = !expandSections" matRipple [matRippleUnbounded]="false">
         <div class="expand-icon">
             <svg [class]="!expandSections ? 'active' : ''" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
@@ -24,12 +45,16 @@
             <button mat-raised-button color="primary" (click)="addSection()" [disabled]="loading">ADD</button>
         </div>
 
-        <div>Drag n drop to change order</div>
-
         <div cdkDropList class="sections" [cdkDropListData]="sections"
             (cdkDropListDropped)="dropSection($event)">
             <div *ngFor="let section of sections; let i = index" class="section mat-app-background" cdkDrag>
-                <div class="section-drop-placeholder" *cdkDragPlaceholder></div>
+                <div class="drop-placeholder" *cdkDragPlaceholder></div>
+
+                <div class="icon-container drag" matRipple [matRippleUnbounded]="false" cdkDragHandle>
+                    <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
+                        <g><rect fill="none" height="24" width="24"/></g><g><g><g><path d="M20,9H4v2h16V9z M4,15h16v-2H4V15z"/></g></g></g>
+                    </svg>
+                </div>
 
                 <div class="section-text">{{ section.text }}</div>
 
@@ -60,33 +85,71 @@
     </div>
 
     <moo-expandable [expanded]="expandFiles">
-        <mat-chip-list aria-label="Select filter" [multiple]="true">
-            <mat-chip *ngFor="let sectionFilter of sectionFilters" 
-                [color]="sectionFilter.noSection ? 'accent' : 'primary'" 
-                (click)="toggleSectionFilter(sectionFilter)" 
-                [selected]="sectionFilter.selected">
-                {{ sectionFilter.text }}
-            </mat-chip>
-        </mat-chip-list>
+        <div class="chips-container">
+            <mat-chip-list aria-label="Select filter" [multiple]="true">
+                <mat-chip *ngFor="let section of sections" 
+                    color="primary" 
+                    (click)="toggleSectionFilter(section.slug)" 
+                    [selected]="sectionFiltersMap[section.slug]">
+                    {{ section.text }}
+                </mat-chip>
+                <mat-chip
+                    color="accent" 
+                    (click)="toggleSectionFilter('no-section__SPECIAL')" 
+                    [selected]="sectionFiltersMap['no-section__SPECIAL']">
+                    None
+                </mat-chip>
+                <mat-chip *ngIf="filesMap && filesMap['delete__SPECIAL'] && filesMap['delete__SPECIAL'].length"
+                    color="warn" 
+                    (click)="toggleSectionFilter('delete__SPECIAL')" 
+                    [selected]="sectionFiltersMap['delete__SPECIAL']">
+                    Delete
+                </mat-chip>
+            </mat-chip-list>
+        </div>
 
-        <div>Drag n drop to change order</div>
-
-        <ng-container *ngIf="filesMap">
-            <ng-container *ngFor="let section of sections">
-                <moo-management-files [label]="'Section: ' + section.text" [files]="filesMap[section.slug]"></moo-management-files>
-                
-                <mat-divider></mat-divider>
+        <div *ngIf="!sectionFilterSelected">
+            <ng-container *ngIf="!sections || !sections.length">
+                Create a section above then assign images to each section.
             </ng-container>
 
-            <moo-management-files label="No Section list" [files]="filesMap['no-section__SPECIAL']"></moo-management-files>
+            <ng-container *ngIf="sections && sections.length">
+                Select a section filter(s) above.
+            </ng-container>
+        </div>
+        
+        <ng-container *ngIf="filesMap">
+            <ng-container *ngFor="let section of sections">
+                <ng-container *ngIf="sectionFiltersMap[section.slug]">
+                    <mat-divider></mat-divider>
 
-            <mat-divider></mat-divider>
+                    <moo-management-files [sectionSlug]="section.slug" [label]="'Section: ' + section.text" [files]="filesMap[section.slug]" [sections]="sections"
+                        (sectionSelected)="handleSectionSelected(filesMap[section.slug], $event)">
+                    </moo-management-files> 
+                </ng-container>
+            </ng-container>
 
-            <moo-management-files label="Delete list" [files]="filesMap['delete__SPECIAL']"></moo-management-files>
+            <ng-container *ngIf="sectionFiltersMap['no-section__SPECIAL']">
+                <mat-divider></mat-divider>
+
+                <moo-management-files [sectionSlug]="'no-section__SPECIAL'" label="None" [files]="filesMap['no-section__SPECIAL']" [sections]="sections"
+                    (sectionSelected)="handleSectionSelected(filesMap['no-section__SPECIAL'], $event)">
+                </moo-management-files> 
+            </ng-container>
+
+            <ng-container *ngIf="sectionFiltersMap['delete__SPECIAL']">
+                <mat-divider></mat-divider>
+
+                <moo-management-files [sectionSlug]="'delete__SPECIAL'" label="Delete" [files]="filesMap['delete__SPECIAL']" [sections]="sections"
+                    (sectionSelected)="handleSectionSelected(filesMap['delete__SPECIAL'], $event)">
+                </moo-management-files> 
+            </ng-container>
         </ng-container>
     </moo-expandable>
 </div>
 
-<div>
-    <a (click)="save()">SAVE</a>
-</div>
+<button class="floating-fav-button" mat-fab color="primary" aria-label="Save updates" (click)="save()">
+    <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/>
+        <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
+    </svg>
+</button>

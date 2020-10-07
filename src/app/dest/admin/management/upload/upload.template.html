@@ -15,16 +15,19 @@
                 (enterPressed)="uploadFile(pendingUploadFile)">
             </moo-input>
 
-
             <div *ngIf="pendingUploadFile.metadata" class="filename">
                 {{ pendingUploadFile.filename || '(unknown)' }}
             </div>
         </div>
 
         <div class="bottom">
-            <moo-select label="Section" [value]="pendingUploadFile.section" [options]="sections" 
+            <moo-select *ngIf="!pendingUploadFile.metadata" label="Section" [value]="pendingUploadFile.section" [options]="sections" 
                 (valueChanged)="handleSelectionChange(pendingUploadFile, $event)">
             </moo-select>
+
+            <div *ngIf="pendingUploadFile.metadata" class="section">
+                {{ pendingUploadFile.section?.text }}
+            </div>
         
             <div *ngIf="!pendingUploadFile.uploading && !pendingUploadFile.metadata" (click)="uploadFile(pendingUploadFile)" class="icon-container" matRipple [matRippleUnbounded]="false">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
@@ -33,9 +36,9 @@
                 </svg>
             </div>
 
-            <div *ngIf="!pendingUploadFile.uploading && pendingUploadFile.metadata" (click)="deleteFile(pendingUploadFile, i)" class="icon-container" matRipple [matRippleUnbounded]="false">
+            <div *ngIf="!pendingUploadFile.uploading && pendingUploadFile.metadata" (click)="hideFile(i)" class="icon-container success" matRipple [matRippleUnbounded]="false">                          
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-                    <path d="M0 0h24v24H0z" fill="none"/><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                    <path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
                 </svg>
             </div>
 
@@ -46,6 +49,8 @@
                 </svg>
             </div>
         </div>
+
+        <div class="overlay" *ngIf="pendingUploadFile.metadata"></div>
 
         <mat-progress-bar *ngIf="pendingUploadFile.uploading" 
             mode="determinate"

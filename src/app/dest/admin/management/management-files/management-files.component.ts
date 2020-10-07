@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild, Input } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -13,6 +13,7 @@ import { FirebaseService } from '@app/services/firebase.service';
 import { UploadFile } from '@app/components/uploader/uploader.component';
 import { HelperService } from '@app/services/helper.service';
 import { LoaderService } from '@app/services/loader.service';
+import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 
 export interface SectionFilter extends Section {
     selected: boolean;
@@ -27,8 +28,12 @@ export interface SectionFilter extends Section {
 export class ManagementFilesComponent {
     @Input() label?: string;
     @Input() files: FileMetadata[] = [];
+    @Input() sectionSlug?: string;
+    @Input() sections: Section[] = [];
 
-    constructor() {
+    @Output() sectionSelected: EventEmitter<{slug: string, file: FileMetadata, index: number}> = new EventEmitter();
+
+    constructor(private overlayGalleryService: OverlayGalleryService) {
     }
 
     public dropFile(event: CdkDragDrop<FileMetadata[]>) {
@@ -51,5 +56,9 @@ export class ManagementFilesComponent {
                             event.previousIndex,
                             event.currentIndex);
         }
+    }
+
+    public activateOverlay(index: number): void {
+        this.overlayGalleryService.activate(index, this.files);
     }
 }

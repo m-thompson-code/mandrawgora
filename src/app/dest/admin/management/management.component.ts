@@ -13,11 +13,7 @@ import { FirebaseService } from '@app/services/firebase.service';
 import { UploadFile } from '@app/components/uploader/uploader.component';
 import { HelperService } from '@app/services/helper.service';
 import { LoaderService } from '@app/services/loader.service';
-
-export interface SectionFilter extends Section {
-    selected: boolean;
-    noSection?: boolean;
-}
+import { PendingUploadFile } from './upload/upload.component';
 
 @Component({
     selector: 'management',
@@ -25,6 +21,8 @@ export interface SectionFilter extends Section {
     styleUrls: ['./management.style.scss']
 })
 export class ManagementComponent implements AfterViewInit {
+    public expandUpload: boolean = false;
+
     public newSectionText: string = '';
     public newSectionError: string = '';
 
@@ -34,7 +32,11 @@ export class ManagementComponent implements AfterViewInit {
 
     public expandSections: boolean = false;
 
-    public sectionFilters: SectionFilter[] = [];
+    public sectionFiltersMap: {
+        [slug: string]: boolean;
+    } = {};
+
+    public sectionFilterSelected: boolean = false;
 
     public expandFiles: boolean = false;
 
@@ -57,7 +59,7 @@ export class ManagementComponent implements AfterViewInit {
             for (const section of this.sections) {
                 this.testList.push(section);
             }
-            this.getSectionFilters();
+            // this.getSectionFilters();
         });
 
         this.loaderService.setShowLoader(true);
@@ -76,16 +78,17 @@ export class ManagementComponent implements AfterViewInit {
 
         promises.push(this.firestoreService.getSections().then(sections => {
             this.sections = sections;
-            this.getSectionFilters();
+            // this.getSectionFilters();
         }));
 
         return Promise.all(promises).then(() => {
             this.filesMap = {};
 
-            for (const section of this.sectionFilters) {
+            for (const section of this.sections) {
                 this.filesMap[section.slug] = [];
             }
 
+            this.filesMap["no-section__SPECIAL"] = [];
             this.filesMap["delete__SPECIAL"] = [];
 
             for (const file of this.files) {
@@ -143,9 +146,9 @@ export class ManagementComponent implements AfterViewInit {
         //   }
 
         if (event.previousContainer === event.container) {
-        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-        transferArrayItem(event.previousContainer.data,
+            transferArrayItem(event.previousContainer.data,
                             event.container.data,
                             event.previousIndex,
                             event.currentIndex);
@@ -165,9 +168,9 @@ export class ManagementComponent implements AfterViewInit {
         //   }
 
         if (event.previousContainer === event.container) {
-        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-        transferArrayItem(event.previousContainer.data,
+            transferArrayItem(event.previousContainer.data,
                             event.container.data,
                             event.previousIndex,
                             event.currentIndex);
@@ -180,53 +183,34 @@ export class ManagementComponent implements AfterViewInit {
         });
     }
 
-    public getSectionFilters(): void {
-        const selectedMap: {
-            [slug: string]: boolean;
-        } = {};
-
-        let noSectionSelected = false;
-
-        for (const sectionFilter of this.sectionFilters) {
-            if (sectionFilter.noSection && sectionFilter.selected) {
-                noSectionSelected = true;
-                continue;
-            }
-
-            if (sectionFilter.selected) {
-                selectedMap[sectionFilter.slug] = true;
-            }
+    public handleFileUploaded(pendingUploadFile: PendingUploadFile): void {
+        if (pendingUploadFile.metadata) {
+            this.files.unshift(pendingUploadFile.metadata);
+            this.filesMap[pendingUploadFile.metadata.sectionSlug || "no-section__SPECIAL"].unshift(pendingUploadFile.metadata);
+        } else {
+            console.error("Unexpected missing metadata from uploaded pendingUploadFile");
+            debugger;
         }
-
-        const sectionFilters = [];
-
-        for (const section of this.sections) {
-            if (!section.slug) {
-                continue;
-            }
-
-            sectionFilters.push({
-                text: section.text,
-                slug: section.slug,
-                order: section.order,
-                selected: selectedMap[section.slug] || false,
-            });
-        }
-
-        sectionFilters.push({
-            text: "No section",
-            slug: "no-section__SPECIAL",
-            order: -1,
-            selected: noSectionSelected || false,
-            noSection: true,
-        });
-
-        this.sectionFilters = sectionFilters;
     }
 
-    public toggleSectionFilter(sectionFilter: SectionFilter): void {
-        console.log(sectionFilter, this.sectionFilters);
-        sectionFilter.selected = !sectionFilter.selected;
+    public toggleSectionFilter(sectionSlug: string): void {
+        console.log(sectionSlug, this.sectionFiltersMap);
+        this.sectionFiltersMap[sectionSlug] = !this.sectionFiltersMap[sectionSlug];
+
+        this.sectionFilterSelected = false;
+
+        for (const key of Object.keys(this.sectionFiltersMap)) {
+            if (this.sectionFiltersMap[key]) {
+                this.sectionFilterSelected = true;
+                break;
+            }
+        }
+    }
+
+    public handleSectionSelected(files: FileMetadata[], event: {slug: string, file: FileMetadata, index: number}): void {
+        console.log(files, event);
+        files.splice(event.index, 1);
+        this.filesMap[event.slug || 'no-section__SPECIAL'].unshift(event.file);
     }
 
     public ngOnDestroy(): void {
