@@ -20,6 +20,8 @@ export class OverlayGalleryComponent implements OnInit, AfterViewInit, OnDestroy
 
     private _timeout?: number;
 
+    public templateReady: boolean = false;
+
     constructor(private ngZone: NgZone, public overlayGalleryService: OverlayGalleryService) {
 
     }
@@ -29,6 +31,9 @@ export class OverlayGalleryComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     public ngAfterViewInit(): void {
+        setTimeout(() => {
+            this.templateReady = true;
+        })
     }
 
     public activate(): void {
