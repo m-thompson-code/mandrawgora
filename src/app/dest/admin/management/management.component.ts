@@ -127,10 +127,18 @@ export class ManagementComponent implements AfterViewInit {
 
         this.newSectionText = "";
         this.newSectionError = "";
+
+        this.filesMap[slug] = [];
     }
 
     public deleteSection(section: Section, index: number): void {
         this.sections.splice(index, 1);
+
+        for (const file of this.filesMap[section.slug]) {
+            this.filesMap['no-section__SPECIAL'].unshift(file);
+        }
+
+        this.filesMap[section.slug] = [];
     }
 
     public dropSection(event: CdkDragDrop<Section[]>) {
@@ -178,8 +186,54 @@ export class ManagementComponent implements AfterViewInit {
     }
 
     public save(): Promise<void> {
-        return this.firestoreService.setSections(this.sections).then(() => {
-            console.log("saved");
+        const promises = [];
+
+        for (const file of this.filesMap['delete__SPECIAL']) {
+            promises.push(this.storageService.deleteFile(file.filename));
+        }
+
+        return Promise.all(promises).then(() => {
+            const batch = this.firestoreService.getBatch();
+
+            this.firestoreService.batchSetSections(batch, this.sections);
+
+            for (const section of this.sections) {
+                const files = this.filesMap[section.slug];
+
+                for (let i = 0; i < files.length; i++) {
+                    const file = files[i];
+                    file.order = files.length - i;
+                    file.sectionSlug = section.slug;
+
+                    this.firestoreService.batchSetFile(batch, file, section);
+                }
+            }
+
+            const noSectionFiles = this.filesMap['no-section__SPECIAL'];
+
+            for (let i = 0; i < noSectionFiles.length; i++) {
+                const file = noSectionFiles[i];
+                file.order = noSectionFiles.length - i;
+                file.sectionSlug = undefined;
+
+                this.firestoreService.batchSetFile(batch, file);
+            }
+
+            const deleteFiles = this.filesMap['delete__SPECIAL'];
+
+            for (let i = 0; i < deleteFiles.length; i++) {
+                const file = deleteFiles[i];
+                file.order = deleteFiles.length - i;
+                file.sectionSlug = undefined;
+
+                this.firestoreService.batchDeleteFile(batch, file);
+            }
+
+            return batch.commit().then(() => {
+                this.filesMap["delete__SPECIAL"] = [];
+                
+                console.log("saved");
+            });
         });
     }
 

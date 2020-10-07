@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { environment } from '@environment';
@@ -10,6 +10,7 @@ import { FirebaseService } from '@app/services/firebase.service';
 import { LoaderService } from '@app/services/loader.service';
 import { GalleryComponent } from '@app/components/gallery/gallery.component';
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
+import { HomeService } from '@app/services/home.service';
 
 // export interface UploadFile {
 //     file: File;
@@ -40,38 +41,85 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     private _queryCount: number = 0;
 
-    constructor(private router: Router, private firestoreService: FirestoreService, private loaderService: LoaderService, 
-        private overlayGalleryService: OverlayGalleryService) {
+    public _paramSubscription?: Subscription;
+
+    private _sectionSlug?: string;
+
+    constructor(private router: Router, private activatedRoute: ActivatedRoute, 
+        private firestoreService: FirestoreService, private loaderService: LoaderService, 
+        private overlayGalleryService: OverlayGalleryService, private homeService: HomeService) {
     }
 
     public ngAfterViewInit(): void {
+        void this._initalize().then(() => {
+            this._paramSubscription = this.activatedRoute.params.subscribe(params => {
+                this._sectionSlug = params['section'] || this.sections[0]?.slug;
+    
+                console.log(this._sectionSlug);
+    
+                let found = false;
+                for (const section of this.sections) {
+                    if (section.slug === this._sectionSlug) {
+                        this.setSelectedSection(section);
+                        found = true;
+                        break;
+                    }
+                }
+    
+                if (!found) {
+                    this.router.navigate(['404'], {
+                        skipLocationChange: true,
+                        replaceUrl: true,
+                    });
+                }
+            });
+        });
+    }
+
+    private _initalize(): Promise<void> {
         this.loaderService.setShowLoader(true);
 
         this._queryCount += 1;
         const _queryCount = this._queryCount;
 
-        void this._initalize().then(() => {
+        return this._getSections().then(() => {
+           // pass
+        });
+    }
+
+    private _loadFiles(): Promise<void> {
+        this.loaderService.setShowLoader(true);
+
+        this._queryCount += 1;
+        const _queryCount = this._queryCount;
+
+        if (this.selectedSection) {
+            return this._getFiles(this._queryCount, this.selectedSection).then(() => {
+                if (_queryCount === this._queryCount) {
+                    this.loaderService.setShowLoader(false);
+                }
+            });
+        }
+
+        return Promise.resolve().then(() => {
             if (_queryCount === this._queryCount) {
                 this.loaderService.setShowLoader(false);
             }
         });
     }
 
-    private _initalize(): Promise<void> {
-        return this._getSections().then(() => {
-            return this._getFiles();
-        });
-    }
-
     private _getSections(): Promise<void> {
+        console.log('_getSections');
         this.sections = [];
 
-        return this.firestoreService.getSections().then(_sections => {
-            this.sections = _sections;
+        const promises: Promise<any>[] = [];
 
-            if (!this.selectedSection) {
-                this.setSelectedSection(this.sections[0]);
-            }
+        if (!this.homeService.sections?.length) {
+            promises.push(this.homeService.getSections());
+        }
+
+        return Promise.all(promises).then(() => {
+            this.sections = this.homeService.sections;
 
             this.revealSectionCount = 0;
 
@@ -91,35 +139,43 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         });
     }
 
-    private _getFiles(): Promise<void> {
-        return this.firestoreService.getFiles('timestamp').then(files => {
-            this.files = files;
-            // this.files = files.slice(0, 3);
-            console.log(files);
+    private _getFiles(queryID: number, section: Section): Promise<void> {
+        return this.firestoreService.getFiles('order', section).then(files => {
+            if (queryID === this._queryCount) {
+                this.files = files;
 
-            this.revealImageCount = 0;
+                console.log(files);
 
-            clearInterval(this._revealImageInterval);
+                this.revealImageCount = 0;
 
-            this._revealImageInterval = window.setInterval(() => {
-                if (!this.files) {
-                    return;
-                }
-    
-                this.revealImageCount += 1;
-                
-                if (this.revealImageCount >= this.files.length) {
-                    clearInterval(this._revealImageInterval);
-                }
-            }, 200);
+                clearInterval(this._revealImageInterval);
+
+                this._revealImageInterval = window.setInterval(() => {
+                    if (!this.files) {
+                        return;
+                    }
+        
+                    this.revealImageCount += 1;
+                    
+                    if (this.revealImageCount >= this.files.length) {
+                        clearInterval(this._revealImageInterval);
+                    }
+                }, 200);
+            }
         });
     }
 
     public setSelectedSection(section: Section): void {
+        const _old = this.selectedSection;
+
         this.selectedSection = section;
+
+        if (_old !== section) {
+            this._loadFiles();
+        }
     }
 
-    public setSections(show: boolean): void {
+    public setShowSections(show: boolean): void {
         this.showTopNavSections = show;
     }
 
@@ -135,5 +191,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         this.loaderService.setShowLoader(false);
         clearInterval(this._revealImageInterval);
         clearInterval(this._revealSectionInterval);
+        this._paramSubscription?.unsubscribe();
     }
 }

@@ -65,6 +65,8 @@
             margin: 0;
             padding: 12px;
 
+            color: white;
+
             border-top: 1px solid #212121;
         }
 
@@ -98,10 +100,11 @@
 
     margin-bottom: 32px;
 
-    div {
+    a {
         margin-left: 32px;
+        color: white;
     }
-    div:first-child {
+    a:first-child {
         margin-left: 0;
     }
 
@@ -201,6 +204,26 @@ $imagePadding: 12px;
 }
 
 $imagePadding: 10px;
+
+.under-construction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    .under-construction-inner {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        width: 80vw;
+        max-width: 300px;
+
+        background: #121212;
+
+        border-radius: 50%;
+        font-size: 1.5em;
+    }
+}
 
 @mixin images-styles($rowCount) {
     .image {

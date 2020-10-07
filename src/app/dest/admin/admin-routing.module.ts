@@ -8,16 +8,6 @@ const routes: Routes = [
         component: AdminComponent,
         runGuardsAndResolvers: 'always',
         children: [
-            // {
-            //     path: '',
-            //     loadChildren: () => import('./menu/menu.module').then(m => m.MenuModule),
-            //     runGuardsAndResolvers: 'always',
-            // },
-            // {
-            //     path: 'upload',
-            //     loadChildren: () => import('./upload/upload.module').then(m => m.UploadModule),
-            //     runGuardsAndResolvers: 'always',
-            // },
             {
                 path: '',
                 loadChildren: () => import('./management/management.module').then(m => m.ManagementModule),

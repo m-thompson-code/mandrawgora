@@ -1,7 +1,7 @@
 <div class="top-nav">
     <div class="top-nav-main">
         <div class="icon-container">
-            <div matRipple [matRippleUnbounded]="false" class="icon" (click)="setSections(!showTopNavSections)">
+            <div matRipple [matRippleUnbounded]="false" class="icon" (click)="setShowSections(!showTopNavSections)">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
             </div>
         </div>
@@ -12,11 +12,11 @@
     </div>
     
     <div [class]="'sections' + (showTopNavSections ? ' show' : ' hide')" [style.max-height]="(sections.length * 49) + 'px'">
-        <div *ngFor="let section of sections;let i = index" matRipple [matRippleUnbounded]="false" class="section" (click)="setSelectedSection(section);setSections(false)">
-            <div [class]="'section-text' + (i < revealSectionCount ? ' show' : ' hide')">
+        <a *ngFor="let section of sections;let i = index" matRipple [matRippleUnbounded]="false" class="section" (click)="setSelectedSection(section);setShowSections(false)" [routerLink]="'/section/' + section.slug">
+            <span [class]="'section-text' + (i < revealSectionCount ? ' show' : ' hide')">
                 {{ section.text }}
-            </div>
-        </div>
+            </span>
+        </a>
     </div>
 </div>
 
@@ -26,28 +26,23 @@
     </div>
     
     <div class="sections">
-        <div *ngFor="let section of sections; let i = index" [class]="'section' + (selectedSection === section ? ' selected' : '')" (click)="setSelectedSection(section);setSections(false)">
-            <div [class]="'section-text' + (i < revealSectionCount ? ' show' : ' hide')">
+        <a *ngFor="let section of sections; let i = index" [class]="'section' + (selectedSection === section ? ' selected' : '')" (click)="setSelectedSection(section);setShowSections(false)" [routerLink]="'/section/' + section.slug">
+            <span [class]="'section-text' + (i < revealSectionCount ? ' show' : ' hide')">
                 {{ section.text }}
-            </div>
-        </div>
+            </span>
+        </a>
     </div>
 </div>
-
-<!-- <div>
-    <a (click)="galleryRef.increaseIndex()">Increase</a>
-</div>
-<div>
-    <a (click)="galleryRef.decreaseIndex()">Decrease</a>
-</div> -->
-
-<!-- <div *ngIf="files" class="test">
-    <moo-gallery #gallery [images]="files"></moo-gallery>
-</div> -->
 
 <div class="main">
     <div *ngIf="selectedSection" class="mobile-selected-section">
         {{ selectedSection.text }}
+    </div>
+
+    <div *ngIf="!loaderService.showLoader && (!files || !files.length)" class="under-construction">
+        <div class="under-construction-inner" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">
+            Under construction!
+        </div>
     </div>
 
     <div class="images-wrapper">

@@ -84,6 +84,13 @@ export class StorageService {
         return childRef.delete().then(_d => {
             console.log(_d);
             // pass
+        }).catch(error => {
+            if (error.code === 'storage/object-not-found') {
+                // pass
+                return;
+            }
+
+            throw error;
         });
     }
 }

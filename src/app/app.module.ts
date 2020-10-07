@@ -16,6 +16,7 @@ import { LoaderService } from '@app/services/loader.service';
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 import { ResponsiveService } from '@app/services/responsive.service';
 import { HelperService } from '@app/services/helper.service';
+import { HomeService } from '@app/services/home.service';
 
 import { DirectivesModule } from '@app/directives';
 
@@ -66,6 +67,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         OverlayGalleryService,
         ResponsiveService,
         HelperService,
+        HomeService,
 
         {
             provide: HAMMER_GESTURE_CONFIG,

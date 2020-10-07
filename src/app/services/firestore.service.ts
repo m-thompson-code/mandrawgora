@@ -60,8 +60,6 @@ export class FirestoreService {
     }
 
     public updateFile(fileMetadata: FileMetadata, section?: Section): Promise<FileMetadata> {
-        const timestamp = Date.now();
-
         const docRef = firebase.firestore().collection('files').doc(fileMetadata.firestoreID);
 
         const firestoreID = docRef.id;
@@ -103,19 +101,19 @@ export class FirestoreService {
         });
     }
 
-    public getFiles(orderBy: 'order' | 'timestamp' | 'filename', section?: string): Promise<FileMetadata[]> {
-        const files: FileMetadata[] = [];
+    public getFiles(orderBy: 'order' | 'timestamp' | 'filename', section?: Section): Promise<FileMetadata[]> {
+        let query: firebase.firestore.CollectionReference<firebase.firestore.DocumentData> | firebase.firestore.Query<firebase.firestore.DocumentData> = firebase.firestore().collection('files');
 
-        const colRef = firebase.firestore().collection('files');
-
-        const query = colRef;
+        if (section) {
+            query = query.where('sectionSlug', '==', section.slug);
+        }
 
         if (orderBy === 'timestamp') {
-            query.orderBy('timestamp', 'desc');
+            query = query.orderBy('timestamp', 'desc');
         } else if (orderBy === 'filename') {
-            query.orderBy('timestamp', 'asc');
+            query = query.orderBy('timestamp', 'asc');
         } else if (orderBy === 'order') {
-            query.orderBy('order', 'desc');
+            query = query.orderBy('order', 'desc');
         } else {
             console.warn("Unexpected orderBy", orderBy);
             if (environment.env !== 'prod') {
@@ -123,13 +121,14 @@ export class FirestoreService {
             }
         }
 
-        if (section) {
-            query.where('section', '==', section);
-        }
+        console.log(firebase);
 
         return query.get().then(colSnapshot => {
+            const files: FileMetadata[] = [];
+
             colSnapshot.forEach(_d => {
                 const data = _d.data();
+                console.log(data);
 
                 if (!data) {
                     return;
@@ -197,8 +196,15 @@ export class FirestoreService {
         });
     }
 
-    public setSections(sections: Section[]): Promise<void> {
+    public getBatch(): firebase.firestore.WriteBatch {
+        const batch = firebase.firestore().batch();
+
+        return batch;
+    }
+
+    public batchSetSections(batch: firebase.firestore.WriteBatch, sections: Section[]): void {
         const _sections: Section[] = [];
+        
         for (let i = 0; i < sections.length; i++) {
             const section = sections[i];
 
@@ -214,7 +220,58 @@ export class FirestoreService {
         }
 
         const docRef = firebase.firestore().collection('sections').doc('sections-data');
-        console.log(_sections);
+
+        batch.set(docRef, {
+            updatedAt: Date.now(),
+            sections: _sections,
+        });
+    }
+
+    public batchSetFile(batch: firebase.firestore.WriteBatch, file: FileMetadata, section?: Section): void {
+        const docRef = firebase.firestore().collection('files').doc(file.firestoreID);
+
+        const firestoreID = docRef.id;
+
+        const _file: FileMetadata = {
+            url: file.url,
+            filename: file.filename,
+            timestamp: file.timestamp || Date.now(),
+            firestoreID: firestoreID,
+            order: file.order || 0,
+        };
+
+        if (section) {
+            _file.sectionSlug = section.slug;
+        }
+
+        batch.set(docRef, _file);
+    }
+
+    public batchDeleteFile(batch: firebase.firestore.WriteBatch, file: FileMetadata): void {
+        const docRef = firebase.firestore().collection('files').doc(file.firestoreID);
+
+        batch.delete(docRef);
+    }
+
+    public setSections(sections: Section[]): Promise<void> {
+        const _sections: Section[] = [];
+
+        for (let i = 0; i < sections.length; i++) {
+            const section = sections[i];
+
+            const text = ('' + section.text) || '';
+            const slug = ('' + section.slug) || '';
+            const order = sections.length - i;
+
+            _sections.push({
+                text: text,
+                slug: slug,
+                order: order,
+            });
+        }
+
+        const docRef = firebase.firestore().collection('sections').doc('sections-data');
+        // console.log(_sections);
         return docRef.set({
             updatedAt: Date.now(),
             sections: _sections,

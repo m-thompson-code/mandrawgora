@@ -4,7 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 const routes: Routes = [
     {
         path: '',
-        loadChildren: () => import('./dest/home/home.module').then(m => m.HomeModule),
+        loadChildren: () => import('./dest/root/root.module').then(m => m.RootModule),
         runGuardsAndResolvers: 'always',
     },
     {
@@ -13,15 +13,20 @@ const routes: Routes = [
         runGuardsAndResolvers: 'always',
     },
     {
-        path: ':section',
+        path: 'section/:section',
         loadChildren: () => import('./dest/home/home.module').then(m => m.HomeModule),
+        runGuardsAndResolvers: 'always',
+    },
+    {
+        path: '**',
+        loadChildren: () => import('./dest/error-404/error-404.module').then(m => m.Error404Module),
         runGuardsAndResolvers: 'always',
     },
 ];
 
 @NgModule({
     imports: [RouterModule.forRoot(routes, {
-        onSameUrlNavigation: 'reload',
+        // onSameUrlNavigation: 'reload',
         // source: https://stackoverflow.com/a/51915623/9115419
         scrollPositionRestoration: 'enabled', // Enables scrolling back to top of app whenever navigating forward
     })],

@@ -6,10 +6,6 @@ import { HomeComponent } from './home.component';
 
 import { MatRippleModule } from '@angular/material/core';
 
-import { StorageService } from '@app/services/storage.service';
-import { FirestoreService } from '@app/services/firestore.service';
-import { FirebaseService } from '@app/services/firebase.service';
-
 import { DirectivesModule } from '@app/directives';
 
 import { GalleryModule } from '@app/components/gallery';
@@ -30,9 +26,6 @@ import { GalleryModule } from '@app/components/gallery';
         GalleryModule,
     ],
     providers: [
-        StorageService,
-        FirestoreService,
-        FirebaseService,
     ],
     bootstrap: [HomeComponent]
 })

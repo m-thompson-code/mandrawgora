@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
     providedIn: 'root',
 })
 export class LoaderService {
-    public _showLoader?: boolean;
+    public showLoader: boolean = true;
     private _timeout?: number;
     constructor() {
     }
@@ -21,7 +21,7 @@ export class LoaderService {
         }
         
         this._timeout = window.setTimeout(() => {
-            this._showLoader = show;
+            this.showLoader = show;
         }, timer);
     }
 }
