@@ -54,7 +54,9 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
             this.animate();
         }, UPDATE_RATE);
 
-        this.pushColors();
+        setTimeout(() => {
+            this.pushColors();
+        }, 1000);
     }
 
     public pushColors(): void {
