@@ -207,6 +207,9 @@ $imagePadding: 12px;
 
         cursor: pointer;
         transition: filter 200ms linear;
+
+        background: #121212;
+        background: linear-gradient(45deg, #121212, transparent);
     }
     img:hover {
         filter: brightness(1.06) contrast(1.04);
