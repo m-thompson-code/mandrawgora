@@ -60,10 +60,10 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
     }
 
     public pushColors(): void {
-        for (let i = 0; i < 200; i++) {
+        for (let i = 0; i < 400; i++) {
             setTimeout(() => {
                 this.pushColor();
-            }, i * 5);
+            }, i * 2 + i * i / 400);
         }
     }
 
@@ -81,9 +81,11 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
         const xStartPercent = Math.random() * .15 + .45;
         const xEndPercent = Math.random();
 
-        const color = Math.random() > .75 ? '#71c4c8' : '#c9997f';
+        let color = Math.random() < .6 ? '#71c4c8' : '#c9997f';
 
-        const scale = .5 + Math.random();
+        const scale = .5 + Math.random() * 1.25;
+
+        color = this.colorLuminance(color, scale - 1);
 
         const width = 2 + Math.random() * 6;
 
@@ -180,6 +182,34 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
         }
 
         window.requestAnimationFrame(_drawLoop);
+    }
+
+    /**
+     * 
+     * @param hex - a hex color value such as “#abc” or “#123456” (the hash is optional)
+     * @param lum - the luminosity factor, i.e. -0.1 is 10% darker, 0.2 is 20% lighter, etc.
+     */
+    public colorLuminance(hex: string, lum: number): string {
+
+        // validate hex string
+        hex = String(hex).replace(/[^0-9a-f]/gi, '');
+
+        if (hex.length < 6) {
+            hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+        }
+
+        lum = lum || 0;
+    
+        // convert to decimal and change luminosity
+        let rgb = "#", c, i;
+
+        for (i = 0; i < 3; i++) {
+            c = parseInt(hex.substr(i*2,2), 16);
+            c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+            rgb += ("00"+c).substr(c.length);
+        }
+    
+        return rgb;
     }
 
     public ngOnDestroy(): void {
