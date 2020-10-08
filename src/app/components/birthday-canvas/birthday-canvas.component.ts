@@ -6,9 +6,14 @@ import { ResponsiveService } from '@app/services/responsive.service';
 export interface RenderColor {
     color: string;
     timestamp: number;
-    xPercent: number;
+    xStartPercent: number;
+    xEndPercent: number;
+    x: number;
     y: number;
     velocity: number;
+    startVelocity: number;
+    landingTime: number;
+    ticks: number;
 }
 
 const UPDATE_RATE = 1000/60;
@@ -30,6 +35,7 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
     }
 
     public ngOnInit(): void {
+        this.pushColor(1);
     }
 
     public ngAfterViewInit(): void {
@@ -46,41 +52,55 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
         }, UPDATE_RATE);
     }
 
-    public pushEmoji(index: number): void {
-        
+    public pushColor(index: number): void {
+        const height = this.divContainer.offsetHeight;
+
+        this._colors = [];
+
+        const g = .5;
+
+        const initalV = Math.sqrt(2 * g * height);
+
+        const landingTime = initalV * 2 / g;
+
+        this._colors.push({
+            color: 'red',
+            timestamp: Date.now(),
+            xStartPercent: 0,
+            xEndPercent: 1,
+            x: 0,
+            y: 0,
+            velocity: initalV,
+            startVelocity: initalV,
+            landingTime: landingTime,
+            ticks: 0,
+        });
     }
 
     public animate(): void {
         const height = this.divContainer.offsetHeight;
-        // const width = this.divContainer.offsetWidth;
+        const width = this.divContainer.offsetWidth;
 
         const now = Date.now();
 
         const newColors = [];
 
         for (const color of this._colors) {
+            color.ticks += 1;
 
-            let dist = color.velocity / UPDATE_RATE;
+            color.velocity -= .5;
 
-            if (this.responsiveService.responsiveMetadata.deviceType === 'mobile') {
-                dist = dist * .75;
-            }
+            color.x = color.xEndPercent * width * color.ticks / color.landingTime;
+            color.y += color.velocity;
 
-            const timestampDelta = now - color.timestamp;
-
-            const yDelta = timestampDelta * dist;
-
-            color.y += yDelta;
-            color.timestamp = now;
-
-            if (color.y > height) {
+            if (color.y < -50) {
                 continue;
             }
 
             newColors.push(color);
         }
 
-        // this._colors = RenderColor
+        this._colors = newColors;
     }
 
     public draw(): void {
@@ -103,45 +123,28 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
             ctx.clearRect(0, 0, width, height);// clear canvas
             ctx.lineWidth = 3;
 
-            const _width = 20;
+            const lineWidth = 20;
 
-            const _rh = Math.floor(Math.random() * _width * 2) - _width;
-            const _rw = Math.floor(Math.random() * _width * 2) - _width;
+            for (const color of this._colors) {
+                if (color.y < -lineWidth) {
+                    continue;
+                }
 
-            ctx.strokeStyle = "#FF0000";
-            ctx.beginPath();
-            ctx.moveTo(50 - _rh, 50 - _rw);
-            ctx.lineTo(50, 50);
-            ctx.stroke();
+                const _rh = Math.floor(Math.random() * lineWidth * 2) - lineWidth;
+                const _rw = Math.floor(Math.random() * lineWidth * 2) - lineWidth;
 
-            ctx.strokeStyle = "#FFFFFF";
-            ctx.beginPath();
-            ctx.moveTo(50, 50);
-            ctx.lineTo(50 + _rh, 50 + _rw);
-            ctx.stroke();
+                ctx.strokeStyle = "#FF0000";
+                ctx.beginPath();
+                ctx.moveTo(color.x - _rh, height - (color.y - _rw));
+                ctx.lineTo(color.x, height - color.y);
+                ctx.stroke();
 
-            // ctx.clearRect(0, 0, width, height);// clear canvas
-            // ctx.lineWidth = 5;
-
-            // for (const color of this._colors) {
-            //     if (color.y < -50) {
-            //         continue;
-            //     }
-
-            //     let alpha = (height - color.y) / height;
-
-            //     if (alpha > 1) {
-            //         alpha = 1;
-            //     } else if (alpha < 0) {
-            //         alpha = 0;
-            //     }
-
-            //     ctx.globalAlpha = alpha;
-
-            //     const x = color.xPercent;
-
-            //     ctx.strokeRect(20, 20, 80, 100);
-            // }
+                ctx.strokeStyle = "#FFFFFF";
+                ctx.beginPath();
+                ctx.moveTo(color.x, height - color.y);
+                ctx.lineTo(color.x + _rh, height - (color.y + _rw));
+                ctx.stroke();
+            }
 
             window.requestAnimationFrame(_drawLoop);
         }
