@@ -56,7 +56,7 @@
     <div class="images-wrapper">
         <div class="container">
             <div matRipple [matRippleUnbounded]="false" (click)="activateOverlay(i)" *ngFor="let fileMetadata of files; let i = index" class="image responsive-width" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">
-                <img *ngIf="i < revealImageCount" class="responsive-width cover-fit" [src]="fileMetadata.url">
+                <img *ngIf="i < revealImageCount" class="responsive-width cover-fit" [src]="fileMetadata.url"  loading="lazy">
             </div>
         </div>
     </div>
