@@ -191,6 +191,12 @@ export class ManagementComponent implements AfterViewInit {
         return Promise.all(promises).then(() => {
             const batch = this.firestoreService.getBatch();
 
+            for (let i = 0; i < this.sections.length; i++) {
+                const section = this.sections[i];
+
+                section.order = this.sections.length - i;
+            }
+
             this.firestoreService.batchSetSections(batch, this.sections);
 
             for (const section of this.sections) {
