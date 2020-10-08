@@ -6,19 +6,11 @@ import { Subscription } from 'rxjs';
 import { environment } from '@environment';
 
 import { AnalyticsService } from '@app/services/analytics.service';
-// import { StorageService } from '@app/services/storage.service';
-// import { FileMetadata, FirestoreService } from '@app/services/firestore.service';
 import { FirebaseService } from '@app/services/firebase.service';
 import { LoaderService } from '@app/services/loader.service';
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 import { AuthService } from '@app/services/auth.service';
 import { ResponsiveService } from './services/responsive.service';
-
-// export interface UploadFile {
-//     file: File;
-//     filename: string;
-//     src: string | ArrayBuffer | null;
-// }
 
 @Component({
     selector: 'app-root',
@@ -30,6 +22,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     private _routerEventsSub?: Subscription;
     private _onResize?: () => void;
+    // Import firebaseService here so firebase initalizes properly
     constructor(private router: Router, public firebaseService: FirebaseService, private analyticsService: AnalyticsService, 
         public loaderService: LoaderService, public overlayGalleryService: OverlayGalleryService, 
         private authService: AuthService, private responsiveService: ResponsiveService) {
@@ -39,7 +32,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         const updateResponsiveService = () => {
             this.responsiveService.responsiveMetadata = this.responsiveService.getResponsiveType();
         }
-
         
         this.initalized = false;
         void this._initalize().then(() => {

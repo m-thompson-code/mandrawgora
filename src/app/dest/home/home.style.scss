@@ -225,6 +225,18 @@ $imagePadding: 10px;
     }
 }
 
+.birthday-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    display: block;
+    
+    height: 100vh;
+    height: var(--app-height-100);
+    width: 100vw;
+}
+
 @mixin images-styles($rowCount) {
     .image {
         width: 100% / $rowCount;

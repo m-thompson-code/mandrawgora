@@ -46,7 +46,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     private _sectionSlug?: string;
 
     constructor(private router: Router, private activatedRoute: ActivatedRoute, 
-        private firestoreService: FirestoreService, private loaderService: LoaderService, 
+        private firestoreService: FirestoreService, public loaderService: LoaderService, 
         private overlayGalleryService: OverlayGalleryService, private homeService: HomeService) {
     }
 

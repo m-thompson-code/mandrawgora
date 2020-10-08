@@ -10,6 +10,8 @@ import { DirectivesModule } from '@app/directives';
 
 import { GalleryModule } from '@app/components/gallery';
 
+import { BirthdayCanvasModule } from '@app/components/birthday-canvas';
+
 @NgModule({
     declarations: [
         HomeComponent
@@ -24,6 +26,8 @@ import { GalleryModule } from '@app/components/gallery';
         DirectivesModule,
 
         GalleryModule,
+
+        BirthdayCanvasModule,
     ],
     providers: [
     ],

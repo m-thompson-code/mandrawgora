@@ -1,0 +1,19 @@
+:host, canvas {
+    display: block;
+
+    height: 100%;
+    width: 100%;
+
+    pointer-events: none;
+
+    background: rgba(green, .1);
+}
+
+canvas {
+    display: block;
+    
+    height: 100%;
+    width: 100%;
+
+    pointer-events: none;
+}
