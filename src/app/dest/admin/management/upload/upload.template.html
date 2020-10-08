@@ -2,29 +2,29 @@
     <moo-uploader (filesUploaded)="handleFilesUploaded($event)"></moo-uploader>
 </div>
 
-<div>
-    <div *ngFor="let pendingUploadFile of pendingUploadFiles; let i = index" class="row">
+<ng-container *ngFor="let pendingUploadFile of pendingUploadFiles; let i = index">
+    <div class="row">
         <div class="top">
             <div matRipple [matRippleUnbounded]="false" (click)="activateOverlay(i)" class="thumbnail responsive-width" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">
                 <img class="cover-fit" [src]="pendingUploadFile.src">
             </div>
-
+    
             <moo-input *ngIf="!pendingUploadFile.metadata" label="Filename" [value]="pendingUploadFile.filename" 
                 [error]="pendingUploadFile.error" 
                 (valueChanged)="handleFilenameChange(pendingUploadFile, $event)"
                 (enterPressed)="uploadFile(pendingUploadFile)">
             </moo-input>
-
+    
             <div *ngIf="pendingUploadFile.metadata" class="filename">
                 {{ pendingUploadFile.filename || '(unknown)' }}
             </div>
         </div>
-
+    
         <div class="bottom">
             <moo-select *ngIf="!pendingUploadFile.metadata" label="Section" [value]="pendingUploadFile.section" [options]="sections" 
                 (valueChanged)="handleSelectionChange(pendingUploadFile, $event)">
             </moo-select>
-
+    
             <div *ngIf="pendingUploadFile.metadata" class="section">
                 {{ pendingUploadFile.section?.text }}
             </div>
@@ -35,13 +35,13 @@
                     <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
                 </svg>
             </div>
-
+    
             <div *ngIf="!pendingUploadFile.uploading && pendingUploadFile.metadata" (click)="hideFile(i)" class="icon-container success" matRipple [matRippleUnbounded]="false">                          
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                     <path d="M0 0h24v24H0z" fill="none"/><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
                 </svg>
             </div>
-
+    
             <div *ngIf="pendingUploadFile.uploading" class="icon-container spin">
                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
                     <path d="M0 0h24v24H0z" fill="none"/>
@@ -49,12 +49,14 @@
                 </svg>
             </div>
         </div>
-
+    
         <div class="overlay" *ngIf="pendingUploadFile.metadata"></div>
-
+    
         <mat-progress-bar *ngIf="pendingUploadFile.uploading" 
             mode="determinate"
             [value]="(pendingUploadFile.progress || 0) * 100">
         </mat-progress-bar>
     </div>
-</div>
+
+    <mat-divider></mat-divider>
+</ng-container>

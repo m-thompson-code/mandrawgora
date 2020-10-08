@@ -4,26 +4,29 @@
 
 <div cdkDropList class="files" [cdkDropListData]="files" 
     (cdkDropListDropped)="dropFile($event)">
-    <div *ngFor="let file of files; let i = index" class="file mat-app-background" cdkDrag>
-        <div class="drop-placeholder" *cdkDragPlaceholder></div>
 
-        <div class="icon-container drag" matRipple [matRippleUnbounded]="false" cdkDragHandle>
-            <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
-                <g><rect fill="none" height="24" width="24"/></g><g><g><g><path d="M20,9H4v2h16V9z M4,15h16v-2H4V15z"/></g></g></g>
-            </svg>
-        </div>
-
-        <div matRipple [matRippleUnbounded]="false" (click)="activateOverlay(i)" class="thumbnail responsive-width" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">
-            <img class="cover-fit" [src]="file.url">
-        </div>
-
-        <div class="file-text">{{ file.filename }}</div>
-
-        <div class="icon-container" matRipple [matRippleUnbounded]="false" [matMenuTriggerFor]="menu" aria-label="image options">
-            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
-                <path d="M0 0h24v24H0z" fill="none"/>
-                <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
-            </svg>
+    <ng-container *ngFor="let file of files; let i = index">
+        <div class="file mat-app-background" cdkDrag>
+            <div class="drop-placeholder" *cdkDragPlaceholder></div>
+    
+            <div class="icon-container drag" matRipple [matRippleUnbounded]="false" cdkDragHandle>
+                <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="24" viewBox="0 0 24 24" width="24">
+                    <g><rect fill="none" height="24" width="24"/></g><g><g><g><path d="M20,9H4v2h16V9z M4,15h16v-2H4V15z"/></g></g></g>
+                </svg>
+            </div>
+    
+            <div matRipple [matRippleUnbounded]="false" (click)="activateOverlay(i)" class="thumbnail responsive-width" mooKeepRatio [ratioHeight]="1" [ratioWidth]="1" [basedOnWidth]="true">
+                <img class="cover-fit" [src]="file.url">
+            </div>
+    
+            <div class="file-text">{{ file.filename }}</div>
+    
+            <div class="icon-container" matRipple [matRippleUnbounded]="false" [matMenuTriggerFor]="menu" aria-label="image options">
+                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                    <path d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                </svg>
+            </div>
         </div>
 
         <mat-menu #menu="matMenu">
@@ -55,7 +58,9 @@
                 <span>Delete</span>
             </button>
         </mat-menu>
-    </div>
+
+        <mat-divider></mat-divider>
+    </ng-container>
 
     <div class="empty" *ngIf="!files || !files.length">
         (empty)

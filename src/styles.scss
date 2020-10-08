@@ -11,6 +11,14 @@
     --app-height-50: 50vh;
 }
 
+.margin-top {
+    margin-top: $spacing;
+}
+
+.margin-bottom {
+    margin-bottom: $spacing;
+}
+
 html, body {
     margin: 0;
     padding: 0;

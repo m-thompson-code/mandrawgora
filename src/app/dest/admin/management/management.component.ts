@@ -67,6 +67,8 @@ export class ManagementComponent implements AfterViewInit {
         this._initalize().then(() => {
             this.loaderService.setShowLoader(false);
         });
+
+        this.sectionFiltersMap['delete__SPECIAL'] = true;
     }
 
     private _initalize(): Promise<void> {
@@ -142,17 +144,6 @@ export class ManagementComponent implements AfterViewInit {
     }
 
     public dropSection(event: CdkDragDrop<Section[]>) {
-        console.log(event);
-        // if (event.previousContainer === event.container) {
-        //     // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        //     moveItemInArray(this.sections, event.previousIndex, event.currentIndex);
-        //   } else {
-        //     transferArrayItem(event.previousContainer.data,
-        //                       event.container.data,
-        //                       event.previousIndex,
-        //                       event.currentIndex);
-        //   }
-
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
@@ -164,17 +155,6 @@ export class ManagementComponent implements AfterViewInit {
     }
 
     public dropFile(event: CdkDragDrop<FileMetadata[]>) {
-        console.log(event);
-        // if (event.previousContainer === event.container) {
-        //     // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        //     moveItemInArray(this.sections, event.previousIndex, event.currentIndex);
-        //   } else {
-        //     transferArrayItem(event.previousContainer.data,
-        //                       event.container.data,
-        //                       event.previousIndex,
-        //                       event.currentIndex);
-        //   }
-
         if (event.previousContainer === event.container) {
             moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {

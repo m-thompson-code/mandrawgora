@@ -1,20 +1,5 @@
 @import 'styles/variables.scss';
 
-:host {
-    display: flex;
-    flex-grow: 2;
-    flex-direction: column;
-}
-
-.header {
-    font-size: 24px;
-    line-height: 1.4;
-}
-
-.margin-bottom {
-    margin-bottom: $spacing;
-}
-
 .thumbnail {
     position: relative;
     top: 0;
@@ -27,6 +12,8 @@
     width: 56px;
 
     margin-right: $spacing/4;
+
+    border-radius: 2px;
 
     cursor: zoom-in;
 }
@@ -100,51 +87,14 @@
     pointer-events: none;
 }
 
-.header-container {
-    display: flex;
-    cursor: pointer;
-
-    .expand-icon {
-        position: relative;
-        top: 0;
-        left: 0;
-
-        height: 33px;
-        width: 33px;
-        margin-right: $spacing/4;
-
-        svg {
-            height: 100%;
-            width: 100%;
-
-            transition: all 400ms linear;
-            // transition: all 400ms cubic-bezier(0.25, 0.8, 0.25, 1);
-            transition: all 400ms cubic-bezier(0.61, 0.01, 0.28, 1.26);
-        }
-        svg.active {
-            transform: rotate(90deg);
-        }
-
-        .svg-overlap {
-            position: absolute;
-            top: 0;
-            left: 0;
-
-            transition: all 400ms linear;
-            transition: all 400ms cubic-bezier(0.61, 0.01, 0.28, 1.26);
-        }
-        .svg-overlap.active {
-            transform: rotate(180deg);
-        }
-    }
-}
-
 .row {
     position: relative;
     top: 0;
     left: 0;
 
     display: flex;
+
+    padding: $spacing/8 0;
 
     .top {
         margin-right: $spacing/8;
@@ -154,8 +104,6 @@
         margin-left: $spacing/8;
         max-width: 300px;
     }
-
-    margin-bottom: $spacing/4;
 
     mat-progress-bar {
         position: absolute;
@@ -201,24 +149,7 @@
     pointer-events: none;
 }
 
-@mixin mobile-padding($padding) {
-    :host {
-        padding-left: $padding;
-        padding-right: $padding;
-    }
-}
-
-@media only screen and (max-width: $desktop_width) {
-    // pass
-}
-
-@media only screen and (max-width: $tablet_width) and (orientation: portrait) {
-    // pass
-}
-
-@media only screen and (max-width: $mobile_width) and (orientation: portrait) {
-    @include mobile-padding(2.5vw);
-
+@mixin mobile-upload() {
     .row {
         flex-direction: column;
 
@@ -235,25 +166,22 @@
     }
 }
 
+@media only screen and (max-width: $desktop_width) {
+    // pass
+}
+
+@media only screen and (max-width: $tablet_width) and (orientation: portrait) {
+    // pass
+}
+
+@media only screen and (max-width: $mobile_width) and (orientation: portrait) {
+    @include mobile-upload();
+}
+
 @media only screen and (max-width: $landscape_width) and (max-height: $tablet_height) and (orientation: landscape) {
     // pass
 }
 
 @media only screen and (max-width: $landscape_width) and (max-height: $mobile_height) and (orientation: landscape) {
-    @include mobile-padding(2.5vw);
-
-    .row {
-        flex-direction: column;
-
-        .top, .bottom {
-            margin: 0;
-        }
-        .bottom {
-            margin-left: 56px + $spacing/4;
-
-            moo-select, .section {
-                max-width: none;
-            }
-        }
-    }
+    @include mobile-upload();
 }
