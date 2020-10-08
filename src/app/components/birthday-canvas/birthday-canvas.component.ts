@@ -16,6 +16,8 @@ export interface RenderColor {
     gravity: number;
     estEndTicks: number;
     ticks: number;
+    scale: number;
+    width: number;
 }
 
 const UPDATE_RATE = 1000/60;
@@ -79,6 +81,10 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
 
         const color = Math.random() > .75 ? '#71c4c8' : '#c9997f';
 
+        const scale = .5 + Math.random();
+
+        const width = 2 + Math.random() * 6;
+
         this._colors.push({
             color: color,
             timestamp: Date.now(),
@@ -92,6 +98,8 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
             estEndTicks: estEndTicks,
             gravity: g,
             ticks: 0,
+            width: width,
+            scale: scale,
         });
     }
 
@@ -141,11 +149,12 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
             _c.width = width;
 
             ctx.clearRect(0, 0, width, height);// clear canvas
-            ctx.lineWidth = 3;
 
-            const lineWidth = 6;
 
             for (const color of this._colors) {
+                const lineWidth = color.width * color.scale;
+                ctx.lineWidth = 3 * color.scale;
+
                 if (color.y < -lineWidth) {
                     continue;
                 }
