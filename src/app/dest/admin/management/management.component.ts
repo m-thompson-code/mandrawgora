@@ -147,6 +147,10 @@ export class ManagementComponent implements AfterViewInit {
         for (const file of this.filesMap[section.slug]) {
             this.filesMap['no-section__SPECIAL'].unshift(file);
         }
+        
+        if (this.sectionFiltersMap[section.slug]) {
+            this.toggleSectionFilter(section.slug);
+        }
 
         this.filesMap[section.slug] = [];
     }
@@ -263,12 +267,15 @@ export class ManagementComponent implements AfterViewInit {
     }
 
     public toggleSectionFilter(sectionSlug: string): void {
-        console.log(sectionSlug, this.sectionFiltersMap);
         this.sectionFiltersMap[sectionSlug] = !this.sectionFiltersMap[sectionSlug];
 
         this.sectionFilterSelected = false;
 
         for (const key of Object.keys(this.sectionFiltersMap)) {
+            if (key === 'delete__SPECIAL') {
+                continue;
+            }
+            
             if (this.sectionFiltersMap[key]) {
                 this.sectionFilterSelected = true;
                 break;
