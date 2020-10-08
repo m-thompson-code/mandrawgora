@@ -184,6 +184,16 @@ svg {
     fill: currentColor;
 }
 
+.snackbar-success {
+    background: #4CAF50;
+    color: white;
+}
+
+.snackbar-error {
+    background: $error;
+    color: black;
+}
+
 @media only screen and (max-width: $desktop_width) {
     // pass
 }

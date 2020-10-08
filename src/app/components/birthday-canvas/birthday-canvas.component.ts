@@ -8,11 +8,13 @@ export interface RenderColor {
     timestamp: number;
     xStartPercent: number;
     xEndPercent: number;
+    yMaxPercent: number;
     x: number;
     y: number;
     velocity: number;
     startVelocity: number;
-    landingTime: number;
+    gravity: number;
+    estEndTicks: number;
     ticks: number;
 }
 
@@ -35,7 +37,6 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
     }
 
     public ngOnInit(): void {
-        this.pushColor(1);
     }
 
     public ngAfterViewInit(): void {
@@ -50,29 +51,46 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
         this._drawInterval = window.setInterval(() => {
             this.animate();
         }, UPDATE_RATE);
+
+        this.pushColors();
     }
 
-    public pushColor(index: number): void {
+    public pushColors(): void {
+        for (let i = 0; i < 200; i++) {
+            setTimeout(() => {
+                this.pushColor();
+            }, i * 5);
+        }
+    }
+
+    public pushColor(): void {
         const height = this.divContainer.offsetHeight;
 
-        this._colors = [];
+        const g = .3 + Math.random() / 2;
 
-        const g = .5;
+        const yMaxPercent = Math.random() / 2 + .5;
 
-        const initalV = Math.sqrt(2 * g * height);
+        const initalV = Math.sqrt(2 * g * (height + 50) * yMaxPercent);
 
-        const landingTime = initalV * 2 / g;
+        const estEndTicks = initalV * 2 / g;
+
+        const xStartPercent = Math.random() * .15 + .45;
+        const xEndPercent = Math.random();
+
+        const color = Math.random() > .75 ? '#71c4c8' : '#c9997f';
 
         this._colors.push({
-            color: 'red',
+            color: color,
             timestamp: Date.now(),
-            xStartPercent: 0,
-            xEndPercent: 1,
+            xStartPercent: xStartPercent,
+            xEndPercent: xEndPercent,
+            yMaxPercent: yMaxPercent,
             x: 0,
-            y: 0,
+            y: -50,
             velocity: initalV,
             startVelocity: initalV,
-            landingTime: landingTime,
+            estEndTicks: estEndTicks,
+            gravity: g,
             ticks: 0,
         });
     }
@@ -86,16 +104,18 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
         const newColors = [];
 
         for (const color of this._colors) {
-            color.ticks += 1;
+            color.velocity -= color.gravity;
 
-            color.velocity -= .5;
-
-            color.x = color.xEndPercent * width * color.ticks / color.landingTime;
             color.y += color.velocity;
 
+            // Delete partical if below screen
             if (color.y < -50) {
                 continue;
             }
+
+            color.ticks += 1;
+
+            color.x = color.xStartPercent * width + (color.xEndPercent - color.xStartPercent) * width * color.ticks / color.estEndTicks;
 
             newColors.push(color);
         }
@@ -123,7 +143,7 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
             ctx.clearRect(0, 0, width, height);// clear canvas
             ctx.lineWidth = 3;
 
-            const lineWidth = 20;
+            const lineWidth = 6;
 
             for (const color of this._colors) {
                 if (color.y < -lineWidth) {
@@ -133,13 +153,12 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
                 const _rh = Math.floor(Math.random() * lineWidth * 2) - lineWidth;
                 const _rw = Math.floor(Math.random() * lineWidth * 2) - lineWidth;
 
-                ctx.strokeStyle = "#FF0000";
+                ctx.strokeStyle = color.color;
                 ctx.beginPath();
                 ctx.moveTo(color.x - _rh, height - (color.y - _rw));
                 ctx.lineTo(color.x, height - color.y);
                 ctx.stroke();
 
-                ctx.strokeStyle = "#FFFFFF";
                 ctx.beginPath();
                 ctx.moveTo(color.x, height - color.y);
                 ctx.lineTo(color.x + _rh, height - (color.y + _rw));

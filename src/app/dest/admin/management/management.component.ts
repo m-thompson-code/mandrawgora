@@ -14,6 +14,7 @@ import { UploadFile } from '@app/components/uploader/uploader.component';
 import { HelperService } from '@app/services/helper.service';
 import { LoaderService } from '@app/services/loader.service';
 import { PendingUploadFile } from './upload/upload.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'management',
@@ -47,9 +48,12 @@ export class ManagementComponent implements AfterViewInit {
 
     public testList: Section[] = [];
 
+    public initalized: boolean = false;
+    public saving: boolean = false;
+
     constructor(private router: Router, private firestoreService: FirestoreService, 
         private storageService: StorageService, private helperService: HelperService, 
-        private loaderService: LoaderService) {
+        private loaderService: LoaderService, private _snackBar: MatSnackBar) {
     }
 
     public ngAfterViewInit(): void {
@@ -62,17 +66,17 @@ export class ManagementComponent implements AfterViewInit {
             // this.getSectionFilters();
         });
 
-        this.loaderService.setShowLoader(true);
-
-        this._initalize().then(() => {
-            this.loaderService.setShowLoader(false);
-        });
+        this._initalize();
 
         this.sectionFiltersMap['delete__SPECIAL'] = true;
     }
 
     private _initalize(): Promise<void> {
+        this.initalized = false;
+
         const promises = [];
+
+        this.loaderService.setShowLoader(true);
 
         promises.push(this.firestoreService.getFiles('order').then(files => {
             this.files = files;
@@ -96,6 +100,10 @@ export class ManagementComponent implements AfterViewInit {
             for (const file of this.files) {
                 this.filesMap[file.sectionSlug || "no-section__SPECIAL"].push(file);
             }
+
+            this.loaderService.setShowLoader(false);
+
+            this.initalized = true;
         });
     }
 
@@ -166,6 +174,14 @@ export class ManagementComponent implements AfterViewInit {
     }
 
     public save(): Promise<void> {
+        if (this.saving) {
+            return Promise.resolve();
+        }
+
+        this.loaderService.setShowLoader(true);
+
+        this.saving = true;
+
         const promises = [];
 
         for (const file of this.filesMap['delete__SPECIAL']) {
@@ -212,8 +228,21 @@ export class ManagementComponent implements AfterViewInit {
             return batch.commit().then(() => {
                 this.filesMap["delete__SPECIAL"] = [];
                 
-                console.log("saved");
+                this._snackBar.open('Save complete!', undefined, {
+                    duration: 2000,
+                    panelClass: 'snackbar-success',
+                });
             });
+        }).catch(error => {
+            console.error(error);
+
+            this._snackBar.open(error.message || 'Unexpected error', undefined, {
+                duration: 2000,
+                panelClass: 'snackbar-error',
+            });
+        }).then(() => {
+            this.saving = false;
+            this.loaderService.setShowLoader(false);
         });
     }
 

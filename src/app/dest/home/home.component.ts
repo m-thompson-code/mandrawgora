@@ -2,21 +2,17 @@ import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+import * as moment from 'moment';
+
 import { environment } from '@environment';
 
-import { StorageService } from '@app/services/storage.service';
 import { FileMetadata, FirestoreService, Section } from '@app/services/firestore.service';
-import { FirebaseService } from '@app/services/firebase.service';
 import { LoaderService } from '@app/services/loader.service';
 import { GalleryComponent } from '@app/components/gallery/gallery.component';
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 import { HomeService } from '@app/services/home.service';
+import { BirthdayCanvasComponent } from '@app/components/birthday-canvas/birthday-canvas.component';
 
-// export interface UploadFile {
-//     file: File;
-//     filename: string;
-//     src: string | ArrayBuffer | null | undefined;
-// }
 
 @Component({
     selector: 'home',
@@ -25,6 +21,7 @@ import { HomeService } from '@app/services/home.service';
 })
 export class HomeComponent implements AfterViewInit, OnDestroy {
     @ViewChild('gallery', {static: false}) public galleryRef!: GalleryComponent;
+    @ViewChild('birthdayCanvas', {static: false}) public birthdayCanvasRef!: BirthdayCanvasComponent;
 
     public files?: FileMetadata[] = [];
 
@@ -45,9 +42,28 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     private _sectionSlug?: string;
 
+    public showBirthday: boolean = false;
+
     constructor(private router: Router, private activatedRoute: ActivatedRoute, 
         private firestoreService: FirestoreService, public loaderService: LoaderService, 
         private overlayGalleryService: OverlayGalleryService, private homeService: HomeService) {
+    }
+
+    public ngOnInit(): void {
+        (window as any).__birthday = () => {
+            this.showBirthday = true;
+        }
+
+        const _m = moment();
+
+        if (_m.month() === 9 && _m.date() === 29) {
+            this.showBirthday = true;
+        }
+
+
+        if (_m.month() === 9 && _m.date() === 8) {
+            this.showBirthday = true;
+        }
     }
 
     public ngAfterViewInit(): void {
@@ -185,6 +201,10 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         }
 
         this.overlayGalleryService.activate(index, this.files);
+    }
+
+    public birthdayFunc(): void {
+        this.birthdayCanvasRef?.pushColors();
     }
 
     public ngOnDestroy(): void {
