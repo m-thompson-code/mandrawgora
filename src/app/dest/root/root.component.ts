@@ -5,6 +5,7 @@ import { environment } from '@environment';
 
 import { LoaderService } from '@app/services/loader.service';
 import { HomeService } from '@app/services/home.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'root',
@@ -12,14 +13,22 @@ import { HomeService } from '@app/services/home.service';
     styleUrls: ['./root.style.scss']
 })
 export class RootComponent implements AfterViewInit, OnDestroy {
-    constructor(private router: Router, private loaderService: LoaderService, private homeService: HomeService) {
+    constructor(private router: Router, private loaderService: LoaderService, private homeService: HomeService, 
+        private _snackBar: MatSnackBar) {
     }
 
     public ngOnInit(): void {
     }
 
     public ngAfterViewInit(): void {
-        void this._initalize();
+        void this._initalize().catch(error => {
+            console.error(error);
+
+            this._snackBar.open('Unexpected error. Please try again later', undefined, {
+                duration: 2000,
+                panelClass: 'snackbar-error',
+            });
+        })
     }
 
     private _initalize(): Promise<void> {

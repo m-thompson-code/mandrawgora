@@ -5,6 +5,7 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 
 import { MatRippleModule } from '@angular/material/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { DirectivesModule } from '@app/directives';
 
@@ -22,6 +23,7 @@ import { BirthdayCanvasModule } from '@app/components/birthday-canvas';
         HomeRoutingModule,
 
         MatRippleModule,
+        MatSnackBarModule,
 
         DirectivesModule,
 

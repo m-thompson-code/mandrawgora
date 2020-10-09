@@ -55,13 +55,20 @@ export class ManagementComponent implements AfterViewInit {
         this.firestoreService.getSections().then(sections => {
             this.sections = sections;
             this.testList = [];
+            
             for (const section of this.sections) {
                 this.testList.push(section);
             }
-            // this.getSectionFilters();
         });
 
-        this._initalize();
+        this._initalize().catch(error => {
+            console.error(error);
+
+            this._snackBar.open('Unexpected error. Please try again later', undefined, {
+                duration: 2000,
+                panelClass: 'snackbar-error',
+            });
+        });
 
         this.sectionFiltersMap['delete__SPECIAL'] = true;
     }

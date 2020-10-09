@@ -4,6 +4,9 @@ import { CommonModule } from '@angular/common';
 import { RootRoutingModule } from './root-routing.module';
 import { RootComponent } from './root.component';
 
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+
 @NgModule({
     declarations: [
         RootComponent
@@ -12,6 +15,8 @@ import { RootComponent } from './root.component';
         CommonModule,
         
         RootRoutingModule,
+
+        MatSnackBarModule,
     ],
     providers: [
     ],

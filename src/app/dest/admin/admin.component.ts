@@ -52,7 +52,12 @@ export class AdminComponent {
 
         this.loaderService.setShowLoader(true);
 
-        return this.authService.signInWithEmailAndPassword(this.email, this.password).catch(error => {
+        return this.authService.signInWithEmailAndPassword(this.email, this.password).then(() => {
+            this._snackBar.open(`Welcome ${this.email}`, undefined, {
+                duration: 2000,
+                panelClass: 'snackbar-success',
+            });
+        }).catch(error => {
             console.error(error);
 
             this.emailError = error?.message || 'Unexpected error';
@@ -78,7 +83,12 @@ export class AdminComponent {
 
         this.loaderService.setShowLoader(true);
 
-        return this.authService.sendPasswordResetEmail(this.email).catch(error => {
+        return this.authService.sendPasswordResetEmail(this.email).then(() => {
+            this._snackBar.open(`Password reset sent to ${this.email}`, undefined, {
+                duration: 2000,
+                panelClass: 'snackbar-success',
+            });
+        }).catch(error => {
             console.error(error);
 
             this.emailError = error?.message || 'Unexpected error';

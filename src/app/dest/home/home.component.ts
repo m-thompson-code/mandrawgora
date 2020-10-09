@@ -13,6 +13,7 @@ import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 import { HomeService } from '@app/services/home.service';
 import { BirthdayCanvasComponent } from '@app/components/birthday-canvas/birthday-canvas.component';
 import { AuthService } from '@app/services/auth.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -48,7 +49,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     constructor(private router: Router, private activatedRoute: ActivatedRoute, public authService: AuthService, 
         private firestoreService: FirestoreService, public loaderService: LoaderService, 
-        private overlayGalleryService: OverlayGalleryService, private homeService: HomeService) {
+        private overlayGalleryService: OverlayGalleryService, private homeService: HomeService, 
+        private _snackBar: MatSnackBar) {
     }
 
     public ngOnInit(): void {
@@ -90,6 +92,13 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
                         replaceUrl: true,
                     });
                 }
+            });
+        }).catch(error => {
+            console.error(error);
+
+            this._snackBar.open('Unexpected error. Please try again later', undefined, {
+                duration: 2000,
+                panelClass: 'snackbar-error',
             });
         });
     }
