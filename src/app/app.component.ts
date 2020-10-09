@@ -1,6 +1,8 @@
 import { AfterViewInit, Component, OnDestroy } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 import { Subscription } from 'rxjs';
 
 import { environment } from '@environment';
@@ -22,10 +24,22 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
     private _routerEventsSub?: Subscription;
     private _onResize?: () => void;
-    // Import firebaseService here so firebase initalizes properly
-    constructor(private router: Router, public firebaseService: FirebaseService, private analyticsService: AnalyticsService, 
+
+    // Inject FirebaseService here so firebase initalizes properly
+    constructor(private router: Router, private firebaseService: FirebaseService, 
+        private analyticsService: AnalyticsService, private _snackBar: MatSnackBar, 
         public loaderService: LoaderService, public overlayGalleryService: OverlayGalleryService, 
         private authService: AuthService, private responsiveService: ResponsiveService) {
+    }
+
+    public ngOnInit(): void {
+        // Check to make sure all firebase services are defined
+        if (!this.firebaseService.firebaseIsValid()) {
+            this._snackBar.open('Unexpected invalid firebase initalization', undefined, {
+                duration: 2000,
+                panelClass: 'snackbar-error',
+            });
+        }
     }
 
     public ngAfterViewInit(): void {
@@ -34,6 +48,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         }
         
         this.initalized = false;
+
         void this._initalize().then(() => {
             this.initalized = true;
         });
@@ -66,7 +81,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         
         appHeight();
 
-        this._routerEventsSub = this.router.events.subscribe(routerEvent=> {
+        // Listten to navigation for analytics
+        this._routerEventsSub = this.router.events.subscribe(routerEvent => {
 			this._checkRouterEvent(routerEvent as RouterEvent);
         });
     }
@@ -79,7 +95,14 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
         return Promise.all(promises).then(() => {
             // pass
-        });
+        }).catch(error => {
+            console.error(error);
+
+            this._snackBar.open('Unexpected issue found initalizing application', undefined, {
+                duration: 2000,
+                panelClass: 'snackbar-error',
+            });
+        })
     }
 
 	private _checkRouterEvent(routerEvent: RouterEvent): void {

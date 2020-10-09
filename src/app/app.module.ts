@@ -6,6 +6,8 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatRippleModule } from '@angular/material/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { AnalyticsService } from '@app/services/analytics.service';
 import { StorageService } from '@app/services/storage.service';
@@ -20,7 +22,6 @@ import { HomeService } from '@app/services/home.service';
 
 import { DirectivesModule } from '@app/directives';
 
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { OverlayGalleryModule } from '@app/components/overlay-gallery';
 
@@ -49,7 +50,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         HammerModule,
         
         MatRippleModule,
-
+        MatSnackBarModule,
         MatProgressBarModule,
 
         DirectivesModule,

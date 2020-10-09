@@ -33,4 +33,12 @@ export class FirebaseService {
 
         firebase.analytics();
     }
+
+    public firebaseIsValid(): boolean {
+        if (!firebase.auth || !firebase.firestore || !firebase.storage || !firebase.analytics) {
+            return false;
+        }
+        
+        return true;
+    }
 }

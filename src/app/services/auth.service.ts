@@ -38,16 +38,6 @@ export class AuthService {
             if (environment.env !== 'prod') {
                 console.log(' ~ AuthService: signInWithEmailAndPassword', auth);
             }
-        }).catch(error => {
-            // Handle Errors here.
-            let errorCode = error.code;
-            let errorMessage = error.message;
-            // ...
-
-            console.error(errorCode, errorMessage);
-            console.error(error);
-            
-            throw error;
         });
     }
 
@@ -58,12 +48,6 @@ export class AuthService {
     public signOut(): Promise<void> {
         return firebase.auth().signOut().then(() => {
             // pass
-        }).catch(error => {
-            console.error(error);
-
-            if (environment.env !== 'prod') {
-                debugger;
-            }
         });
     }
 }

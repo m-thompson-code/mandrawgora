@@ -3,14 +3,25 @@ button {
     margin-right: $spacing;
 }
 
-a {
-    color: white;
+.top-nav {
     display: flex;
     align-items: center;
+
     padding: $spacing/4 0;
     margin-left: -8px;
-
     margin-bottom: $spacing;
+
+    color: white;
+
+    a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        color: white;
+
+        cursor: pointer;
+    }
 }
 a:focus, a:hover, a:active {
     text-decoration: underline;
