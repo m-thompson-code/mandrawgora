@@ -46,7 +46,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     public showBirthday: boolean = false;
     public showAdminNav: boolean = true;
 
-    constructor(private router: Router, private activatedRoute: ActivatedRoute, private authService: AuthService, 
+    constructor(private router: Router, private activatedRoute: ActivatedRoute, public authService: AuthService, 
         private firestoreService: FirestoreService, public loaderService: LoaderService, 
         private overlayGalleryService: OverlayGalleryService, private homeService: HomeService) {
     }
