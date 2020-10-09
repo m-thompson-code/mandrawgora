@@ -12,6 +12,7 @@ import { GalleryComponent } from '@app/components/gallery/gallery.component';
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 import { HomeService } from '@app/services/home.service';
 import { BirthdayCanvasComponent } from '@app/components/birthday-canvas/birthday-canvas.component';
+import { AuthService } from '@app/services/auth.service';
 
 
 @Component({
@@ -43,8 +44,9 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     private _sectionSlug?: string;
 
     public showBirthday: boolean = false;
+    public showAdminNav: boolean = true;
 
-    constructor(private router: Router, private activatedRoute: ActivatedRoute, 
+    constructor(private router: Router, private activatedRoute: ActivatedRoute, private authService: AuthService, 
         private firestoreService: FirestoreService, public loaderService: LoaderService, 
         private overlayGalleryService: OverlayGalleryService, private homeService: HomeService) {
     }
