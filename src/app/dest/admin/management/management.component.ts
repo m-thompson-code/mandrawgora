@@ -1,20 +1,15 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild, Input } from '@angular/core';
-import { NavigationEnd, Router, RouterEvent } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { AfterViewInit, Component } from '@angular/core';
 
 import { environment } from '@environment';
 
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { StorageService } from '@app/services/storage.service';
 import { FileMetadata, Section, FirestoreService } from '@app/services/firestore.service';
-import { FirebaseService } from '@app/services/firebase.service';
-
-import { UploadFile } from '@app/components/uploader/uploader.component';
 import { HelperService } from '@app/services/helper.service';
 import { LoaderService } from '@app/services/loader.service';
 import { PendingUploadFile } from './upload/upload.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'management',
@@ -51,7 +46,7 @@ export class ManagementComponent implements AfterViewInit {
     public initalized: boolean = false;
     public saving: boolean = false;
 
-    constructor(private router: Router, private firestoreService: FirestoreService, 
+    constructor(private firestoreService: FirestoreService, 
         private storageService: StorageService, private helperService: HelperService, 
         private loaderService: LoaderService, private _snackBar: MatSnackBar) {
     }

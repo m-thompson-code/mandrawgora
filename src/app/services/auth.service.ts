@@ -51,6 +51,10 @@ export class AuthService {
         });
     }
 
+    public sendPasswordResetEmail(email: string): Promise<void> {
+        return firebase.auth().sendPasswordResetEmail(email);
+    }
+
     public signOut(): Promise<void> {
         return firebase.auth().signOut().then(() => {
             // pass

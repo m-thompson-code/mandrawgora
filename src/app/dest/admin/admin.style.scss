@@ -1,1 +1,21 @@
 @import 'styles/variables.scss';
+button {
+    margin-right: $spacing;
+}
+
+a {
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: $spacing/4 0;
+    margin-left: -8px;
+
+    margin-bottom: $spacing;
+}
+a:focus, a:hover, a:active {
+    text-decoration: underline;
+}
+
+.input-container {
+    margin-bottom: $spacing/4;
+}
