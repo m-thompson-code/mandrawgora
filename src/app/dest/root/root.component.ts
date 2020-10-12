@@ -24,11 +24,11 @@ export class RootComponent implements AfterViewInit, OnDestroy {
         void this._initalize().catch(error => {
             console.error(error);
 
-            this._snackBar.open('Unexpected error. Please try again later', undefined, {
-                duration: 2000,
+            this._snackBar.open(error.message || 'Unexpected error. Please try again later', undefined, {
+                duration: 5000,
                 panelClass: 'snackbar-error',
             });
-        })
+        });
     }
 
     private _initalize(): Promise<void> {

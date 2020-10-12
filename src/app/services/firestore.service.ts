@@ -121,14 +121,11 @@ export class FirestoreService {
             }
         }
 
-        console.log(firebase);
-
         return query.get().then(colSnapshot => {
             const files: FileMetadata[] = [];
 
             colSnapshot.forEach(_d => {
                 const data = _d.data();
-                console.log(data);
 
                 if (!data) {
                     return;
@@ -271,7 +268,7 @@ export class FirestoreService {
         }
 
         const docRef = firebase.firestore().collection('sections').doc('sections-data');
-        // console.log(_sections);
+        
         return docRef.set({
             updatedAt: Date.now(),
             sections: _sections,

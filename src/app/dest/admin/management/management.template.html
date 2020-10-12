@@ -16,7 +16,7 @@
         </div>
 
         <moo-expandable [expanded]="expandUpload">
-            <moo-upload [files]="files" [sections]="sections" (fileUploaded)="handleFileUploaded($event)"></moo-upload>
+            <moo-upload #uploadComponent [files]="files" [sections]="sections" [newSections]="newSections" (fileUploaded)="handleFileUploaded($event)"></moo-upload>
         </moo-expandable>
     </div>
 

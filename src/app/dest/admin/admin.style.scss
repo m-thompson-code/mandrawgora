@@ -30,3 +30,33 @@ a:focus, a:hover, a:active {
 .input-container {
     margin-bottom: $spacing/4;
 }
+
+
+@mixin mobile-padding($padding) {
+    .mobile-padding {
+        padding-left: $padding;
+        padding-right: $padding;
+
+        box-sizing: border-box;
+    }
+}
+
+@media only screen and (max-width: $desktop_width) {
+    // pass
+}
+
+@media only screen and (max-width: $tablet_width) and (orientation: portrait) {
+    // pass
+}
+
+@media only screen and (max-width: $mobile_width) and (orientation: portrait) {
+    @include mobile-padding(2.5vw);
+}
+
+@media only screen and (max-width: $landscape_width) and (max-height: $tablet_height) and (orientation: landscape) {
+    // pass
+}
+
+@media only screen and (max-width: $landscape_width) and (max-height: $mobile_height) and (orientation: landscape) {
+    @include mobile-padding(2.5vw);
+}

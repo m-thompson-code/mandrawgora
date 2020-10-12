@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 
 import { environment } from '@environment';
 
@@ -9,7 +9,7 @@ import { StorageService } from '@app/services/storage.service';
 import { FileMetadata, Section, FirestoreService } from '@app/services/firestore.service';
 import { HelperService } from '@app/services/helper.service';
 import { LoaderService } from '@app/services/loader.service';
-import { PendingUploadFile } from './upload/upload.component';
+import { PendingUploadFile, UploadComponent } from './upload/upload.component';
 
 @Component({
     selector: 'management',
@@ -17,6 +17,7 @@ import { PendingUploadFile } from './upload/upload.component';
     styleUrls: ['./management.style.scss']
 })
 export class ManagementComponent implements AfterViewInit {
+    @ViewChild('uploadComponent') uploadComponent!: UploadComponent;
     public expandUpload: boolean = false;
 
     public newSectionText: string = '';
@@ -46,6 +47,8 @@ export class ManagementComponent implements AfterViewInit {
     public initalized: boolean = false;
     public saving: boolean = false;
 
+    public newSections: Section[] = [];
+
     constructor(private firestoreService: FirestoreService, 
         private storageService: StorageService, private helperService: HelperService, 
         private loaderService: LoaderService, private _snackBar: MatSnackBar) {
@@ -55,7 +58,7 @@ export class ManagementComponent implements AfterViewInit {
         this.firestoreService.getSections().then(sections => {
             this.sections = sections;
             this.testList = [];
-            
+
             for (const section of this.sections) {
                 this.testList.push(section);
             }
@@ -64,8 +67,8 @@ export class ManagementComponent implements AfterViewInit {
         this._initalize().catch(error => {
             console.error(error);
 
-            this._snackBar.open('Unexpected error. Please try again later', undefined, {
-                duration: 2000,
+            this._snackBar.open(error.message || 'Unexpected error. Please try again later', undefined, {
+                duration: 5000,
                 panelClass: 'snackbar-error',
             });
         });
@@ -100,7 +103,20 @@ export class ManagementComponent implements AfterViewInit {
             this.filesMap["delete__SPECIAL"] = [];
 
             for (const file of this.files) {
-                this.filesMap[file.sectionSlug || "no-section__SPECIAL"].push(file);
+                const slug = file.sectionSlug;
+
+                let found = false;
+                for (const section of this.sections) {
+                    if (section.slug === slug) {
+                        this.filesMap[file.sectionSlug || "no-section__SPECIAL"].push(file);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found) {
+                    this.filesMap["no-section__SPECIAL"].push(file);
+                }
             }
 
             this.loaderService.setShowLoader(false);
@@ -131,11 +147,15 @@ export class ManagementComponent implements AfterViewInit {
             }
         }
 
-        this.sections.push({
+        const s = {
             text: text,
             slug: slug,
             order: this.sections.length + 1,
-        });
+        };
+
+        this.sections.push(s);
+
+        this.newSections.push(s);
 
         this.newSectionText = "";
         this.newSectionError = "";
@@ -155,6 +175,8 @@ export class ManagementComponent implements AfterViewInit {
         }
 
         this.filesMap[section.slug] = [];
+
+        this.uploadComponent.removeSection(section);
     }
 
     public dropSection(event: CdkDragDrop<Section[]>) {
@@ -239,6 +261,19 @@ export class ManagementComponent implements AfterViewInit {
 
             return batch.commit().then(() => {
                 this.filesMap["delete__SPECIAL"] = [];
+
+                for (const deleteFile of deleteFiles) {
+                    for (let i = 0; i < this.files.length; i++) {
+                        const file = this.files[i];
+
+                        if (file.firestoreID === deleteFile.firestoreID) {
+                            this.files.splice(i, 1);
+                            break;
+                        }
+                    }
+                }
+
+                this.newSections = [];
                 
                 this._snackBar.open('Save complete!', undefined, {
                     duration: 2000,
@@ -249,7 +284,7 @@ export class ManagementComponent implements AfterViewInit {
             console.error(error);
 
             this._snackBar.open(error.message || 'Unexpected error', undefined, {
-                duration: 2000,
+                duration: 5000,
                 panelClass: 'snackbar-error',
             });
         }).then(() => {
@@ -286,7 +321,6 @@ export class ManagementComponent implements AfterViewInit {
     }
 
     public handleSectionSelected(files: FileMetadata[], event: {slug: string, file: FileMetadata, index: number}): void {
-        console.log(files, event);
         files.splice(event.index, 1);
         this.filesMap[event.slug || 'no-section__SPECIAL'].unshift(event.file);
     }

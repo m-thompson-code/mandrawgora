@@ -37,21 +37,10 @@ export class ManagementFilesComponent {
     }
 
     public dropFile(event: CdkDragDrop<FileMetadata[]>) {
-        console.log(event);
-        // if (event.previousContainer === event.container) {
-        //     // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-        //     moveItemInArray(this.sections, event.previousIndex, event.currentIndex);
-        //   } else {
-        //     transferArrayItem(event.previousContainer.data,
-        //                       event.container.data,
-        //                       event.previousIndex,
-        //                       event.currentIndex);
-        //   }
-
         if (event.previousContainer === event.container) {
-        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+            moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
         } else {
-        transferArrayItem(event.previousContainer.data,
+            transferArrayItem(event.previousContainer.data,
                             event.container.data,
                             event.previousIndex,
                             event.currentIndex);

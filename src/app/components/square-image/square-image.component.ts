@@ -68,16 +68,14 @@ export class SquareImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public onload(event: any): void {
         this.ngZone.run(() => {
-            console.log(event);
-
             this.imageWidth = this.image.nativeElement.naturalWidth;
             this.imageHeight = this.image.nativeElement.naturalHeight;
         });
     }
 
-    public onerror(event: any): void {
+    public onerror(error: any): void {
         this.ngZone.run(() => {
-            console.log(event);
+            console.error(error);
         });
     }
 

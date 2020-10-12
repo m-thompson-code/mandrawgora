@@ -1,18 +1,18 @@
-import { AfterViewInit, Component, OnDestroy, ViewChild, Input, ElementRef, Output, EventEmitter } from '@angular/core';
-import { NavigationEnd, Router, RouterEvent } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 
-import { environment } from '@environment';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
+// import { environment } from '@environment';
 
 import { StorageService } from '@app/services/storage.service';
 import { FileMetadata, FirestoreService, Section } from '@app/services/firestore.service';
-import { FirebaseService } from '@app/services/firebase.service';
 import { LoaderService } from '@app/services/loader.service';
 
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 
 import { UploadFile } from '@app/components/uploader/uploader.component';
-import { MatSelectChange } from '@angular/material/select';
+
 import { HelperService } from '@app/services/helper.service';
 
 export interface PendingUploadFile extends UploadFile {
@@ -31,6 +31,8 @@ export interface PendingUploadFile extends UploadFile {
 })
 export class UploadComponent {
     @Input() public sections: Section[] = [];
+    @Input() public newSections: Section[] = [];
+
     @Input() public files: FileMetadata[] = [];
 
     @Output() public fileUploaded: EventEmitter<PendingUploadFile> = new EventEmitter();
@@ -39,7 +41,7 @@ export class UploadComponent {
 
     constructor(private router: Router, private firestoreService: FirestoreService, private loaderService: LoaderService, 
         private overlayGalleryService: OverlayGalleryService, private storageService: StorageService, 
-        private helperService: HelperService) {
+        private helperService: HelperService, private _snackBar: MatSnackBar) {
     }
 
     public handleFilesUploaded(uploadFiles: UploadFile[]): void {
@@ -72,7 +74,6 @@ export class UploadComponent {
     }
 
     public handleSelectionChange(pendingUploadFile: PendingUploadFile, newSection?: Section): void {
-        console.log(newSection);
         pendingUploadFile.section = newSection;
 
         if (pendingUploadFile.metadata) {
@@ -81,7 +82,6 @@ export class UploadComponent {
     }
 
     public handleFilenameChange(pendingUploadFile: PendingUploadFile, text: string): void {
-        console.log(text);
         pendingUploadFile.filename = text;
         // TODO: handle section change
     }
@@ -89,6 +89,23 @@ export class UploadComponent {
     public uploadFile(pendingUploadFile: PendingUploadFile): Promise<void> {
         if (pendingUploadFile.uploading) {
             return Promise.resolve();
+        }
+
+        if (pendingUploadFile?.section) {
+            const _s = pendingUploadFile.section;
+
+            for (const section of this.newSections) {
+                if (section.slug === _s.slug) {
+                    pendingUploadFile.error = 'You cannot upload an image to a new section without saving it first';
+
+                    this._snackBar.open('Please save your changes to sections/images before uploading to this new section', undefined, {
+                        duration: 5000,
+                        panelClass: 'snackbar-error',
+                    });
+                    
+                    return Promise.resolve();
+                }
+            }
         }
 
         pendingUploadFile.error = undefined;
@@ -117,7 +134,6 @@ export class UploadComponent {
         });
 
         return _d.fileUploadResult.then(_result => {
-            console.log(_result);
             return _result;
         }).then(_result => {
             return this.firestoreService.addFile(_result.url, _result.filename, this.files.length + 1, pendingUploadFile.section).then(metadata => {
@@ -132,6 +148,14 @@ export class UploadComponent {
             debugger;
             pendingUploadFile.uploading = false;
         });
+    }
+
+    public removeSection(section: Section): void {
+        for (const p of this.pendingUploadFiles) {
+            if (p.section && p.section.slug === section.slug) {
+                p.section = undefined;
+            }
+        }
     }
 
     public deleteFile(pendingUploadFile: PendingUploadFile, index: number): Promise<void> {

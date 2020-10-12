@@ -36,8 +36,6 @@ export class StorageService {
             // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
             const progress = snapshot.bytesTransferred / snapshot.totalBytes;
             _s.next(progress);
-
-            console.log('Upload is ' + progress + '% done');
         }, error => {
             // TODO: Handle unsuccessful uploads
             console.error(error);
@@ -51,9 +49,6 @@ export class StorageService {
         });
 
         const _p = uploadTask.then(snapshot => {
-            console.log('Uploaded a blob or file!');
-            console.log(snapshot);
-
             return {
                 snapshot: snapshot,
                 url: `https://storage.googleapis.com/mandrawgora-170d4.appspot.com/${filename}`,
@@ -61,6 +56,7 @@ export class StorageService {
             };
         }).catch(error => {
             console.error(error);
+
             if (environment.env !== 'prod') {
                 debugger;
             }
@@ -82,7 +78,6 @@ export class StorageService {
         var childRef = storageRef.child(filename);
 
         return childRef.delete().then(_d => {
-            console.log(_d);
             // pass
         }).catch(error => {
             if (error.code === 'storage/object-not-found') {

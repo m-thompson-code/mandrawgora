@@ -24,8 +24,6 @@ export class UploaderComponent {
     }
     
     public handleFileInputChange(event: any): void {
-        // console.log(event);
-
         const _t = event?.target as HTMLInputElement;
 
         if (!_t || !_t.files || !_t.files.length) {
@@ -39,8 +37,6 @@ export class UploaderComponent {
     }
 
     public handleFileInputDrop(event: any): void {
-        // console.log(event);
-
         event?.stopPropagation();
         event?.preventDefault();
 
@@ -59,8 +55,6 @@ export class UploaderComponent {
     }
 
     public handleDragover(event: any): void {
-        // console.log(event);
-
         event?.stopPropagation();
         event?.preventDefault();
 
@@ -75,8 +69,6 @@ export class UploaderComponent {
     }
     
     public handleDragend(event: any): void {
-        // console.log(event);
-
         event?.stopPropagation();
         event?.preventDefault();
 
@@ -93,8 +85,6 @@ export class UploaderComponent {
 
         for (let i = 0; i < fileList.length; i++) {
             const file = fileList[i];
-
-            // console.log(file);
 
             const filename = (file.name || '').toLowerCase();
 

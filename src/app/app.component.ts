@@ -36,7 +36,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         // Check to make sure all firebase services are defined
         if (!this.firebaseService.firebaseIsValid()) {
             this._snackBar.open('Unexpected invalid firebase initalization', undefined, {
-                duration: 2000,
+                duration: 5000,
                 panelClass: 'snackbar-error',
             });
         }
@@ -98,8 +98,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         }).catch(error => {
             console.error(error);
 
-            this._snackBar.open('Unexpected issue found initalizing application', undefined, {
-                duration: 2000,
+            this._snackBar.open(error.message || 'Unexpected issue found initalizing application', undefined, {
+                duration: 5000,
                 panelClass: 'snackbar-error',
             });
         })

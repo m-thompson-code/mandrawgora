@@ -93,7 +93,6 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
         if (this.animate) {
             return;
         }
-        // console.log(panEvent);
 
         const deltaX = hammerEvent?.deltaX || 0;
 
@@ -115,7 +114,6 @@ export class GalleryComponent implements OnInit, AfterViewInit, OnDestroy {
         
         const deltaX = hammerEvent?.deltaX || 0;
         const velocityX = hammerEvent?.velocityX || 0;
-        // console.log(deltaX,velocityX);
 
         if (deltaX > 30 || velocityX > 1.5) {
             this.decreaseIndex();

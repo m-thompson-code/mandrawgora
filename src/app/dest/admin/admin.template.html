@@ -1,4 +1,4 @@
-<div class="top-nav">
+<div class="top-nav mobile-padding">
     <a routerLink="/">
         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
             <path d="M0 0h24v24H0z" fill="none"/><path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
@@ -12,14 +12,18 @@
     </ng-container>
 </div>
 
-<ng-container *ngIf="authService.user?.email !== 'm.thompson.code@gmail.com' && authService.user?.email !== 'mandrawgora@gmail.com'">
+<div *ngIf="authService.user?.email !== 'm.thompson.code@gmail.com' && authService.user?.email !== 'mandrawgora@gmail.com'" class="mobile-padding">
     <div class="input-container">
-        <moo-input label="email" [value]="email" inputType="email" [error]="emailError" (valueChanged)="email = $event; emailError = ''">
+        <moo-input label="email" [value]="email" inputType="email" [error]="emailError" 
+            (valueChanged)="email = $event; emailError = ''" 
+            (enterPressed)="login()">
         </moo-input>
     </div>
 
     <div class="input-container margin-bottom">
-        <moo-input label="password" [value]="password" inputType="password" [error]="passwordError" (valueChanged)="password = $event; passwordError = ''">
+        <moo-input label="password" [value]="password" inputType="password" [error]="passwordError" 
+        (valueChanged)="password = $event; passwordError = ''" 
+        (enterPressed)="login()">
         </moo-input>    
     </div>
     
@@ -28,6 +32,6 @@
         <button mat-raised-button color="accent" (click)="forgot()">Forgot</button>
     </div>
     
-</ng-container>
+</div>
 
 <router-outlet *ngIf="authService.user?.email === 'm.thompson.code@gmail.com' || authService.user?.email === 'mandrawgora@gmail.com'"></router-outlet>

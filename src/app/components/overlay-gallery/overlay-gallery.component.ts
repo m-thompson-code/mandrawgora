@@ -48,7 +48,6 @@ export class OverlayGalleryComponent implements OnInit, AfterViewInit, OnDestroy
 
     private bindKeyDownListeners(): void {
         this._keyDownFunc = (event: KeyboardEvent) => {
-            console.log(event);
             if (event.key === 'ArrowLeft') {
                 this.galleryRef.decreaseIndex();
             } else if (event.key === 'ArrowRight') {

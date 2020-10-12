@@ -33,7 +33,7 @@ export class AdminComponent {
         if (!this.email) {
             this.emailError = 'Missing email';
             this._snackBar.open(this.emailError, undefined, {
-                duration: 2000,
+                duration: 5000,
                 panelClass: 'snackbar-error',
             });
 
@@ -43,7 +43,7 @@ export class AdminComponent {
         if (!this.password) {
             this.passwordError = 'Missing password';
             this._snackBar.open(this.passwordError, undefined, {
-                duration: 2000,
+                duration: 5000,
                 panelClass: 'snackbar-error',
             });
 
@@ -62,7 +62,7 @@ export class AdminComponent {
 
             this.emailError = error?.message || 'Unexpected error';
             this._snackBar.open(this.emailError, undefined, {
-                duration: 2000,
+                duration: 5000,
                 panelClass: 'snackbar-error',
             });
         }).then(() => {
@@ -74,7 +74,7 @@ export class AdminComponent {
         if (!this.email) {
             this.emailError = 'Missing email';
             this._snackBar.open(this.emailError, undefined, {
-                duration: 2000,
+                duration: 5000,
                 panelClass: 'snackbar-error',
             });
 
@@ -93,7 +93,7 @@ export class AdminComponent {
 
             this.emailError = error?.message || 'Unexpected error';
             this._snackBar.open(this.emailError, undefined, {
-                duration: 2000,
+                duration: 5000,
                 panelClass: 'snackbar-error',
             });
         }).then(() => {

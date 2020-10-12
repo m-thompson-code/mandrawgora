@@ -15,8 +15,6 @@ export class AnalyticsService {
     public addPageView(routeData: {url: string}): void {
         try {
             const url = routeData.url || "mandrawgora_unknown_url";
-
-            console.log(url);
     
             firebase.analytics().logEvent('page_view', {
                 'page_path': url,

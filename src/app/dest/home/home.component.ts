@@ -74,9 +74,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         void this._initalize().then(() => {
             this._paramSubscription = this.activatedRoute.params.subscribe(params => {
                 this._sectionSlug = params['section'] || this.sections[0]?.slug;
-    
-                console.log(this._sectionSlug);
-    
+
                 let found = false;
                 for (const section of this.sections) {
                     if (section.slug === this._sectionSlug) {
@@ -96,8 +94,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         }).catch(error => {
             console.error(error);
 
-            this._snackBar.open('Unexpected error. Please try again later', undefined, {
-                duration: 2000,
+            this._snackBar.open(error.message || 'Unexpected error. Please try again later', undefined, {
+                duration: 5000,
                 panelClass: 'snackbar-error',
             });
         });
@@ -136,7 +134,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     }
 
     private _getSections(): Promise<void> {
-        console.log('_getSections');
         this.sections = [];
 
         const promises: Promise<any>[] = [];
@@ -170,8 +167,6 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         return this.firestoreService.getFiles('order', section).then(files => {
             if (queryID === this._queryCount) {
                 this.files = files;
-
-                console.log(files);
 
                 this.revealImageCount = 0;
 
