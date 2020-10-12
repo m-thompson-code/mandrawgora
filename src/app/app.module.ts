@@ -22,6 +22,7 @@ import { HomeService } from '@app/services/home.service';
 
 import { DirectivesModule } from '@app/directives';
 
+import { CanDeactivateGuard } from '@app/guards/can-deactivate.guard';
 
 import { OverlayGalleryModule } from '@app/components/overlay-gallery';
 
@@ -69,6 +70,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         ResponsiveService,
         HelperService,
         HomeService,
+
+        CanDeactivateGuard,
 
         {
             provide: HAMMER_GESTURE_CONFIG,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-// import { environment } from '@environment';
+import { environment } from '@environment';
 
 import { SlideImage } from '@app/components/gallery/gallery.component';
 
@@ -14,6 +14,8 @@ export class OverlayGalleryService {
     public active?: boolean;
 
     public initalIndex: number = 0;
+
+    public deactivateHandler?: () => void;
     
     constructor() {
     }
@@ -28,8 +30,16 @@ export class OverlayGalleryService {
     }
     
     public deactivate(): void {
-        // Setting active to false is handled by overlay component
-        this.images = [];
-        this.initalIndex = 0;
+        if (!this.deactivateHandler) {
+            console.error("deactivate missing deactiveHandler");
+
+            if (environment.env !== 'prod') {
+                debugger;
+            }
+
+            return;
+        }
+
+        this.deactivateHandler();
     }
 }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { CanDeactivateGuard } from '@app/guards/can-deactivate.guard';
 import { AdminComponent } from './admin.component';
 
 const routes: Routes = [
@@ -12,7 +13,13 @@ const routes: Routes = [
                 path: '',
                 loadChildren: () => import('./management/management.module').then(m => m.ManagementModule),
                 runGuardsAndResolvers: 'always',
+                canDeactivate: [
+                    CanDeactivateGuard,
+                ],
             },
+        ],
+        canDeactivate: [
+            CanDeactivateGuard,
         ],
     },
 ];
