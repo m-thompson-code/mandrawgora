@@ -58,6 +58,7 @@ export class ManagementComponent implements AfterViewInit {
 
     public newSections: Section[] = [];
 
+    public modalIsOpen: boolean = false;
     public discardChangesPromise: Promise<boolean>;
     public discardChangesPromiseFunc: (discard: boolean) => Promise<boolean>;
 
@@ -95,6 +96,8 @@ export class ManagementComponent implements AfterViewInit {
     }
 
     public openDiscardChangesModal() {
+        this.modalIsOpen = true;
+
         const dialogRef = this.dialogRef.open(this.modalTemplate);
 
         this.discardChangesPromise = new Promise((resolve: (discard: boolean) => void) => {
@@ -107,6 +110,10 @@ export class ManagementComponent implements AfterViewInit {
         }).catch(error => {
             console.error(error);
             return true;
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            this.modalIsOpen = false;
         });
     }
 
@@ -378,6 +385,12 @@ export class ManagementComponent implements AfterViewInit {
     }
 
     public canDeactivate(): Promise<boolean> {
+        if (this.modalIsOpen) {
+            this.modalIsOpen = false;
+            this.dialogRef.closeAll();
+            return Promise.resolve(false);
+        }
+
         if (this.changesMade) {
             this.openDiscardChangesModal();
             return this.discardChangesPromise;
