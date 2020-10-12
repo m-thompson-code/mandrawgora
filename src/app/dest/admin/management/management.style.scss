@@ -151,6 +151,17 @@ mat-chip {
     cursor: pointer;
 }
 
+.modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    margin-top: $spacing/2;
+    
+    button {
+        margin-left: $spacing/2;
+    }
+}
+
 @mixin mobile-padding($padding) {
     :host {
         padding-left: $padding;

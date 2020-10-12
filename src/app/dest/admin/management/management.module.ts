@@ -18,7 +18,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatRippleModule } from '@angular/material/core';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 
@@ -46,7 +46,7 @@ import { UploaderModule } from '@app/components/uploader';
         MatDividerModule,
         MatMenuModule,
         MatSnackBarModule,
-
+        MatDialogModule,
         MatRippleModule,
         DragDropModule,
 

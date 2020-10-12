@@ -13,9 +13,6 @@ const routes: Routes = [
                 path: '',
                 loadChildren: () => import('./management/management.module').then(m => m.ManagementModule),
                 runGuardsAndResolvers: 'always',
-                canDeactivate: [
-                    CanDeactivateGuard,
-                ],
             },
         ],
         canDeactivate: [

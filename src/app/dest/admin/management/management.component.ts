@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, TemplateRef, ViewChild } from '@angular/core';
 
 import { environment } from '@environment';
 
 import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 
 import { StorageService } from '@app/services/storage.service';
 import { FileMetadata, Section, FirestoreService } from '@app/services/firestore.service';
@@ -11,12 +12,20 @@ import { HelperService } from '@app/services/helper.service';
 import { LoaderService } from '@app/services/loader.service';
 import { PendingUploadFile, UploadComponent } from './upload/upload.component';
 
+export interface ModalData<T, V=any> {
+    templateRef: TemplateRef<T>;
+    context: V | null;
+    [key: string]: any;
+}
+
 @Component({
-    selector: 'management',
+    selector: 'moo-management',
     templateUrl: './management.template.html',
     styleUrls: ['./management.style.scss']
 })
 export class ManagementComponent implements AfterViewInit {
+    @ViewChild('modalTemplate', {static: true}) private modalTemplate!: TemplateRef<any>;
+
     @ViewChild('uploadComponent') uploadComponent!: UploadComponent;
     public expandUpload: boolean = false;
 
@@ -49,9 +58,18 @@ export class ManagementComponent implements AfterViewInit {
 
     public newSections: Section[] = [];
 
+    public discardChangesPromise: Promise<boolean>;
+    public discardChangesPromiseFunc: (discard: boolean) => Promise<boolean>;
+
+    public changesMade: boolean = false;
+
     constructor(private firestoreService: FirestoreService, 
         private storageService: StorageService, private helperService: HelperService, 
-        private loaderService: LoaderService, private _snackBar: MatSnackBar) {
+        private loaderService: LoaderService, private _snackBar: MatSnackBar, 
+        public dialogRef: MatDialog) {
+
+        this.discardChangesPromise = Promise.resolve(true);
+        this.discardChangesPromiseFunc = (discard: boolean) => {return this.discardChangesPromise};
     }
 
     public ngAfterViewInit(): void {
@@ -74,6 +92,22 @@ export class ManagementComponent implements AfterViewInit {
         });
 
         this.sectionFiltersMap['delete__SPECIAL'] = true;
+    }
+
+    public openDiscardChangesModal() {
+        const dialogRef = this.dialogRef.open(this.modalTemplate);
+
+        this.discardChangesPromise = new Promise((resolve: (discard: boolean) => void) => {
+            this.discardChangesPromiseFunc = (discard: boolean) => {
+                resolve(discard);
+                this.dialogRef.closeAll();
+    
+                return this.discardChangesPromise;
+            };
+        }).catch(error => {
+            console.error(error);
+            return true;
+        });
     }
 
     private _initalize(): Promise<void> {
@@ -161,6 +195,8 @@ export class ManagementComponent implements AfterViewInit {
         this.newSectionError = "";
 
         this.filesMap[slug] = [];
+
+        this.changesMade = true;
     }
 
     public deleteSection(section: Section, index: number): void {
@@ -177,6 +213,8 @@ export class ManagementComponent implements AfterViewInit {
         this.filesMap[section.slug] = [];
 
         this.uploadComponent.removeSection(section);
+
+        this.changesMade = true;
     }
 
     public dropSection(event: CdkDragDrop<Section[]>) {
@@ -188,6 +226,8 @@ export class ManagementComponent implements AfterViewInit {
                             event.previousIndex,
                             event.currentIndex);
         }
+
+        this.handleFileDropped(event);
     }
 
     public dropFile(event: CdkDragDrop<FileMetadata[]>) {
@@ -198,6 +238,15 @@ export class ManagementComponent implements AfterViewInit {
                             event.container.data,
                             event.previousIndex,
                             event.currentIndex);
+        }
+
+        this.handleFileDropped(event);
+    }
+
+    public handleFileDropped(event: CdkDragDrop<any[]>) {
+        console.log(event);
+        if (event.previousIndex !== event.currentIndex || event.previousContainer !== event.container) {
+            this.changesMade = true;
         }
     }
 
@@ -274,6 +323,8 @@ export class ManagementComponent implements AfterViewInit {
                 }
 
                 this.newSections = [];
+
+                this.changesMade = false;
                 
                 this._snackBar.open('Save complete!', undefined, {
                     duration: 2000,
@@ -323,6 +374,16 @@ export class ManagementComponent implements AfterViewInit {
     public handleSectionSelected(files: FileMetadata[], event: {slug: string, file: FileMetadata, index: number}): void {
         files.splice(event.index, 1);
         this.filesMap[event.slug || 'no-section__SPECIAL'].unshift(event.file);
+        this.changesMade = true;
+    }
+
+    public canDeactivate(): Promise<boolean> {
+        if (this.changesMade) {
+            this.openDiscardChangesModal();
+            return this.discardChangesPromise;
+        }
+
+        return Promise.resolve(true);
     }
 
     public ngOnDestroy(): void {

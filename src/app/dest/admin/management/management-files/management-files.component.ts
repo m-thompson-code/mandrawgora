@@ -32,6 +32,7 @@ export class ManagementFilesComponent {
     @Input() sections: Section[] = [];
 
     @Output() sectionSelected: EventEmitter<{slug: string, file: FileMetadata, index: number}> = new EventEmitter();
+    @Output() fileDropped: EventEmitter<CdkDragDrop<FileMetadata[]>> = new EventEmitter();
 
     constructor(private overlayGalleryService: OverlayGalleryService) {
     }
@@ -45,6 +46,8 @@ export class ManagementFilesComponent {
                             event.previousIndex,
                             event.currentIndex);
         }
+
+        this.fileDropped.emit(event);
     }
 
     public activateOverlay(index: number): void {

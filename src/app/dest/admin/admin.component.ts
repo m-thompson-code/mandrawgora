@@ -6,7 +6,7 @@ import { AuthService } from '@app/services/auth.service';
 import { LoaderService } from '@app/services/loader.service';
 
 @Component({
-    selector: 'admin',
+    selector: 'moo-admin',
     templateUrl: './admin.template.html',
     styleUrls: ['./admin.style.scss']
 })

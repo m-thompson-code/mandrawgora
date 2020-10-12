@@ -31,6 +31,7 @@ export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate>
     }
 
   	public _canDeactivate(component?: CanComponentDeactivate): Promise<boolean> {
+        console.log(component);
         if (this.overlayGalleryService.active) {
             this.overlayGalleryService.deactivate();
             return Promise.resolve(false);

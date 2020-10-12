@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatRippleModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatButtonModule } from '@angular/material/button';
 
 import { AnalyticsService } from '@app/services/analytics.service';
 import { StorageService } from '@app/services/storage.service';
@@ -43,7 +44,7 @@ export class MyHammerConfig extends HammerGestureConfig {
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
     ],
     imports: [
         BrowserModule,
@@ -54,6 +55,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         MatRippleModule,
         MatSnackBarModule,
         MatProgressBarModule,
+        MatButtonModule,
 
         DirectivesModule,
 
