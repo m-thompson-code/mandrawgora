@@ -47,6 +47,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     public showBirthday: boolean = false;
     public showAdminNav: boolean = true;
 
+    public initalized: boolean = false;
+
     constructor(private router: Router, private activatedRoute: ActivatedRoute, public authService: AuthService, 
         private firestoreService: FirestoreService, public loaderService: LoaderService, 
         private overlayGalleryService: OverlayGalleryService, private homeService: HomeService, 
@@ -64,10 +66,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
             this.showBirthday = true;
         }
 
-
-        if (_m.month() === 9 && _m.date() === 8) {
-            this.showBirthday = true;
-        }
+        this.initalized = false;
     }
 
     public ngAfterViewInit(): void {
@@ -102,17 +101,20 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     }
 
     private _initalize(): Promise<void> {
+        this.initalized = false;
+
         this.loaderService.setShowLoader(true);
 
         this._queryCount += 1;
         const _queryCount = this._queryCount;
 
         return this._getSections().then(() => {
-           // pass
+            // pass
         });
     }
 
     private _loadFiles(): Promise<void> {
+        this.initalized = false;
         this.loaderService.setShowLoader(true);
 
         this._queryCount += 1;
@@ -122,6 +124,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
             return this._getFiles(this._queryCount, this.selectedSection).then(() => {
                 if (_queryCount === this._queryCount) {
                     this.loaderService.setShowLoader(false);
+                    this.initalized = true;
                 }
             });
         }
@@ -129,6 +132,7 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
         return Promise.resolve().then(() => {
             if (_queryCount === this._queryCount) {
                 this.loaderService.setShowLoader(false);
+                this.initalized = true;
             }
         });
     }
