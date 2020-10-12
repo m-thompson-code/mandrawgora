@@ -4,6 +4,7 @@
 import { Injectable }    from '@angular/core';
 import { CanDeactivate } from '@angular/router';
 
+import { NavigationService } from '@app/services/navigation.service';
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
  
 export interface CanComponentDeactivate {
@@ -14,10 +15,22 @@ export interface CanComponentDeactivate {
     providedIn: 'root',
 })
 export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
-    constructor(private overlayGalleryService: OverlayGalleryService) {
+    constructor(private overlayGalleryService: OverlayGalleryService, private navigationService: NavigationService) {
 
     }
+
   	public canDeactivate(component?: CanComponentDeactivate): Promise<boolean> {
+        return this._canDeactivate(component).then(_canDeactivate => {
+            if (!_canDeactivate) {
+                // Fix history state
+                this.navigationService.pushLastHistoryState();
+            }
+
+            return _canDeactivate;
+        })
+    }
+
+  	public _canDeactivate(component?: CanComponentDeactivate): Promise<boolean> {
         if (this.overlayGalleryService.active) {
             this.overlayGalleryService.deactivate();
             return Promise.resolve(false);
@@ -28,5 +41,5 @@ export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate>
         }
 
         return component.canDeactivate();
-  	}
+    }
 }
