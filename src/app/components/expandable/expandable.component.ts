@@ -62,7 +62,7 @@ export class ExpandableComponent implements AfterViewInit {
 
     public ngAfterViewInit(): void {
         if (!this.content) {
-            if (environment.env !== 'prod') {
+            if (environment.env === 'dev') {
                 debugger;
             }
         }

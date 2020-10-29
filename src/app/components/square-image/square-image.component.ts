@@ -87,13 +87,13 @@ export class SquareImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public ngAfterViewInit(): void {
         if (!this.src) {
-            if (environment.env !== 'prod') {
+            if (environment.env === 'staging') {
                 debugger;
             }
         }
 
         if (!this.image) {
-            if (environment.env !== 'prod') {
+            if (environment.env === 'staging') {
                 debugger;
             }
         }

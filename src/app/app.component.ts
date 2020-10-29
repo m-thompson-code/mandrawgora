@@ -64,7 +64,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                 doc.style.setProperty('--app-height-95', `${windowHeight * .95}px`);
                 doc.style.setProperty('--app-height-50', `${windowHeight * .5}px`);
             } catch(error) {
-                if (environment.env !== 'prod') {
+                if (environment.env === 'dev') {
                     console.error(error);
                     debugger;
                 }
@@ -100,8 +100,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         // Check if any current user is signed in
         promises.push(this.authService.handleAuth());
 
-        // Auto sign in Anonymous for dev
-        if (environment.env === 'dev') {
+        // Auto sign in Anonymous for dev and staging
+        if (environment.env === 'dev' || environment.env === 'staging') {
             promises.push(new Promise((resolve: () => void) => {
                 if (!this.authService.user) {
                     return this.authService.signInAnonymously().then(() => {
@@ -133,7 +133,7 @@ export class AppComponent implements AfterViewInit, OnDestroy {
                     url: routerEvent.urlAfterRedirects,
                 });
 			} catch(error) {
-				if (environment.env !== 'prod') {
+				if (environment.env === 'dev') {
                     console.error(error);
                     debugger;
 				}

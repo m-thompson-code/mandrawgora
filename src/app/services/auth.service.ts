@@ -46,7 +46,7 @@ export class AuthService {
 
     public signInWithEmailAndPassword(email: string, password: string): Promise<void> {
         return firebase.auth().signInWithEmailAndPassword(email, password).then(auth => {
-            if (environment.env !== 'prod') {
+            if (environment.env === 'dev') {
                 console.log(' ~ AuthService: signInWithEmailAndPassword', auth);
             }
         });
@@ -54,7 +54,7 @@ export class AuthService {
 
     public signInAnonymously(): Promise<void> {
         return firebase.auth().signInAnonymously().then(auth => {
-            if (environment.env !== 'prod') {
+            if (environment.env === 'dev') {
                 console.log(' ~ AuthService: signInWithEmailAndPassword', auth);
             }
         });

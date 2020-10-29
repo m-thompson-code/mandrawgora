@@ -40,7 +40,7 @@ export class StorageService {
             // TODO: Handle unsuccessful uploads
             console.error(error);
 
-            if (environment.env !== 'prod') {
+            if (environment.env === 'dev') {
                 debugger;
             }
 
@@ -57,7 +57,7 @@ export class StorageService {
         }).catch(error => {
             console.error(error);
 
-            if (environment.env !== 'prod') {
+            if (environment.env === 'dev') {
                 debugger;
             }
 

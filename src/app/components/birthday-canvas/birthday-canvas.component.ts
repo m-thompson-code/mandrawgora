@@ -43,7 +43,7 @@ export class BirthdayCanvasComponent implements OnInit, AfterViewInit {
 
     public ngAfterViewInit(): void {
         if (!this.divContainer) {
-            if (environment.env !== 'prod') {
+            if (environment.env === 'dev') {
                 debugger;
             }
         }

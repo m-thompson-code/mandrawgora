@@ -1,5 +1,5 @@
 export interface Environment {
-    env: 'prod' | 'dev';
+    env: 'prod' | 'dev' | 'staging';
     firebaseConfig: {
         apiKey: string;
         authDomain: string;

@@ -145,8 +145,6 @@ export class KeepRatioDirective implements OnInit, AfterViewInit {
             return;
         }
 
-        console.log(element);
-
         // const rect =  element.getBoundingClientRect();
 
         // Avoiding getBoundingClientRect since we use animations a lot, which might be messing up calculations (Safari issue on delivery/product)

@@ -5,6 +5,10 @@
 @import 'styles/keyframes.scss';
 @import 'styles/drag-and-drop.scss';
 
+.primary-color {
+    color: $primary;
+}
+
 :root {
     --app-height-100: 100vh;
     --app-height-95: 95vh;

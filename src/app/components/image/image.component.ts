@@ -87,13 +87,13 @@ export class ImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public ngAfterViewInit(): void {
         if (!this.src) {
-            if (environment.env !== 'prod') {
+            if (environment.env === 'dev') {
                 debugger;
             }
         }
 
         if (!this.image) {
-            if (environment.env !== 'prod') {
+            if (environment.env === 'dev') {
                 debugger;
             }
         }

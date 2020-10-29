@@ -22,7 +22,7 @@ export class NavigationService {
     public setup(): void {
         if (!this._onpopstate) {
             
-            if (environment.env !== 'prod') {
+            if (environment.env === 'dev') {
                 debugger;
             }
 

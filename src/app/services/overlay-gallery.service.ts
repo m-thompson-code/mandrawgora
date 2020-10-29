@@ -33,7 +33,7 @@ export class OverlayGalleryService {
         if (!this.deactivateHandler) {
             console.error("deactivate missing deactiveHandler");
 
-            if (environment.env !== 'prod') {
+            if (environment.env === 'dev') {
                 debugger;
             }
 
