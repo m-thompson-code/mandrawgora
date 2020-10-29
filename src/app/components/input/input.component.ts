@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, Output, EventEmitter, Renderer2, OnDestroy } from '@angular/core';
 
 // import { environment } from '@environment';
 
@@ -9,7 +9,7 @@ import { ResponsiveService } from '@app/services/responsive.service';
     templateUrl: './input.template.html',
     styleUrls: ['./input.style.scss']
 })
-export class InputComponent implements OnInit {
+export class InputComponent implements OnInit, OnDestroy {
     @ViewChild('input', {static: true}) private _input!: ElementRef<HTMLInputElement>;
     public focused: boolean = false;
 
@@ -25,12 +25,14 @@ export class InputComponent implements OnInit {
 
     @Output() public enterPressed: EventEmitter<KeyboardEvent> = new EventEmitter();
 
-    constructor(private responsiveService: ResponsiveService) {
+    private _detachListeners?: () => void;
+
+    constructor(private responsiveService: ResponsiveService, private renderer: Renderer2) {
     }
 
     public ngOnInit(): void {
-         // source: https://www.w3schools.com/howto/howto_js_trigger_button_enter.asp
-         this._input.nativeElement.addEventListener("keyup", event => {
+        // source: https://www.w3schools.com/howto/howto_js_trigger_button_enter.asp
+        this._detachListeners = this.renderer.listen(this._input.nativeElement, "keyup", (event: KeyboardEvent) => {
             // Number 13 is the "Enter" key on the keyboard
             if (event.key == 'Enter' || event.keyCode == 13 || event.which == 13) {
                 // Cancel the default action, if needed
@@ -110,5 +112,9 @@ export class InputComponent implements OnInit {
         const _target = inputEvent.target as HTMLInputElement;
 
         this.valueChanged.emit(_target.value || '');
+    }
+
+    public ngOnDestroy(): void {
+        this._detachListeners && this._detachListeners();
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy, Output, EventEmitter, NgZone, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy, Output, EventEmitter, NgZone, AfterViewInit, Renderer2 } from '@angular/core';
 
 import { environment } from '@environment';
 
@@ -38,7 +38,9 @@ export class SquareImageComponent implements OnInit, AfterViewInit, OnDestroy {
 
     @Input() containerElement?: HTMLElement;
 
-    constructor(private ngZone: NgZone) {
+    private _detachListeners?: () => void;
+
+    constructor(private ngZone: NgZone, private renderer: Renderer2) {
     }
 
     public ngOnInit(): void {
@@ -48,11 +50,15 @@ export class SquareImageComponent implements OnInit, AfterViewInit, OnDestroy {
         this.imageWidth = 0;
         this.imageHeight = 0;
 
-        this.image.nativeElement.removeEventListener('load', this.onload.bind(this));
-		this.image.nativeElement.removeEventListener('error', this.onerror.bind(this));
-		
-		this.image.nativeElement.addEventListener('load', this.onload.bind(this));
-        this.image.nativeElement.addEventListener('error', this.onerror.bind(this));
+        this._detachListeners && this._detachListeners();
+
+        const _load_off = this.renderer.listen(this.image.nativeElement, 'load', this.onload.bind(this));
+        const _error_off = this.renderer.listen(this.image.nativeElement, 'error', this.onerror.bind(this));
+        
+        this._detachListeners = () => {
+            _load_off();
+            _error_off();
+        };
 
         clearInterval(this._getDimensionsInterval);
         this._getDimensionsInterval = window.setInterval(() => {
@@ -94,6 +100,6 @@ export class SquareImageComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     public ngOnDestroy(): void {
-        
+        this._detachListeners && this._detachListeners();
     }
 }

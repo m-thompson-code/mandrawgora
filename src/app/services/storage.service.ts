@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { environment } from '@environment';
 
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
 import { Observable, Subject } from 'rxjs';
 
 export interface FileUploadResult {

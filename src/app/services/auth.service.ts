@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 
-import * as firebase from 'firebase/app';
+import firebase from 'firebase/app';
 
 import { environment } from '@environment';
 

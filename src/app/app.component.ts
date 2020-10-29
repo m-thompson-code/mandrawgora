@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, Renderer2 } from '@angular/core';
 import { NavigationEnd, Router, RouterEvent } from '@angular/router';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -23,10 +23,10 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     public initalized: boolean = false;
 
     private _routerEventsSub?: Subscription;
-    private _onResize?: () => void;
+    private _detachListeners?: () => void;
 
     // Inject FirebaseService here so firebase initalizes properly
-    constructor(private router: Router, private firebaseService: FirebaseService, 
+    constructor(private router: Router, private renderer: Renderer2, private firebaseService: FirebaseService, 
         private analyticsService: AnalyticsService, private _snackBar: MatSnackBar, 
         public loaderService: LoaderService, public overlayGalleryService: OverlayGalleryService, 
         private authService: AuthService, private responsiveService: ResponsiveService) {
@@ -71,13 +71,20 @@ export class AppComponent implements AfterViewInit, OnDestroy {
             }
         }
 
-        this._onResize = () => {
+        const _onResize = () => {
             appHeight();
             updateResponsiveService();
         }
 
-        window.addEventListener('resize', this._onResize);
-        window.addEventListener('orientationchange', this._onResize);
+        const _off__resize = this.renderer.listen('window', 'resize', _onResize);
+        const _off__orientationchange = this.renderer.listen('window', 'orientationchange', _onResize);
+        
+        this._detachListeners = () => {
+            _off__resize();
+            _off__orientationchange();
+        };
+
+        appHeight();
         
         appHeight();
 
@@ -126,9 +133,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
 
         this._routerEventsSub?.unsubscribe();
 
-        if (this._onResize) {
-			window.removeEventListener('resize', this._onResize);
-			window.removeEventListener('orientationchange', this._onResize);
+        if (this._detachListeners) {
+			this._detachListeners();
 		}
     }
 }
