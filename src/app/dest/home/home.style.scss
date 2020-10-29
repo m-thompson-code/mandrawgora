@@ -316,7 +316,8 @@ $imagePadding: 10px;
 
         border-radius: 4px;
 
-        color: white;
+        color: $primary;
+        text-decoration: underline;
     }
 
     .text:hover, .text:active, .text:focus {
