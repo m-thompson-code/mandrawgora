@@ -1,5 +1,8 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
+# Ignore src/index.html since it should be generated from index.base.html using env-handler.js
+src/index.html
+
 # firebase debug logs
 firebase-debug.log
 
