@@ -7,7 +7,7 @@
         </div>
     
         <div class="header">
-            ManDrawGora
+            {{ environment?.header || 'Art Gallery' }}
             
             <div *ngIf="showBirthday" class="birthday-hat" (click)="birthdayFunc()" matRipple [matRippleUnbounded]="false">
                 <img src="/assets/birthday-hat.png">
@@ -26,7 +26,7 @@
 
 <div class="desktop-top">
     <div class="header">
-        ManDrawGora
+        {{ environment?.header || 'Art Gallery' }}
 
         <div *ngIf="showBirthday" class="birthday-hat" (click)="birthdayFunc()" matRipple [matRippleUnbounded]="false">
             <img src="/assets/birthday-hat.png">
@@ -62,7 +62,7 @@
     </div>
     
     <div class="footer">
-        ©&nbsp;2020&nbsp;Mario Diaz
+        ©&nbsp;2020&nbsp;{{ environment?.copyright || 'Mark Thompson m.thompson.code@gmail.com' }}
     </div>
 </div>
 
@@ -70,7 +70,7 @@
     <moo-birthday-canvas #birthdayCanvas [divContainer]="divContainer"></moo-birthday-canvas>
 </div>
 
-<div class="admin-panel" *ngIf="(authService?.user?.email === 'm.thompson.code@gmail.com' || authService?.user?.email === 'mandrawgora@gmail.com') && showAdminNav">
+<div class="admin-panel" *ngIf="authService.currentUserIsAdmin && showAdminNav">
     <div class="content">
         <a class="admin-test text" matRipple [matRippleUnbounded]="false" routerLink="/admin">
             Manage website through Admin panel 

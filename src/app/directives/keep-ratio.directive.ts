@@ -1,7 +1,5 @@
 import { Directive, ElementRef, HostListener, AfterViewInit, Input, OnInit, EventEmitter, Output } from '@angular/core';
 
-// import { debounce } from '@app/decorators/debounce';
-
 @Directive({
     selector: '[mooKeepRatio]',
 })
@@ -146,6 +144,8 @@ export class KeepRatioDirective implements OnInit, AfterViewInit {
         if (!element || !this.ratioWidth || !this.ratioHeight) {
             return;
         }
+
+        console.log(element);
 
         // const rect =  element.getBoundingClientRect();
 

@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "mandrawgora-170d4"
+    "prod": "mandrawgora-170d4",
+    "dev": "mandrawgora-demo"
   }
 }

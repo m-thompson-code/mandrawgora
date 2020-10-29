@@ -100,6 +100,19 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         // Check if any current user is signed in
         promises.push(this.authService.handleAuth());
 
+        // Auto sign in Anonymous for dev
+        if (environment.env === 'dev') {
+            promises.push(new Promise((resolve: () => void) => {
+                if (!this.authService.user) {
+                    return this.authService.signInAnonymously().then(() => {
+                        resolve();
+                    });
+                }
+
+                return resolve();
+            }));
+        }
+
         return Promise.all(promises).then(() => {
             // pass
         }).catch(error => {

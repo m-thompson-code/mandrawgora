@@ -1,27 +1,50 @@
-<!doctype html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <base href="/">
-        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+// source: https://stackoverflow.com/questions/51388921/pass-command-line-args-to-npm-scripts-in-package-json
+const execSync = require('child_process').execSync;
+execSync;
 
-        
-        <title>Art Gallery Demo</title>
-        <meta name="description" content="Art gallery website using Angular and Firebase for hosting and storage. This demo aims to showcase the website and overall functionality of the site management by making permissions public">
+
+const fs = require('fs');
+const path = require('path');
+
+console.log("~ env-handler.js: START\n");
+
+const env = process.argv[2];
+
+if (env !== 'prod' && env !== 'dev') {
+    const message = " ~ Unexpected env";
+    console.error(" ~ Unexpected env");
+    throw {
+        message: message,
+        env: env
+    };
+}
+
+const baseIndex = fs.readFileSync(path.resolve(__dirname, 'src/index.base.html'), "utf8");
+let finalIndex = baseIndex;
+
+// Update index meta tags depending on prod/dev
+if (env === 'prod') {
+    const title = 'ManDrawGora';
+    const desc = 'Hey, hi. I like like drawin cute girls. Skullgirls enthusiast. Let’s fight some time maybe? @mandrawgora on twitter. Any spicy stuff will go there <3';
+    const url = 'https://mandrawgora.com';
+
+    finalIndex = baseIndex.replace('{% metatags %}', `
+        <title>${title}</title>
+        <meta name="description" content="${desc}">
     
-        <meta property="og:title" content="Art Gallery Demo">
-        <meta property="og:description" content="Art gallery website using Angular and Firebase for hosting and storage. This demo aims to showcase the website and overall functionality of the site management by making permissions public">
-        <meta property="og:image" content="https://mandrawgora-demo.web.app/assets/social.jpg?v=1">
+        <meta property="og:title" content="${title}">
+        <meta property="og:description" content="${desc}">
+        <meta property="og:image" content="${url}/assets/social.jpg?v=1">
         <meta property="og:width" content="320">
         <meta property="og:height" content="320">
-        <meta property="og:url" content="https://mandrawgora-demo.web.app">
+        <meta property="og:url" content="${url}">
         <meta property="og:type" content="website">
         <meta property="og:locale" content="en_US">
 
-        <meta name="twitter:title" content="Art Gallery Demo">
-        <meta name="twitter:description" content="Art gallery website using Angular and Firebase for hosting and storage. This demo aims to showcase the website and overall functionality of the site management by making permissions public">
-        <meta name="twitter:image" content="https://mandrawgora-demo.web.app/assets/social.jpg?v=1">
-        <meta name="twitter:site" content="https://mandrawgora-demo.web.app">
+        <meta name="twitter:title" content="${title}">
+        <meta name="twitter:description" content="${desc}">
+        <meta name="twitter:image" content="${url}/assets/social.jpg?v=1">
+        <meta name="twitter:site" content="${url}">
         <meta name="twitter:card" content="summary">
 
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
@@ -42,23 +65,29 @@
         <meta name="msapplication-TileColor" content="#71c4c8">
         <meta name="msapplication-TileImage" content="assets/ms-icon-144x144.png">
         <meta name="theme-color" content="#71c4c8">
+    `);
+} else {
+    const title = 'Art Gallery Demo';
+    const desc = 'Art gallery website using Angular and Firebase for hosting and storage. This demo aims to showcase the website and overall functionality of the site management by making permissions public';
+    const url = 'https://mandrawgora-demo.web.app';
+
+    finalIndex = baseIndex.replace('{% metatags %}', `
+        <title>${title}</title>
+        <meta name="description" content="${desc}">
     
-        <!-- <title>ManDrawGora</title>
-        <meta name="description" content="Hey, hi. I like like drawin cute girls. Skullgirls enthusiast. Let’s fight some time maybe? @mandrawgora on twitter. Any spicy stuff will go there <3">
-    
-        <meta property="og:title" content="ManDrawGora">
-        <meta property="og:description" content="Hey, hi. I like like drawin cute girls. Skullgirls enthusiast. Let’s fight some time maybe? @mandrawgora on twitter. Any spicy stuff will go there <3">
-        <meta property="og:image" content="https://mandrawgora.com/assets/social.jpg?v=1">
+        <meta property="og:title" content="${title}">
+        <meta property="og:description" content="${desc}">
+        <meta property="og:image" content="${url}/assets/social.jpg?v=1">
         <meta property="og:width" content="320">
         <meta property="og:height" content="320">
-        <meta property="og:url" content="https://mandrawgora.com">
+        <meta property="og:url" content="${url}">
         <meta property="og:type" content="website">
         <meta property="og:locale" content="en_US">
 
-        <meta name="twitter:title" content="ManDrawGora">
-        <meta name="twitter:description" content="Hey, hi. I like like drawin cute girls. Skullgirls enthusiast. Let’s fight some time maybe? @mandrawgora on twitter. Any spicy stuff will go there <3">
-        <meta name="twitter:image" content="https://mandrawgora.com/assets/social.jpg?v=1">
-        <meta name="twitter:site" content="https://mandrawgora.com">
+        <meta name="twitter:title" content="${title}">
+        <meta name="twitter:description" content="${desc}">
+        <meta name="twitter:image" content="${url}/assets/social.jpg?v=1">
+        <meta name="twitter:site" content="${url}">
         <meta name="twitter:card" content="summary">
 
         <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
@@ -78,12 +107,10 @@
         <link rel="manifest" href="assets/manifest.json">
         <meta name="msapplication-TileColor" content="#71c4c8">
         <meta name="msapplication-TileImage" content="assets/ms-icon-144x144.png">
-        <meta name="theme-color" content="#71c4c8"> -->
+        <meta name="theme-color" content="#71c4c8">
+    `);
+}
 
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500&display=swap" rel="stylesheet">
-        <!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
-    </head>
-    <body class="mat-typography mat-app-background">
-        <app-root></app-root>
-    </body>
-</html>
+fs.writeFileSync(path.resolve(__dirname, 'src/index.html'), finalIndex);
+
+console.log(" ~ Updated src/index.html based on environment\n ~ env-handler.js: END");

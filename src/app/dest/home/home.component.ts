@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 
 import * as moment from 'moment';
 
-import { environment } from '@environment';
+import { Environment, environment } from '@environment';
 
 import { FileMetadata, FirestoreService, Section } from '@app/services/firestore.service';
 import { LoaderService } from '@app/services/loader.service';
@@ -49,6 +49,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
 
     public initalized: boolean = false;
 
+    public environment?: Environment;
+
     constructor(private router: Router, private activatedRoute: ActivatedRoute, public authService: AuthService, 
         private firestoreService: FirestoreService, public loaderService: LoaderService, 
         private overlayGalleryService: OverlayGalleryService, private homeService: HomeService, 
@@ -56,6 +58,8 @@ export class HomeComponent implements AfterViewInit, OnDestroy {
     }
 
     public ngOnInit(): void {
+        this.environment = environment;
+        
         (window as any).__birthday = () => {
             this.showBirthday = true;
         }

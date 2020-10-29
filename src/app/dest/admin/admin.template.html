@@ -12,7 +12,7 @@
     </ng-container>
 </div>
 
-<div *ngIf="authService.user?.email !== 'm.thompson.code@gmail.com' && authService.user?.email !== 'mandrawgora@gmail.com'" class="mobile-padding">
+<div *ngIf="!authService.currentUserIsAdmin" class="mobile-padding">
     <div class="input-container">
         <moo-input label="email" [value]="email" inputType="email" [error]="emailError" 
             (valueChanged)="email = $event; emailError = ''" 
@@ -29,9 +29,10 @@
     
     <div class="buttons">
         <button mat-raised-button color="primary" (click)="login()">Login</button>
+        <button *ngIf="environment?.env === 'dev'" mat-raised-button color="primary" (click)="login()">Anonymous Login</button>
         <button mat-raised-button color="accent" (click)="forgot()">Forgot</button>
     </div>
     
 </div>
 
-<router-outlet *ngIf="authService.user?.email === 'm.thompson.code@gmail.com' || authService.user?.email === 'mandrawgora@gmail.com'"></router-outlet>
+<router-outlet *ngIf="authService.currentUserIsAdmin"></router-outlet>

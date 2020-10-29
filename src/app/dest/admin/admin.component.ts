@@ -5,6 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@app/services/auth.service';
 import { LoaderService } from '@app/services/loader.service';
 
+import { environment, Environment } from '@environment';
+
 @Component({
     selector: 'moo-admin',
     templateUrl: './admin.template.html',
@@ -16,12 +18,16 @@ export class AdminComponent {
     public password: string = '';
     public passwordError: string = '';
 
+    public environment?: Environment;
+
     constructor(public authService: AuthService, public loaderService: LoaderService, 
         private _snackBar: MatSnackBar) {
     }
 
     public ngOnInit(): void {
-        if (this.authService?.user?.email !== 'm.thompson.code@gmail.com' && this.authService?.user?.email !== 'mandrawgoragmail.com') {
+        this.environment = environment;
+
+        if (!this.authService.currentUserIsAdmin) {
             this.loaderService.setShowLoader(false);
         }
     }
@@ -85,6 +91,27 @@ export class AdminComponent {
 
         return this.authService.sendPasswordResetEmail(this.email).then(() => {
             this._snackBar.open(`Password reset sent to ${this.email}`, undefined, {
+                duration: 2000,
+                panelClass: 'snackbar-success',
+            });
+        }).catch(error => {
+            console.error(error);
+
+            this.emailError = error?.message || 'Unexpected error';
+            this._snackBar.open(this.emailError, undefined, {
+                duration: 5000,
+                panelClass: 'snackbar-error',
+            });
+        }).then(() => {
+            this.loaderService.setShowLoader(false);
+        });
+    }
+
+    public loginAnonymously(): Promise<void> {
+        this.loaderService.setShowLoader(true);
+
+        return this.authService.signInAnonymously().then(() => {
+            this._snackBar.open(`Welcome Anonymous!`, undefined, {
                 duration: 2000,
                 panelClass: 'snackbar-success',
             });

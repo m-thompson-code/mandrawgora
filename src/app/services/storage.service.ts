@@ -51,7 +51,7 @@ export class StorageService {
         const _p = uploadTask.then(snapshot => {
             return {
                 snapshot: snapshot,
-                url: `https://storage.googleapis.com/mandrawgora-170d4.appspot.com/${filename}`,
+                url: `https://storage.googleapis.com/${environment.firebaseConfig.projectId}.appspot.com/${filename}`,
                 filename: filename,
             };
         }).catch(error => {
