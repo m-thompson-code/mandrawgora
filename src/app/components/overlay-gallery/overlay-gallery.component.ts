@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, OnDestroy, Output, EventEmitter, NgZone, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, NgZone, AfterViewInit } from '@angular/core';
 
 import { OverlayGalleryService } from '@app/services/overlay-gallery.service';
 
@@ -22,7 +22,7 @@ export class OverlayGalleryComponent implements OnInit, AfterViewInit, OnDestroy
 
     public templateReady: boolean = false;
 
-    constructor(private ngZone: NgZone, public overlayGalleryService: OverlayGalleryService) {
+    constructor(public overlayGalleryService: OverlayGalleryService) {
 
     }
 

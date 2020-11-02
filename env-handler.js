@@ -35,6 +35,8 @@ if (env === 'prod') {
         <meta property="og:title" content="${title}">
         <meta property="og:description" content="${desc}">
         <meta property="og:image" content="${url}/assets/social.jpg?v=1">
+        <meta property="og:image:width" content="320">
+        <meta property="og:image:height" content="320">
         <meta property="og:width" content="320">
         <meta property="og:height" content="320">
         <meta property="og:url" content="${url}">

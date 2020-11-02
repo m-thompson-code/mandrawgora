@@ -85,8 +85,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
         };
 
         appHeight();
-        
-        appHeight();
 
         // Listten to navigation for analytics
         this._routerEventsSub = this.router.events.subscribe(routerEvent => {
